@@ -3,7 +3,7 @@
 %% 
 %% Author: PGL  Porta Mana
 %% Created: 2015-05-01T20:53:34+0200
-%% Last-Updated: 2017-06-01T11:31:13+0200
+%% Last-Updated: 2017-06-01T16:15:30+0200
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Report-no: ***
 \newcommand*{\memfontfamily}{zplx}
@@ -17,7 +17,7 @@ onecolumn,oneside,a5paper,article,british]{memoir}
 \newcommand*{\propertitle}{Inferring health conditions from fMRI-graph data}
 \newcommand*{\pdftitle}{Inferring health conditions from fMRI-graph data}
 \newcommand*{\headtitle}{\pdftitle}
-\newcommand*{\pdfauthor}{P.G.L.  Porta Mana, C. Bachmann, A. Morrison}
+\newcommand*{\pdfauthor}{C. Bachmann, P.G.L.  Porta Mana, A. Morrison}
 \newcommand*{\headauthor}{\ifnotnotes Porta Mana%
 \else\autanet\ Luca\fi}
 \newcommand*{\reporthead}{}
@@ -80,8 +80,6 @@ onecolumn,oneside,a5paper,article,british]{memoir}
 \newtheoremstyle{innote}{\parsep}{\parsep}{\footnotesize}{}{}{}{0pt}{}
 \theoremstyle{innote}
 \newtheorem*{innote}{}
-
-\usepackage{bm}
 
 \usepackage[shortlabels,inline]{enumitem}
 \SetEnumitemKey{para}{itemindent=\parindent,leftmargin=0pt,listparindent=\parindent,parsep=0pt,itemsep=\topsep}
@@ -295,7 +293,7 @@ onecolumn,oneside,a5paper,article,british]{memoir}
 \definecolor{mypurplishred}{RGB}{136,34,85}
 \definecolor{myreddishpurple}{RGB}{170,68,153}
 
-
+\usepackage{bm}
 \usepackage{microtype}
 
 \usepackage[backend=biber,mcite,subentry,citestyle=numeric-comp,bibstyle=numericbringhurst,autopunct=false,sorting=none,sortcites=false,natbib=false,maxnames=8,minnames=8,giveninits=true,block=space,hyperref=true,defernumbers=false,useprefix=true,language=british]{biblatex}
@@ -472,16 +470,16 @@ urlcolor=mygreen,breaklinks=true,pdftitle={\pdftitle},pdfauthor={\pdfauthor}}
 \title{\propertitle%***
 }
 \author{\ifnotnotes%
-%  \hspace*{\stretch{1}}
-  \parbox[t]{0.33\linewidth}%
-{\protect\centering P.G.L.\ Porta\,Mana\\
-  \epost{\email{pgl}{portamana.org}}\\
-  \affiliation{Independent researcher}}%
   % \hspace*{\stretch{1}}
 \parbox[t]{0.33\linewidth}%
 {\protect\centering C. Bachmann\\
   \epost{\email{c.bachmann}{fz-juelich.de}}\\
     \affiliation{Forschungszentrum J{\"u}lich INM-6}\\[-1\jot]\affiliation{Germany}}%
+%  \hspace*{\stretch{1}}
+  \parbox[t]{0.33\linewidth}%
+{\protect\centering P.G.L.\ Porta\,Mana\\
+  \epost{\email{pgl}{portamana.org}}\\
+  \affiliation{Independent researcher}}%
   % \hspace*{\stretch{1}}
 \parbox[t]{0.33\linewidth}%
 {\protect\centering A. Morrison\\
