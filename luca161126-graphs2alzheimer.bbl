@@ -1,0 +1,671 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 2.7 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \sortlist[entry]{none/global/}
+    \entry{koopman1936}{article}{}
+      \name{author}{1}{}{%
+        {{hash=5adcdf5414082721c379f6cc2227053a}{%
+           family={Koopman},
+           family_i={K\bibinitperiod},
+           given={Bernard\bibnamedelima Osgood},
+           given_i={B\bibinitperiod\bibinitdelim O\bibinitperiod}}}%
+      }
+      \strng{namehash}{5adcdf5414082721c379f6cc2227053a}
+      \strng{fullhash}{5adcdf5414082721c379f6cc2227053a}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Trans.\ Am.\ Math.\ Soc.}
+      \field{number}{3}
+      \field{title}{On Distributions Admitting a Sufficient Statistic}
+      \field{volume}{39}
+      \field{year}{1936}
+      \field{pages}{399\bibrangedash 409}
+      \range{pages}{11}
+      \keyw{exponential family}
+    \endentry
+    \entry{pitman1936}{article}{}
+      \name{author}{1}{}{%
+        {{hash=3ab0729de2497e592be6fde6d36484ba}{%
+           family={Pitman},
+           family_i={P\bibinitperiod},
+           given={E.\bibnamedelimi J.\bibnamedelimi G.},
+           given_i={E\bibinitperiod\bibinitdelim J\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
+      }
+      \strng{namehash}{3ab0729de2497e592be6fde6d36484ba}
+      \strng{fullhash}{3ab0729de2497e592be6fde6d36484ba}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Math.\ Proc.\ Camb.\ Phil.\ Soc.}
+      \field{number}{4}
+      \field{title}{Sufficient statistics and intrinsic accuracy}
+      \field{volume}{32}
+      \field{year}{1936}
+      \field{pages}{567\bibrangedash 579}
+      \range{pages}{13}
+      \keyw{exponential family,probability theory}
+    \endentry
+    \entry{darmois1935}{article}{}
+      \name{author}{1}{}{%
+        {{hash=9ea8952fb7f0f22cbd579bbda7d74dfe}{%
+           family={Darmois},
+           family_i={D\bibinitperiod},
+           given={Georges},
+           given_i={G\bibinitperiod}}}%
+      }
+      \strng{namehash}{9ea8952fb7f0f22cbd579bbda7d74dfe}
+      \strng{fullhash}{9ea8952fb7f0f22cbd579bbda7d74dfe}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{\langfrench{Comptes rendus hebdomadaires des séances de l'Académie des sciences}}
+      \field{title}{\langfrench{{Sur} les lois de probabilité à estimation exhaustive}}
+      \field{volume}{200}
+      \field{year}{1935}
+      \field{pages}{1265\bibrangedash 1266}
+      \range{pages}{2}
+      \keyw{on the law of probability with exhaustive estimation,sufficient statistics,exponential family,sufficiency}
+    \endentry
+    \entry{hipp1974}{article}{}
+      \name{author}{1}{}{%
+        {{hash=479c1634dd8b8d7f0f8fc2336f301cb8}{%
+           family={Hipp},
+           family_i={H\bibinitperiod},
+           given={Christian},
+           given_i={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{479c1634dd8b8d7f0f8fc2336f301cb8}
+      \strng{fullhash}{479c1634dd8b8d7f0f8fc2336f301cb8}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Ann.\ Stat.}
+      \field{number}{6}
+      \field{title}{Sufficient Statistics and Exponential Families}
+      \field{volume}{2}
+      \field{year}{1974}
+      \field{pages}{1283\bibrangedash 1292}
+      \range{pages}{10}
+      \keyw{probability calculus,maximum-entropy,exchangeability}
+    \endentry
+    \entry{andersen1970}{article}{}
+      \name{author}{1}{}{%
+        {{hash=82d47a53887f0e4579bc6e2cca2e98bb}{%
+           family={Andersen},
+           family_i={A\bibinitperiod},
+           given={Erling\bibnamedelima Bernhard},
+           given_i={E\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+      }
+      \strng{namehash}{82d47a53887f0e4579bc6e2cca2e98bb}
+      \strng{fullhash}{82d47a53887f0e4579bc6e2cca2e98bb}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{J. Am.\ Stat.\ Assoc.}
+      \field{number}{331}
+      \field{title}{Sufficiency and Exponential Families for Discrete Sample Spaces}
+      \field{volume}{65}
+      \field{year}{1970}
+      \field{pages}{1248\bibrangedash 1255}
+      \range{pages}{8}
+      \keyw{probability theory}
+    \endentry
+    \entry{denny1967}{article}{}
+      \name{author}{1}{}{%
+        {{hash=bc3bdf929fde7e0915891dde2d53029d}{%
+           family={Denny},
+           family_i={D\bibinitperiod},
+           given={J.\bibnamedelimi L.},
+           given_i={J\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+      }
+      \strng{namehash}{bc3bdf929fde7e0915891dde2d53029d}
+      \strng{fullhash}{bc3bdf929fde7e0915891dde2d53029d}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Proc.\ Natl.\ Acad.\ Sci.\ (USA)}
+      \field{number}{5}
+      \field{title}{Sufficient conditions for a family of probabilities to be exponential}
+      \field{volume}{57}
+      \field{year}{1967}
+      \field{pages}{1184\bibrangedash 1187}
+      \range{pages}{4}
+      \keyw{sufficient statistics,sufficiency,exponential family}
+    \endentry
+    \entry{fraser1963}{article}{}
+      \name{author}{1}{}{%
+        {{hash=800bd02eebf5a8e0aaae76aa0cc87fcc}{%
+           family={Fraser},
+           family_i={F\bibinitperiod},
+           given={D.\bibnamedelimi A.\bibnamedelimi S.},
+           given_i={D\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+      }
+      \strng{namehash}{800bd02eebf5a8e0aaae76aa0cc87fcc}
+      \strng{fullhash}{800bd02eebf5a8e0aaae76aa0cc87fcc}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{J. Roy.\ Stat.\ Soc. B}
+      \field{number}{1}
+      \field{title}{On Sufficiency and the Exponential Family}
+      \field{volume}{25}
+      \field{year}{1963}
+      \field{pages}{115\bibrangedash 123}
+      \range{pages}{9}
+    \endentry
+    \entry{barankinetal1963}{article}{}
+      \name{author}{2}{}{%
+        {{hash=6f8bae4d30065c2eec04af31eb17b32c}{%
+           family={Barankin},
+           family_i={B\bibinitperiod},
+           given={Edward\bibnamedelima W.},
+           given_i={E\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
+        {{hash=6590ef0708f4088c09a123fc67da7556}{%
+           family={Maitra},
+           family_i={M\bibinitperiod},
+           given={Ashok\bibnamedelima P.},
+           given_i={A\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+      }
+      \strng{namehash}{0069da6fa1d8026236d5e26f4496112d}
+      \strng{fullhash}{0069da6fa1d8026236d5e26f4496112d}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Sankhyā A}
+      \field{number}{3}
+      \field{title}{Generalization of the {Fisher-Darmois-Koopman-Pitman} Theorem on Sufficient Statistics}
+      \field{volume}{25}
+      \field{year}{1963}
+      \field{pages}{217\bibrangedash 244}
+      \range{pages}{28}
+      \keyw{exponential family,sufficiency}
+    \endentry
+    \entry{bernardoetal1994_r2000}{book}{}
+      \name{author}{2}{}{%
+        {{hash=0741a5a716c098b0e7ca1d754f94380d}{%
+           family={Bernardo},
+           family_i={B\bibinitperiod},
+           given={José-Miguel},
+           given_i={J\bibinithyphendelim M\bibinitperiod}}}%
+        {{hash=152598c3ebe4a28cd75171b1227e6ca2}{%
+           family={Smith},
+           family_i={S\bibinitperiod},
+           given={Adrian\bibnamedelima F.},
+           given_i={A\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York}%
+      }
+      \list{publisher}{1}{%
+        {Wiley}%
+      }
+      \strng{namehash}{dac869f6e92aba10c08196b55e48bb32}
+      \strng{fullhash}{dac869f6e92aba10c08196b55e48bb32}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{reprint}
+      \field{note}{First publ.\ 1994}
+      \field{origyear}{1994}
+      \field{series}{Wiley series in probability and mathematical statistics}
+      \field{title}{Bayesian Theory}
+      \field{year}{2000}
+    \endentry
+    \entry{lindley1965b_r2008}{book}{}
+      \name{author}{1}{}{%
+        {{hash=215b0d5004ca460343e12a8ecd3a5efa}{%
+           family={Lindley},
+           family_i={L\bibinitperiod},
+           given={Dennis\bibnamedelima V.},
+           given_i={D\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Cambridge}%
+      }
+      \list{publisher}{1}{%
+        {Cambridge University Press}%
+      }
+      \strng{namehash}{215b0d5004ca460343e12a8ecd3a5efa}
+      \strng{fullhash}{215b0d5004ca460343e12a8ecd3a5efa}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{reprint}
+      \field{note}{First publ.\ 1965}
+      \field{origyear}{1965}
+      \field{title}{Introduction to Probability and Statistics from a Bayesian Viewpoint. Part 2: Inference}
+      \field{year}{2008}
+      \keyw{Bayesian probability theory}
+    \endentry
+    \entry{diaconisetal1981}{incollection}{}
+      \name{author}{2}{}{%
+        {{hash=f5a7dd4f4a0c79d2eaaf29d6dda0f4b3}{%
+           family={Diaconis},
+           family_i={D\bibinitperiod},
+           given={Persi},
+           given_i={P\bibinitperiod}}}%
+        {{hash=7396ccf082b609137d9256e7354f6228}{%
+           family={Freedman},
+           family_i={F\bibinitperiod},
+           given={David},
+           given_i={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{4ae041fbd5d254ea1c7fa87628ab6f49}
+      \strng{fullhash}{4ae041fbd5d254ea1c7fa87628ab6f49}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{\citein{ghoshetal1981}}
+      \field{note}{Also publ.\ 1982 as technical report \url{https://www.stat.berkeley.edu/~aldous/206-Exch/Papers/diaconis_freedman_PES.pdf}, \url{http://statweb.stanford.edu/~cgates/PERSI/year.html}}
+      \field{title}{Partial Exchangeability and Sufficiency}
+      \field{year}{1981}
+      \field{pages}{205\bibrangedash 236}
+      \range{pages}{32}
+      \keyw{Bayesian probability theory}
+    \endentry
+    \entry{lauritzen1982_r1988}{book}{}
+      \name{author}{1}{}{%
+        {{hash=fe4b57a93ffde01c165af147418a450c}{%
+           family={Lauritzen},
+           family_i={L\bibinitperiod},
+           given={Steffen\bibnamedelima L.},
+           given_i={S\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Berlin}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{fe4b57a93ffde01c165af147418a450c}
+      \strng{fullhash}{fe4b57a93ffde01c165af147418a450c}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{First publ.\ 1982}
+      \field{origyear}{1982}
+      \field{series}{Lecture notes in statistics}
+      \field{title}{Extremal Families and Systems of Sufficient Statistics}
+      \field{volume}{49}
+      \field{year}{1988}
+      \keyw{exchangeability,exponential family,Bayesian probability theory}
+    \endentry
+    \entry{kallenberg2005}{book}{}
+      \name{author}{1}{}{%
+        {{hash=f6bb1091b9da51c1ac66f8a4a75fcba9}{%
+           family={Kallenberg},
+           family_i={K\bibinitperiod},
+           given={Olav},
+           given_i={O\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{f6bb1091b9da51c1ac66f8a4a75fcba9}
+      \strng{fullhash}{f6bb1091b9da51c1ac66f8a4a75fcba9}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{series}{Probability and its applications}
+      \field{title}{Probabilistic Symmetries and Invariance Principles}
+      \field{year}{2005}
+      \keyw{Bayesian probability theory,exchangeability}
+    \endentry
+    \entry{dawid2013}{incollection}{}
+      \name{author}{1}{}{%
+        {{hash=0961ef4d29a125a610782a8d38dbe96e}{%
+           family={Dawid},
+           family_i={D\bibinitperiod},
+           given={A.\bibnamedelimi Philip},
+           given_i={A\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+      }
+      \strng{namehash}{0961ef4d29a125a610782a8d38dbe96e}
+      \strng{fullhash}{0961ef4d29a125a610782a8d38dbe96e}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{\citein{damienetal2013}}
+      \field{chapter}{\chapb~2}
+      \field{title}{Exchangeability and its Ramifications}
+      \field{year}{2013}
+      \field{pages}{19\bibrangedash 29}
+      \range{pages}{11}
+      \keyw{Bayesian probability theory}
+    \endentry
+    \entry{jeffreys1939_r2003}{book}{}
+      \name{author}{1}{}{%
+        {{hash=8ee1b6df972985d58c1190980d9aa387}{%
+           family={Jeffreys},
+           family_i={J\bibinitperiod},
+           given={Harold},
+           given_i={H\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {London}%
+      }
+      \list{publisher}{1}{%
+        {Oxford University Press}%
+      }
+      \strng{namehash}{8ee1b6df972985d58c1190980d9aa387}
+      \strng{fullhash}{8ee1b6df972985d58c1190980d9aa387}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{3}
+      \field{note}{First publ.\ 1939}
+      \field{origyear}{1939}
+      \field{title}{Theory of Probability}
+      \field{year}{2003}
+      \keyw{Bayesian probability theory}
+    \endentry
+    \entry{jaynes1994_r2003}{book}{}
+      \name{author}{1}{}{%
+        {{hash=8cdf30bdc3dd0ea27baf3889cb341484}{%
+           family={Jaynes},
+           family_i={J\bibinitperiod},
+           given={Edwin\bibnamedelima Thompson},
+           given_i={E\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Cambridge}%
+      }
+      \list{publisher}{1}{%
+        {Cambridge University Press}%
+      }
+      \strng{namehash}{8cdf30bdc3dd0ea27baf3889cb341484}
+      \strng{fullhash}{8cdf30bdc3dd0ea27baf3889cb341484}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Ed.\ by G. Larry Bretthorst; \url{http://omega.albany.edu:8008/JaynesBook.html}, \url{http://omega.albany.edu:8008/JaynesBookPdf.html}, \url{http://www-biba.inrialpes.fr/Jaynes/prob.html}. First publ.\ 1994}
+      \field{origyear}{1994}
+      \field{title}{Probability Theory: The Logic of Science}
+      \field{year}{2003}
+      \keyw{de Finetti's theorem,exchangeability,Bayesian probability theory}
+    \endentry
+    \entry{minka1998_r2001}{report}{}
+      \name{author}{1}{}{%
+        {{hash=c1fd48399dd38d0fe54ebe685a846d09}{%
+           family={Minka},
+           family_i={M\bibinitperiod},
+           given={Thomas},
+           given_i={T\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {MIT media Lab}%
+      }
+      \list{location}{1}{%
+        {Cambridge, USA}%
+      }
+      \strng{namehash}{c1fd48399dd38d0fe54ebe685a846d09}
+      \strng{fullhash}{c1fd48399dd38d0fe54ebe685a846d09}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{\url{http://research.microsoft.com/en-us/um/people/minka/papers/}. First publ.\ 1998}
+      \field{origyear}{1998}
+      \field{title}{Inferring a {Gaussian} distribution}
+      \field{type}{techreport}
+      \field{year}{2001}
+      \keyw{Bayesian probability theory,improper prior,Jeffreys prior}
+    \endentry
+    \entry{guptaetal2000}{book}{}
+      \name{author}{2}{}{%
+        {{hash=073bfedba25d946cfc4800afa89d9212}{%
+           family={Gupta},
+           family_i={G\bibinitperiod},
+           given={Arjun\bibnamedelima K.},
+           given_i={A\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+        {{hash=020ea5b5060ca3209d929422a8b17355}{%
+           family={Nagar},
+           family_i={N\bibinitperiod},
+           given={D.\bibnamedelimi K.},
+           given_i={D\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Boca Raton, USA}%
+      }
+      \list{publisher}{1}{%
+        {Chapman \amp{} Hall/CRC}%
+      }
+      \strng{namehash}{1d7575f192f3a4659cbe4d742a316043}
+      \strng{fullhash}{1d7575f192f3a4659cbe4d742a316043}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{series}{Monographs and surveys in pure and applied mathematics}
+      \field{title}{Matrix Variate Distributions}
+      \field{volume}{104}
+      \field{year}{2000}
+      \keyw{probability theory,exponential family}
+    \endentry
+    \entry{murphy2012}{book}{}
+      \name{author}{1}{}{%
+        {{hash=57a45a819d1ea44f0e40dfcdeeaa4140}{%
+           family={Murphy},
+           family_i={M\bibinitperiod},
+           given={Kevin\bibnamedelima P.},
+           given_i={K\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Cambridge, USA}%
+      }
+      \list{publisher}{1}{%
+        {MIT Press}%
+      }
+      \strng{namehash}{57a45a819d1ea44f0e40dfcdeeaa4140}
+      \strng{fullhash}{57a45a819d1ea44f0e40dfcdeeaa4140}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{series}{Adaptive computation and machine learning series}
+      \field{title}{Machine Learning: A Probabilistic Perspective}
+      \field{year}{2012}
+      \keyw{Bayesian probability theory}
+    \endentry
+    \entry{bishop2006}{book}{}
+      \name{author}{1}{}{%
+        {{hash=53e2ec6cc7f2b8080b7b3a758d5607fe}{%
+           family={Bishop},
+           family_i={B\bibinitperiod},
+           given={Christopher\bibnamedelima M.},
+           given_i={C\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{53e2ec6cc7f2b8080b7b3a758d5607fe}
+      \strng{fullhash}{53e2ec6cc7f2b8080b7b3a758d5607fe}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{series}{Information science and statistics}
+      \field{title}{Pattern Recognition and Machine Learning}
+      \field{year}{2006}
+    \endentry
+    \entry{degroot1970_r2004}{book}{}
+      \name{author}{1}{}{%
+        {{hash=af77066eda87ff11d5ebfce4a0f0c867}{%
+           family={DeGroot},
+           family_i={D\bibinitperiod},
+           given={Morris\bibnamedelima H.},
+           given_i={M\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York}%
+      }
+      \list{publisher}{1}{%
+        {Wiley}%
+      }
+      \strng{namehash}{af77066eda87ff11d5ebfce4a0f0c867}
+      \strng{fullhash}{af77066eda87ff11d5ebfce4a0f0c867}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{reprint}
+      \field{origyear}{1970}
+      \field{series}{Wiley classics library}
+      \field{title}{{optimal statistical decisions}}
+      \field{year}{2004}
+      \keyw{conjugate priors,normal distribution,Bayesian probability theory}
+    \endentry
+    \entry{hahn2005}{article}{}
+      \name{author}{1}{}{%
+        {{hash=8cdaea1f60348cb4a465d25c15f78503}{%
+           family={Hahn},
+           family_i={H\bibinitperiod},
+           given={Thomas},
+           given_i={T\bibinitperiod}}}%
+      }
+      \strng{namehash}{8cdaea1f60348cb4a465d25c15f78503}
+      \strng{fullhash}{8cdaea1f60348cb4a465d25c15f78503}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Comput.\ Phys.\ Comm.}
+      \field{note}{\arxiveprint{hep-ph/0404043}, library at \url{http://www.feynarts.de/cuba}. See also \citebi{hahn2014}}
+      \field{number}{2}
+      \field{title}{{{\textsc{Cuba}}} -- a library for multidimensional numerical integration}
+      \field{volume}{168}
+      \field{year}{2005}
+      \field{pages}{78\bibrangedash 95}
+      \range{pages}{18}
+      \keyw{multidimensional numerical integration}
+    \endentry
+    \entry{ghoshetal1981}{book}{}
+      \name{editor}{2}{}{%
+        {{hash=2d3648990f2093c4ad2bd4b70ba40265}{%
+           family={Ghosh},
+           family_i={G\bibinitperiod},
+           given={J.\bibnamedelimi K.},
+           given_i={J\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+        {{hash=5a2c483b8adee4deff1b3794cf66fc33}{%
+           family={Roy},
+           family_i={R\bibinitperiod},
+           given={J.},
+           given_i={J\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Calcutta}%
+      }
+      \list{publisher}{1}{%
+        {Indian Statistical Institute}%
+      }
+      \strng{namehash}{c6a8a03b66e2a596e82fe7f95da30521}
+      \strng{fullhash}{c6a8a03b66e2a596e82fe7f95da30521}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{editor}
+      \field{labeltitlesource}{title}
+      \field{title}{Statistics: Applications and New Directions\subtitleproc{. Proceedings of the Indian Statistical Institute Golden Jubilee International Conference. Calcutta, 16--19 Dec.\ 1981}}
+      \field{year}{1981}
+      \keyw{Bayesian probability theory,exchangeability,sufficiency}
+    \endentry
+    \entry{damienetal2013}{book}{}
+      \name{editor}{4}{}{%
+        {{hash=15b8963950a4ba47c6d4d8e60a4484b0}{%
+           family={Damien},
+           family_i={D\bibinitperiod},
+           given={Paul},
+           given_i={P\bibinitperiod}}}%
+        {{hash=8ac0479065a2be2fbe918f05c9821cc6}{%
+           family={Dellaportas},
+           family_i={D\bibinitperiod},
+           given={Petros},
+           given_i={P\bibinitperiod}}}%
+        {{hash=a18db8ee3dd32b50d8d2125bafdee7e3}{%
+           family={Polson},
+           family_i={P\bibinitperiod},
+           given={Nicholas\bibnamedelima G.},
+           given_i={N\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
+        {{hash=57582a8334e616a996c318697ee5aa1a}{%
+           family={Stephens},
+           family_i={S\bibinitperiod},
+           given={David\bibnamedelima A.},
+           given_i={D\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Oxford}%
+      }
+      \list{publisher}{1}{%
+        {Oxford University Press}%
+      }
+      \strng{namehash}{8c36e38a7ebc63a2d68053068540aaf6}
+      \strng{fullhash}{8c36e38a7ebc63a2d68053068540aaf6}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{editor}
+      \field{labeltitlesource}{title}
+      \field{title}{Bayesian Theory and Applications}
+      \field{year}{2013}
+      \keyw{Bayesian probability theory,exchangeability,induction}
+    \endentry
+    \entry{hahn2014}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=8cdaea1f60348cb4a465d25c15f78503}{%
+           family={Hahn},
+           family_i={H\bibinitperiod},
+           given={Thomas},
+           given_i={T\bibinitperiod}}}%
+      }
+      \strng{namehash}{8cdaea1f60348cb4a465d25c15f78503}
+      \strng{fullhash}{8cdaea1f60348cb4a465d25c15f78503}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{\arxiveprint{1408.6373}. See \citebi{hahn2005}}
+      \field{title}{Concurrent {Cuba}}
+      \field{year}{2014}
+      \keyw{cubature,integration,Monte Carlo}
+    \endentry
+  \endsortlist
+\endrefsection
+\endinput
+
