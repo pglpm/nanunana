@@ -1,0 +1,517 @@
+%\pdfoutput=1
+%% luca161203-question_ZR_sufficient.tex --- 
+%% 
+%% Author: PGL  Porta Mana
+%% Created: 2016-12-03T14:02:45+0100
+%% Last-Updated: 2016-12-04T23:30:29+0100
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Report-no: ***
+\newcommand*{\memfontfamily}{zplx}
+\newcommand*{\memfontpack}{newpxtext}
+\documentclass[10pt,%extrafontsizes,%
+%dvips,% comment this for arXiv
+onecolumn,oneside,a5paper,article,frenchb,italian,german,swedish,latin,british%
+%,draft%***
+%,final%
+]{memoir}
+\newif\ifnotnotes
+\notnotesfalse % true = for publication, false = personal notes
+\newcommand*{\pdftitle}{A question on a model via sufficiency}
+\newcommand*{\headtitle}{\pdftitle}
+\newcommand*{\pdfauthor}{P.G.L.  Porta Mana}
+\newcommand*{\headauthor}{\ifnotnotes Porta Mana%
+\else\autanet\ Luca\fi}
+\newcommand*{\reporthead}{}
+
+%%% Call to the various packages, most of them in bringhurst3.sty %%%
+%\usepackage[25-31,files]{pagesel}
+\usepackage[%nomicrotype,%
+%nosum,%
+%nomathpazo% loads mathpazo - Palatino text & math
+%,noosf% no old-style figures
+%,fakesc,%,
+%noeugreek,% no greek letters in Euler font
+%,nooptima% no Zapf's Optima font as sans serif
+%,noitsans% no math sans serif in italic
+%,nolmodern% use Latin Modern instead of CM
+%,noeucal%
+%,commadec% print a comma as dec separator when . is used
+%nodejavutt,% DejaVu Mono as typewriter font
+%,bb% blackboard letters for naturals, integers, reals, etc.
+datetime]{bringhurst3}
+
+%%%% Paper's details %%%%
+\title{\pdftitle%***
+}
+\author{\ifnotnotes% 
+%\hspace*{\stretch{1}}\protect\makebox[0pt][c]%
+%{\firstname{***}\ \surname{***}}%
+%\hspace*{\stretch{1}}\protect\makebox[0pt][c]%
+{\firstname{P.G.L.}\ \surname{Porta\,Mana}}%
+%\hspace*{\stretch{1}}%
+\\[2\jot]%
+\affiliation{INM-6, Forschungszentrum Jülich, Germany}
+% \\[2\jot]%
+\else Luca\fi
+\quad
+\epost{\email{pglpm0}{gmail.com}}%
+}
+
+\date{Draft of \mydate\today\ (first drafted 3 December 2016)}
+
+%@@@@@@@@@@@@@@@@@@@@@@@ new commands @@@@@@@@@@@@@@@@@@@@@
+\definecolor{notecolour}{RGB}{68,170,153}
+\newcommand*{\mynote}[1]{ {\color{notecolour}\maltese\ #1}}
+%\DeclareMathOperator{\artanh}{artanh}
+%\DeclareMathOperator{\nabnab}{\bm{\nabla\nabla}}
+%\newcommand*{\nabnab}{\mathord{\bm{\nabla}\otimes\bm{\nabla}}}
+\newcommand*{\half}{\tfrac{1}{2}}
+\newcommand*{\te}{}
+\newcommand*{\co}{}
+\newcommand*{\yxn}{X}
+\newcommand*{\yI}{I}
+\newcommand*{\yS}{S}
+\newcommand*{\data}{\textrm{data}}
+\newcommand*{\yf}{f}
+\newcommand*{\yh}{q}
+\newcommand*{\bx}{\bm{x}}
+\newcommand*{\ya}{\textrm{A}}
+\newcommand*{\yb}{\textrm{B}}
+\newcommand*{\yna}{n_{\ya}}
+\newcommand*{\ynb}{n_{\yb}}
+\newcommand*{\ynh}{n_{\yh}}
+\newcommand*{\yxa}{\overline{\bx}_{\ya}}
+\newcommand*{\yxb}{\overline{\bx}_{\yb}}
+\newcommand*{\yxh}{\overline{\bx}_{\yh}}
+\newcommand*{\yxxa}{\overline{\bx\te\bx}_{\ya}}
+\newcommand*{\yxxb}{\overline{\bx\te\bx}_{\yb}}
+\newcommand*{\yxxh}{\overline{\bx\te\bx}_{\yh}}
+\newcommand*{\yla}{\alpha_{\ya}}
+\newcommand*{\ylb}{\alpha_{\yb}}
+\newcommand*{\yma}{\bm{\beta}_{\ya}}
+\newcommand*{\ymb}{\bm{\beta}_{\yb}}
+\newcommand*{\ymma}{\bm{\varGamma}_{\ya}}
+\newcommand*{\ymmb}{\bm{\varGamma}_{\yb}}
+\newcommand*{\yfa}{\nu_{\ya}}
+\newcommand*{\yfb}{\nu_{\yb}}
+\newcommand*{\yff}{\nu}
+\newcommand*{\yca}{\bm{m}_{\ya}}
+\newcommand*{\ycb}{\bm{m}_{\yb}}
+\newcommand*{\yssa}{\bm{V}_{\ya}}
+\newcommand*{\yssb}{\bm{V}_{\yb}}
+\newcommand*{\yth}{\theta}
+\newcommand*{\yN}{N}
+%@@@@@@@@@@@@@@@@@@@@@@@ new commands end @@@@@@@@@@@@@@@@@
+
+\firmlists
+\begin{document}
+\captiondelim{\quad}\captionnamefont{\footnotesize}\captiontitlefont{\footnotesize}
+\selectlanguage{british}\frenchspacing
+
+%%% Title and abstract %%%
+\maketitle
+\ifnotnotes\myabstract
+\begin{abstract}\labelsep 0pt%
+\noindent ***
+\par%\\[\jot]
+\noindent\pacs{***}\qquad\msc{***}
+\end{abstract}\fi
+
+\selectlanguage{british}\frenchspacing
+%\asudedication{to ***}
+%\setlength{\epigraphwidth}{.7\columnwidth}
+%\setlength{\epigraphrule}{0pt}
+%\epigraph{}
+
+\addsubsec{Notation}
+
+Boldface letters: Latin ones are contravariant quantities: lowercase
+are vectors and uppercase are rank-2 tensors; Greek ones are covariant
+quantities: lowercase are covectors and uppercase are rank-2 tensors.
+Juxtaposition of two quantities indicates tensor product if they are of the same
+transformation kind and contraction if they are of opposite kind:
+$\bx\te\bx\equiv\bx\otimes\bx$ is rank-2 and
+$\bm{\alpha}\co\bx\equiv\bm{\alpha}\cdot\bx$ is a scalar. \iffalse Full contraction
+is indicated by a colon: $\bm{\varGamma}\con\bm{G}$ is a scalar.\fi
+
+Medium letters denote scalars and combinations of quantities of different
+type, depending on the context
+
+
+\section{Context}
+\label{sec:context}
+
+I have a keen interest in the method of \emph{modelling via sufficiency},
+which in rough terms works as follows. We have the outcomes $\set{X_i}$
+of some observations made with the same set-up. Let's call these outcomes
+our \enquote{data}. We want to predict the yet unknown outcome $\yxn$ of one
+more observation, same set-up, given our data and some background knowledge
+$\yI$; that is, we want to give for each $\yxn$ a numerical value to
+\begin{equation}
+  \label{eq:P_new_outcome}
+  \pf(\yxn \| \data, \yI).
+\end{equation}
+
+Now suppose we believe or just entertain the hypothesis that for this
+prediction we only need to know a function -- an \enquote{aspect}, or
+\enquote{feature} -- of the data $\yf(\data)$; the rest of the data is
+irrelevant. That is, calling our hypothesis $\yS$,
+\begin{equation}
+  \label{eq:P_new_outcome_sufficiency}
+\forall\yxn,\quad  \pf[\yxn \| \data, \yf(\data), \yS, \yI] =
+  \pf[\yxn \| \yf(\data), \yS, \yI].
+\end{equation}
+An example is $\yf(\set{X_i})=X_1+X_2+\dotsb$ if the outcomes are numbers.
+I call $\yS$ a hypothesis about sufficiency; $\yf$ is called
+\emph{sufficient statistics}.
+
+A consequence of the hypothesis is also that
+\begin{equation}
+  \label{eq:P_different_data_sufficiency}
+  \tag*{(\ref{eq:P_new_outcome_sufficiency}')}
+\forall\data,\data',\quad  \pf(\data \| \yS, \yI) = \pf(\data' \| \yS, \yI)
+\;  \text{if} \; \yf(\data)=\yf(\data'),
+\end{equation}
+that is, data with the same sufficient statistics must have the same
+probability.
+
+The method of modelling via sufficiency says that our hypothesis then leads
+to a \emph{unique} expression for $\pf(\yxn \| \data, \yS, \yI)$, given our
+prior guesses about the limit values in the absence of data. In other
+words, our hypothesis leads to a specific value for this probability.
+
+This method is based on mathematical theorems reviewed in several works
+\cites[\eg:][]{dawid2013,diaconis1992}[\sect~4.5]{bernardoetal1994_r2000}{kallenberg2005,lauritzen1982_r1988,diaconisetal1981}.
+These works also show the unique expression for our probability for
+particular choices of outcome spaces and sufficient statistics. In many
+important cases the resulting expression is an integral containing
+distributions of the exponential family, for example the normal, exponential,
+binomial, or multinomial ones.
+
+
+\section{Question}
+\label{sec:question}
+
+\subsection{Two hypotheses}
+\label{sec:two_hypotheses}
+
+I am interested in a particular kind of outcomes: each outcome is a pair of
+a \enquote{quality} $\yh$ and an \enquote{indicator} $\bx$; that is,
+$X_i=(\yh_i,\bx_i)$. The quality is one from of a discrete set, for example
+$\yh \in \set{\textrm{green}, \textrm{red}, \textrm{blue}}$, or
+$\yh \in \set{\textrm{healthy}, \textrm{unhealthy}}$; the indicator is a
+real-valued vector. The space of outcomes is therefore homeomorphic to
+$\ZZ_n\times\RR^m$ for some $n,m$. Let's say for definiteness that there
+are two qualities called $\ya$ and $\yb$.
+
+First let's define the number of outcomes of each quality, $\yna,\ynb$, and
+the averages of the first and second powers of the indicators for each
+quality, $\yxa,\yxb,\yxxa, \yxxb$:
+\begin{equation}
+  \label{eq:suff_stat_1}
+  \begin{aligned}
+      \yna&\defd \tsum_i\delt(\yh_i=\ya),
+&
+      \ynb&\defd \tsum_i\delt(\yh_i=\yb),
+\\
+\yxa&\defd \tsum_i \bx_i\delt(\yh_i=\ya)/\yna,
+&
+\yxb&\defd \tsum_i \bx_i\delt(\yh_i=\yb)/\ynb,
+\\
+\yxxa&\defd \tsum_i {\bx_i}\te\bx_i\delt(\yh_i=\ya)/\yna,
+&
+      \yxxb&\defd \tsum_i {\bx_i}\te\bx_i\delt(\yh_i=\yb)/\ynb.
+  \end{aligned}
+\end{equation}
+  
+I would like to know the form of the distribution
+$\pf[\yxn \| \yf(\data), \yS, \yI]$ for two choices of sufficient
+statistics among the quantities above, that is, two different hypotheses
+about sufficiency $\yS$ given data $\set{(\yh_i,\bx_i)}$:\defaultlists
+\begin{description}
+\item[$\yS_1$:] The sufficient statistics $\yf_1(\data)$ are: the number of
+  outcomes of each quality and the averages of the indicators for each
+  quality. In formulae, $\yf_1(\data)\defd\set{\yna,\ynb,\yxa,\yxb,\yxxa,\yxxb}$.
+  
+  This sufficiency condition is mathematically expressed by
+  \begin{equation}
+    \label{eq:P_suff_stat_S1}
+    \pf[(\yh,\bx) \| \data, \yS_1, \yI] =
+    \pf[(\yh,\bx) \| \yna,\ynb,\yxa,\yxb,\yxxa,\yxxb, \yS_1, \yI].
+  \end{equation}
+
+  There are other equivalent ways of specifying this statistics, for
+  example by giving the total number of outcomes, the number of those of
+  quality $\ya$, and the totals of the indicators for each quality:
+  $\set{\yna+\ynb, \yna, \yna\yxa, \ynb\yxb}$.
+  
+\item[$\yS_2$:] This hypothesis combines sufficiency on two different
+  levels: the probability for the qualities $\set{\yh_i}$ is exchangeable,
+  and that of the indicators given the qualities is \enquote{unrestrictedly
+  exchangeable} \cite[\sect~4.6.2]{bernardoetal1994_r2000}. In terms of
+sufficient statistics: the total number of each quality in the data is a
+sufficient statistics for $\yh$:
+\begin{subequations}\label{eq:P_suff_stat_S2}
+  \begin{equation}
+    \label{eq:suff_stat_h}
+    \pf(\yh \| \data, \yS_2,\yI) = \pf(\yh \| \set{\yh_i}, \yS_2,\yI)
+    = \pf(\yh \| \yna, \ynb, \yS_2,\yI); 
+  \end{equation}
+  and the total of the first and second powers of the indicator related to
+  a particular quality is a sufficient statistics for that indicator, if
+  the qualities are known:
+  \begin{equation}
+    \label{eq:suff_stat_x}
+    \pf(\bx \| \yh, \data, \yS_2,\yI)
+    = \pf(\bx \| \yh, \ynh, \yxh, \yxxh, \yS_2,\yI).
+  \end{equation}
+\end{subequations}
+\end{description}\firmlists
+
+The two conditions~\eqref{eq:P_suff_stat_S2} together imply the same
+condition~\eqref{eq:P_suff_stat_S1} of the first hypothesis, but not vice
+versa. So hypothesis $\yS_2$ seems to be a special case of hypothesis
+$\yS_1$.
+
+\subsection{Integral form}
+\label{sec:integral_form}
+
+We calculate the joint probability for an arbitrary sequence
+$\set{(\yh_i,\bx_i)}$ under the two hypotheses. From this all other
+  probabilities can be calculated.
+
+\bigskip
+
+$\yS_1$. Following Bernardo \amp\ Smith's discussion on sufficiency and the
+exponential family \cite[\sect~4.5.3]{bernardoetal1994_r2000} I assume that
+hypothesis $\yS_1$ leads to the following form for the joint probability:
+\begin{multline}
+  \label{eq:P_integral_exp_S1_initial}
+  \pf[\set{(\yh_i,\bx_i)} \| \yS_1, \yI]
+  ={}\\
+  \qquad\!\begin{aligned}[b]
+    \int&\prod_i\Bigl\{\tfrac{1}{Z(\yth')} \exp[\!\begin{aligned}[t]
+      &\yla \delt(\yh_i=\ya) +\ylb \delt(\yh_i=\yb) + {}\\
+      &\yma \bx_i\delt(\yh_i=\ya) +\ymb \bx_i\delt(\yh_i=\yb) +{}\\
+      &\bx_i\ymma\bx_i \delt(\yh_i=\ya) +\bx_i\ymmb\bx_i \delt(\yh_i=\yb)
+      ] \Bigr\}\times{}
+    \end{aligned}\\
+    &\pf(\yth' \cond \yS_1,\yI)\, \di\yth'
+  \end{aligned}
+\end{multline}
+with $\yth'=(\yla,\ylb,\yma,\ymb,\ymma,\ymmb)$ and $Z(\yth')$ a
+normalization factor for the exponential. Either of the terms $\yla$ or
+$\ylb$ is actually redundant and is eliminated via a Dirac delta in the
+parameter prior $\pf(\yth' \cond \yS_1,\yI)$. Compare Definition~4.11 and
+Proposition~4.13 (p.~201) \cite[\sect~4.5.3]{bernardoetal1994_r2000}. The
+mathematical type of the integration variables should be clear from the
+context.
+
+The reason for the prime in $\yth'$ is that we now change to a more
+convenient set of parameters $\yth=(\yfa,\yfb,\yca,\yssa,\ycb,\yssb)$:
+\begin{equation}
+  \label{eq:new_params}
+  \begin{split}
+    \yla &= \ln\frac{\yfa}{\yfa+\yfb} - \half\yca{\yssa}^{-1}\yca
+    - \ln\det(2\pu\yssa),\\
+    \yma &= \yca{\yssa}^{-1},\\
+    \ymma &= -\half{\yssa}^{-1}
+    \quad\text{(inversion exchanges co- and contravariance),}
+  \end{split}
+\end{equation}
+and similarly for $(\ylb, \ymb, \ymmb)$. Combining the \textsc{Jakob}ian
+determinant of the transformation into the parameter prior, and denoting
+the normal distribution with $\yN$, the joint probability now takes the
+form
+\begin{equation}
+  \label{eq:P_integral_exp_S1_final}
+  \begin{split}
+    \pf[\set{(\yh_i,\bx_i)} \| \yS_1, \yI]&=\int \!\begin{aligned}[t]
+      &\prod_i\Bigl[ \!\begin{aligned}[t]
+        &\yfa^{\delt(\yh_i=\ya)} \yN(\bx_i \| \yca,\yssa)^{\delt(\yh_i=\ya)}\times{}\\
+        &\yfb^{\delt(\yh_i=\yb)} \yN(\bx_i
+        \|\ycb,\yssb)^{\delt(\yh_i=\yb)} \Bigr] \times{}
+      \end{aligned}\\
+      &\pf(\yfa,\yfb,\yca,\yssa,\ycb,\yssb\cond \yS_1,\yI)\, \di\yth
+    \end{aligned}
+    \\
+    &=\int
+    \!\begin{aligned}[t]
+      &\yfa^{\yna} \prod_i^{\yh_i=\ya}\yN(\bx_i \| \yca,\yssa)\times{}\\
+      &\yfb^{\ynb} \prod_i^{\yh_i=\yb}\yN(\bx_i \| \ycb,\yssb)\times{}\\
+      &\pf(\yfa,\yfb,\yca,\yssa,\ycb,\yssb\cond \yS_1,\yI)\, \di\yth,
+    \end{aligned}
+  \end{split}
+\end{equation}
+with a Dirac delta $\delt(\yfa+\yfb-1)$ in the parameter prior. The new
+normalization factor turns out to be unity. This expression is a mixture of
+products of Bernoulli distributions for the qualities and normal
+distributions for the indicators. The normals are of two kinds depending on
+either quality corresponding to each indicator.
+
+\bigskip
+
+$\yS_2$. From Bernardo \amp\ Smith's discussion on exchangeability
+\cite[\sect~4.3]{bernardoetal1994_r2000}, exchangeability for the
+probability of the qualities $\set{\yh_i}$, \eqn~\eqref{eq:suff_stat_h}
+leads to
+\begin{equation}
+  \label{eq:P_integral_S2_h}
+  \begin{split}
+    \pf(\set{\yh_i} \| \yS_2, \yI) &= \int \prod_i\Bigl[\yfa^{\delt(\yh_i=\ya)}
+    \yfb^{\delt(\yh_i=\yb)}\Bigr] \,\pf(\yfa,\yfb\cond \yS_1,\yI)
+    \,\di\yfa\,\di\yfb\\
+    &=\int\yfa^{\yna} \yfb^{\ynb}\,\pf(\yfa,\yfb\cond \yS_1,\yI)
+    \,\di\yfa\,\di\yfb,
+  \end{split}
+\end{equation}
+with the usual implicit Dirac delta.
+
+From the discussion on unrestricted exchangeability
+\cite[\sect~4.6.2]{bernardoetal1994_r2000}, the probability of the
+indicators $\set{\bx_i}$ given the corresponding qualities $\set{\yh_i}$ is
+\begin{equation}
+  \label{eq:P_integral_S2_x}
+  \!\begin{aligned}
+    \pf(\set{\bx_i} \cond \set{\yh_i}, \yS_2, \yI) = {}&\int
+    \!\begin{aligned}[t]
+    &\prod_i^{\yh_i=\ya}\yN(\bx_i \| \yca,\yssa)\times{}\\
+    &\pf(\yca,\yssa \| \yS_2,\yI)\,\di\yca\,\di\yssa\times{}
+  \end{aligned}\\
+&\int\!\begin{aligned}[t]
+    &\prod_i^{\yh_i=\yb}\yN(\bx_i \| \ycb,\yssb)\times{}\\
+    &\pf(\ycb,\yssb \| \yS_2,\yI)\,\di\ycb\,\di\yssb.
+  \end{aligned}
+  \end{aligned}
+\end{equation}
+
+Multiplying the above two probabilities we find
+\begin{equation}
+  \label{eq:P_integral_exp_S2_final}
+  \!\begin{aligned}
+    \pf[\set{(\yh_i,\bx_i)} \| \yS_2, \yI]=\int
+    &\yfa^{\yna} \prod_i^{\yh_i=\ya}\yN(\bx_i \| \yca,\yssa)\times{}\\
+    &\yfb^{\ynb} \prod_i^{\yh_i=\yb}\yN(\bx_i \| \ycb,\yssb)\times{}\\
+    &\pf(\yfa,\yfb\cond \yS_2,\yI)\times{}\\
+    &\pf(\yca,\yssa\cond \yS_2,\yI)\, 
+    \pf(\ycb,\yssb\cond \yS_2,\yI)\, \di\yth.
+  \end{aligned}
+\end{equation}
+
+\subsection{Comparison}
+\label{sec:comparison}
+
+The final integral forms, \eqns~\eqref{eq:P_integral_exp_S1_final}
+and~\eqref{eq:P_integral_exp_S2_final}, of the joint probabilities under
+the two hypotheses, $\pf[\set{(\yh_i,\bx_i)} \| \yS_1, \yI]$ and
+$\pf[\set{(\yh_i,\bx_i)} \| \yS_2, \yI]$, shows that they only differ in
+the parameter prior distribution, which factorizes in the second hypothesis
+$\yS_2$. This confirms our previous remark that $\yS_2$ seems to be a
+special case of $\yS_1$.
+
+The factorized form of the parameter prior in the second hypothesis is
+connected to the fact that data about indicators for quality $\yb$ are
+irrelevant for prediction of the indicator for quality $\ya$, and vice
+versa. This is clear by constructing that conditional probability from
+\eqn~\eqref{eq:P_integral_exp_S2_final}. This irrelevance is generally not
+true under the first hypothesis.
+
+The use of a flat parameter prior (and factorizing boundaries)
+under the first hypothesis erases its difference from the second one.
+
+\subsection{Questions}
+\label{sec:questions_final}
+
+My questions are these:
+
+\begin{enumerate}
+\item It is easy to show that the integral forms of
+  \eqns~\eqref{eq:P_integral_exp_S1_final},
+  \eqref{eq:P_integral_exp_S2_final} for the joint probabilities imply the
+  assumptions \eqref{eq:P_suff_stat_S1}, \eqref{eq:P_suff_stat_S2} of the
+  corresponding hypotheses. Is the converse true?
+
+\item I assumed that the exponential form in the integral also holds for
+  variables of mixed, discrete-continuous character. Is this true? Possibly
+  Barndorff-Nielsen \citey{barndorffnielsen1978_r2014} has the answer?
+
+\item A flat parameter prior makes hypothesis $\yS_1$ and $\yS_2$
+  equivalent. Does this make sense? Why does a flat prior introduce
+  independence between indicators of different qualities for example?
+
+\item Are the calculations in this note correct?
+\end{enumerate}
+  
+\iffalse a
+\begin{equation}
+  \abs{abc}=\abs{abc}+(\abs{abc})
+\end{equation}
+\begin{equation}
+  \abs{abc}={}
+  \!\begin{aligned}[t]
+    &\abs{abc}+(
+    \!\begin{aligned}[t]
+      &\abs{abc}+{}\\ &\abs{abc}) \times{}
+    \end{aligned}\\
+&\abs{abc}
+  \end{aligned}
+\end{equation}
+\begin{equation}
+  \!\begin{aligned}
+    \abs{abc}={}&
+    \!\begin{aligned}[t]
+      \abs{abc}+(&\abs{abc}+{}\\ &\abs{abc}) \times{}
+    \end{aligned}\\
+&\abs{abc}
+  \end{aligned}
+\end{equation}\fi
+
+
+
+\iffalse
+\begin{figure}[!b]
+\centering
+\includegraphics[width=0.4\columnwidth]{***}%
+\caption{***}
+\label{***}
+\end{figure}
+\fi
+
+\ifnotnotes
+\begin{acknowledgements}
+  Many thanks to Mari \amp\ Miri for continuous encouragement and affection,
+  to Buster for filling life with awe and inspiration, and to the
+  developers and maintainers of \LaTeX, Emacs, AUC\TeX, MiK\TeX, arXiv,
+  biorXiv, PhilSci, Hal archives, Python, Inkscape, Sci-Hub for making a
+  free and unfiltered scientific exchange possible.
+%\rotatebox{15}{P}\rotatebox{5}{I}\rotatebox{-10}{P}\rotatebox{10}{\reflectbox{P}}\rotatebox{-5}{O}.
+\sourceatright{\autanet}
+\end{acknowledgements}
+\fi
+
+%\appendixpage
+%\appendix
+
+%%%%%%%%%%%%%%% BIB %%%%%%%%%%%%%%%
+
+\defbibnote{postnote}{\small\par\medskip\noindent{\footnotesize% Note:
+\arxivp \mparcp \philscip \biorxivp}%
+}
+
+\newcommand{\citein}[2][]{\textnormal{\textcite[#1]{#2}}%\addtocategory{extras}{#2}
+}
+\newcommand{\citebi}[2][]{ref.\ \citep[#1]{#2}%\addtocategory{extras}{#2}
+}
+
+\printbibliography[postnote=postnote]
+
+
+\end{document}
+---------- cut text ----------------
+
+
+%%% Local Variables: 
+%%% mode: LaTeX
+%%% TeX-PDF-mode: t
+%%% TeX-master: t
+%%% End: 
