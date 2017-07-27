@@ -1,5 +1,131 @@
-ClearAll[crossvalidate1];
-crossvalidate1[data1_, otherdata_, pp_, prior_] :=
+(* one-out cross-validation with eigendecomposition *)
+ClearAll[crossvalidatet1e]
+crossvalidatet1[data1_, otherdata_, pp_, setofquantities_] :=
+  Block[{origsubjectfile,
+	 numcategories = (Length@otherdata)+1,
+	 numquantities,
+	 allindividuals = Length[data1[[1]]],
+	 numindividuals, tparameter, covmatrix, tmatrix, means,
+	 results, quant, mainfile, secondfile,
+	 distr, hits, totpr, datax},
+
+	covmatrix[meansi_, datai_] := (datai - meansi).T[datai - meansi];
+
+numindividuals[1]=allindividuals-1;
+
+Do[origsubjectfile[ii] = otherdata[[ii-1]];
+   numindividuals[ii] = Length[origsubjectfile[ii][[1]]];
+   , {ii, 2, numcategories}];
+	
+ParallelTable[(* cycle through possible graph properties *)
+  Block[{hits,tparameter,tmatrix,means,totpr=0},
+	quant=setofquantities[[ll]];
+	numquantities=Length[quant];
+
+hits[1] = 0;
+tparameter[1]=numindividuals[1]+1-numquantities;
+
+Do[means[ii]=Mean@T[origsubjectfile[ii][[quant]]];
+   tparameter[ii]=numindividuals[ii]+1-numquantities;
+   tmatrix[ii]=covmatrix[means[ii], origsubjectfile[ii][[quant]]] *
+			  (numindividuals[ii]+1)/numindividuals[ii]/tparameter[ii];
+   hits[ii] = 0;
+,{ii,2,numcategories}];
+mainfile=data1[[quant]];
+
+Do[(* cycle through individuals in first group *)
+datax=T[mainfile][[ndat]];
+secondfile=T[Drop[T[mainfile],{ndat}]];
+means[1]=Mean@T[secondfile];
+tmatrix[1]=covmatrix[means[1],secondfile] *
+		      (numindividuals[1]+1)/numindividuals[1]/tparameter[1];
+
+distr=Normalize[(* Normalize is faster *)
+  Table[pp[[ii]]*
+	PDF[MultivariateTDistribution[means[ii],tmatrix[ii],tparameter[ii]]
+	   ,datax], {ii,numcategories}],Total];
+
+++(hits[Last@Ordering[distr,-1]]);
+totpr=totpr+distr;
+
+,{ndat,allindividuals}];
+
+{Array[hits,3],totpr}/allindividuals]
+
+	, {ll, Length@setofquantities}, Method->"CoarsestGrained"]
+];
+
+
+(* one-out cross-validation *)
+ClearAll[crossvalidatet1]
+crossvalidatet1[data1_, otherdata_, pp_, setofquantities_] :=
+  Block[{origsubjectfile,
+	 numcategories = (Length@otherdata)+1,
+	 numquantities,
+	 allindividuals = Length[data1[[1]]],
+	 numindividuals, tparameter, covmatrix, tmatrix, means,
+	 results, quant, mainfile, secondfile,
+	 distr, hits, totpr, datax},
+
+	covmatrix[meansi_, datai_] := (datai - meansi).T[datai - meansi];
+
+numindividuals[1]=allindividuals-1;
+
+Do[origsubjectfile[ii] = otherdata[[ii-1]];
+   numindividuals[ii] = Length[origsubjectfile[ii][[1]]];
+   , {ii, 2, numcategories}];
+	
+ParallelTable[(* cycle through possible graph properties *)
+  Block[{hits,tparameter,tmatrix,means,totpr=0},
+	quant=setofquantities[[ll]];
+	numquantities=Length[quant];
+
+hits[1] = 0;
+tparameter[1]=numindividuals[1]+1-numquantities;
+
+Do[means[ii]=Mean@T[origsubjectfile[ii][[quant]]];
+   tparameter[ii]=numindividuals[ii]+1-numquantities;
+   tmatrix[ii]=covmatrix[means[ii], origsubjectfile[ii][[quant]]] *
+			  (numindividuals[ii]+1)/numindividuals[ii]/tparameter[ii];
+   hits[ii] = 0;
+,{ii,2,numcategories}];
+mainfile=data1[[quant]];
+
+Do[(* cycle through individuals in first group *)
+datax=T[mainfile][[ndat]];
+secondfile=T[Drop[T[mainfile],{ndat}]];
+means[1]=Mean@T[secondfile];
+tmatrix[1]=covmatrix[means[1],secondfile] *
+		      (numindividuals[1]+1)/numindividuals[1]/tparameter[1];
+
+distr=Normalize[(* Normalize is faster *)
+  Table[pp[[ii]]*
+	PDF[MultivariateTDistribution[means[ii],tmatrix[ii],tparameter[ii]]
+	   ,datax], {ii,numcategories}],Total];
+
+++(hits[Last@Ordering[distr,-1]]);
+totpr=totpr+distr;
+
+,{ndat,allindividuals}];
+
+{Array[hits,3],totpr}/allindividuals]
+
+	, {ll, Length@setofquantities}, Method->"CoarsestGrained"]
+];
+
+
+ClearAll[crossvalidatetall];
+crossvalidatetall[dataall_, pp_, setofquantities_] :=
+  Block[{numcategories = Length@dataall},
+Table[crossvalidatet1[dataall[[ii]], Drop[dataall,{ii}], pp, setofquantities], {ii,ncat}]];
+
+
+
+
+
+(* not efficient *)
+ClearAll[crossvalidate1old];
+crossvalidate1old[data1_, otherdata_, pp_, prior_] :=
   Block[{ncat = Length@otherdata+1,
 	 nqua = Length@data1,
 	 nind1 = Length[data1[[1]]] - 1,
@@ -81,8 +207,8 @@ Do[(* cycle through individuals in first group *)
     {hits, totpr}/(nind1 + 1)
  ];
 
-ClearAll[crossvalidateall];
+ClearAll[crossvalidateallold];
 crossvalidateall[dataall_, pp_, prior_] :=
   Block[{ncat = Length@dataall},
-Table[crossvalidate1[dataall[[ii]], Drop[dataall,{ii}], pp, prior], {ii,ncat}]
+Table[crossvalidate1old[dataall[[ii]], Drop[dataall,{ii}], pp, prior], {ii,ncat}]
   ];
