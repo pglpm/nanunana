@@ -6,7 +6,7 @@
 %% Home page: http://magnaspesmeretrix.org/
 %% Email (remove ZZ): pglpm0ZZ[at]gmail.com
 %% Created: 2000-08-23T16:53:30+0200
-%% Last-Updated: 2017-07-09T11:55:58+0200
+%% Last-Updated: 2017-07-30T12:20:40+0200
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % NB: This database contains also items whose content's validity I
@@ -834,6 +834,7 @@
 @String{sankhb = {Sankhy{\=a} B}}
 @String{sat = {Surv.\ Approx.\ Theory}}
 @String{saww = {\langgerman{Sitzungsber.\ Akad.\ Wiss.\ Wien, Math.-Naturw.\ Klasse, Abt.\ IIa}}}
+@String{sc = {Stat.\ Comput.}}
 @String{sci = {Science}}
 @String{sciadv = {Sci.\ Adv.}}
 @String{scientom = {Scientometrics}}
@@ -877,6 +878,7 @@
 @String{ssmh = {Studia Sci.\ Math.\ Hung.}}
 @String{ssr = {Stochast.\ Stochast.\ Rep.}}
 @String{sss = {Soc.\ Stud.\ Sci.}}
+@String{ssurv = {Statist.\ Surv.}}
 @String{stat = {Statistica}}
 @String{statistician = {The Statistician}}
 @String{statn = {Statistica Neerlandica}}
@@ -7132,11 +7134,22 @@ note =	       {\arxiveprint{cond-mat/0406358}}
 }
 
 @Misc{barreiroetal2010,
-author =       {Andrea K. Barreiro and Julijana Gjorgjieva and Fred Rieke and Eric Shea-Brown},
-title =	       {When Do Microcircuits Produce Beyond-Pairwise Correlations?},
-year =	       {2010},
+author =       {Andrea K. Barreiro and Julijana Gjorgjieva and Fred M. Rieke and Shea-Brown, Eric T.},
+title =	       {When are microcircuits well-modeled by maximum entropy methods?},
 keywords =     {maximum-entropy, computational neuroscience},
-note =	       {\arxiveprint{1011.2797}}
+note =	       {\arxiveprint{1011.2797}. See also \citebi{barreiroetal2010b}}
+}
+
+@Article{barreiroetal2010b,
+author =       {Andrea K. Barreiro and Shea-Brown, Eric T. and Fred M. Rieke and Julijana Gjorgjieva},
+title =	       {When are microcircuits well-modeled by maximum entropy methods?},
+journal =      bmcns,
+year =	       {2010},
+volume =       {11},
+number =       {Suppl.~1},
+pages =	       {P65},
+keywords =     {maximum-entropy, computational neuroscience},
+note =	       {See \citebi{barreiroetal2010}}
 }
 
 @Article{barrett2007,
@@ -9453,7 +9466,7 @@ volume =       {37},
 number =       {2},
 pages =        {905--938},
 note =         {\arxiveprint{0904.0156}},
-keywords =     {Bayesian probability theory}
+keywords =     {Bayesian probability theory, Fisher information matrix}
 }
 
 @Article{bergeretal2015,
@@ -10977,6 +10990,18 @@ year =	       {1988},
 volume =       {154 (123)},
 series =       {North-Holland mathematics studies (Notas de matem{\'a}tica)},
 address =      {Amsterdam}
+}
+
+@Article{biocheetal2016,
+author =       {Christele Bioche and Pierre Druilhet},
+title =	       {Approximation of improper priors},
+journal =      bern,
+year =	       {2016},
+volume =       {22},
+number =       {3},
+pages =	       {1709--1728},
+keywords =     {Bayesian probability theory},
+note =	       {\arxiveprint{1311.1067}}
 }
 
 @Article{biot1956,
@@ -19863,6 +19888,14 @@ keywords =     {Glauber dynamics, Gibbs sampling, maximum-entropy, Markov-chain 
 note =	       {\url{https://hal.inria.fr/inria-00073049/}}
 }
 
+@Misc{celeuxetal2017,
+author =       {Gilles Celeux and Jack Jewson and Julie Josse and Marin, Jean-Michel and Christian P. Robert},
+title =	       {Some discussions on ``{Beyond} subjective and objective in statistics'' by {A. Gelman} and {C. Hennig}},
+year =	       {2017},
+keywords =     {priors, Bayesian probability theory},
+note =	       {\arxiveprint{1705.03727}. See \citebi{gelmanetal2015}}
+}
+
 @Misc{celletti2007,
 author =       {Alessandra Celletti},
 title =	       {Perturbation Theory in Celestial Mechanics},
@@ -23787,6 +23820,14 @@ volume =       {47},
 pages =	       {238--247},
 note =	       {See \citep{jauchetal1972}},
 keywords =     {statistical mechanics}
+}
+
+@Misc{costaetal2012,
+author =       {Sueli I. R. Costa and Sandra A. Santos and Jo{\~a}o E. Strapasson},
+title =	       {Fisher information distance: a geometrical reading},
+year =	       {2012},
+keywords =     {probability theory, priors},
+note =	       {\arxiveprint{1210.2354}}
 }
 
 @Article{costaetal2015,
@@ -30389,6 +30430,26 @@ year =	       {1997},
 volume =       {24},
 series =       {Advanced series in mathematical physics},
 address =      {Singapore}
+}
+
+@Misc{druilhet2015,
+author =       {Pierre Druilhet},
+title =	       {On the Flatland Paradox},
+year =	       {2015},
+keywords =     {Bayesian probability theory, improper priors},
+note =	       {\arxiveprint{1505.00202}}
+}
+
+@Article{druilhetetal2012,
+author =       {Pierre Druilhet and Denys Pommeret},
+title =	       {Invariant Conjugate Analysis for Exponential Families},
+journal =      ba,
+year =	       {2012},
+volume =       {7},
+number =       {4},
+pages =	       {903--916},
+keywords =     {probability theory, priors},
+note = 	       {\url{http://math.univ-bpclermont.fr/~druilhet/recherche.htm}}
 }
 
 @Article{drumhelleretal1980,
@@ -41377,6 +41438,14 @@ volume =       {67},
 number =       {1},
 pages =        {1--5},
 note =         {\arxiveprint{1006.5366}}
+}
+
+@Misc{gelmanetal2015,
+author =       {Andrew Gelman and Christian Hennig},
+title =	       {Beyond subjective and objective in statistics},
+year =	       {2015},
+keywords =     {priors, Bayesian probability theory},
+note =	       {\arxiveprint{1508.05453}. See also discussion \citebi{celeuxetal2017}}
 }
 
 @Article{gemanetal1984,
@@ -54628,23 +54697,26 @@ address =      {Oxford}
 }
 
 @Article{ishwaretal2003,
-author =       {Ishwar, P. and Moulin, P.},
+author =       {Prakash Ishwar and Pierre Moulin},
 title =	       {On the equivalence of set-theoretic and maxent {MAP} estimation},
 journal =      ieeetsp,
 year =	       {2003},
 volume =       {51},
 number =       {3},
-pages =	       {698--713}
+pages =	       {698--713},
+keywords =     {maximum-entropy}
 }
 
 @Article{ishwaretal2005,
-author =       {Ishwar, P. and Moulin, P.},
+author =       {Prakash Ishwar and Pierre Moulin},
 title =	       {On the Existence and Characterization of the Maxent Distribution Under General Moment Inequality Constraints},
 journal =      ieeetit,
 year =	       {2005},
 volume =       {51},
 number =       {9},
-pages =	       {3322--3333}
+pages =	       {3322--3333},
+note = 	       {\arxiveprint{cs/0506013}},
+keywords =     {maximum-entropy}
 }
 
 @Article{isidro2005,
@@ -78103,6 +78175,16 @@ pages =	       {659--666},
 keywords =     {Black-body radiation, statistical mechanics}
 }
 
+@Article{natesanetal2016,
+author =       {Prathiba Natesan and Ratna Nandakumar and Tom Minka and Jonathan D. Rubright},
+title =	       {Bayesian Prior Choice in {IRT} Estimation Using {MCMC} and Variational {Bayes}},
+journal =      fpsy,
+year =	       {2016},
+volume =       {7},
+pages =	       {1422},
+keywords =     {probability theory, priors}
+}
+
 @Misc{nattermann2004,
 author =       {Thomas Nattermann},
 title =	       {A Scaling Approach to Ideal Quantum Gases},
@@ -84502,6 +84584,18 @@ pages =	       {165--173},
 keywords =     {Lagrangian, Hamiltonian}
 }
 
+@Article{piironenetal2017,
+author =       {Juho Piironen and Aki Vehtari},
+title =	       {Comparison of {Bayesian} predictive methods for model selection},
+journal =      sc,
+year =	       {2017},
+volume =       {27},
+number =       {3},
+pages =	       {711--735},
+keywords =     {Bayesian probability theory},
+note =	       {\arxiveprint{1503.08650}}
+}
+
 @Article{pike1963,
 author =       {E. R. Pike},
 title =	       {Second Quantization of the General Many {Fermion} Operator},
@@ -86130,7 +86224,7 @@ author =       {Porta Mana, Piero Giovanni Luca},
 title =	       {Maximum-entropy from the probability calculus: exchangeability, sufficiency},
 year =	       {2017},
 keywords =     {probability theory, exponential family},
-note =	       {\arxiveprint{1706.02561}}
+note =	       {\osfeprint{xdy72}, \arxiveprint{1706.02561}}
 }
 
 @Misc{portamana2017b,
@@ -97779,6 +97873,19 @@ pages =	       {3426--3432},
 keywords =     {probability theory, statistical mechanics}
 }
 
+@Article{skovgaard1981_r1984,
+author =       {Lene Theil Skovgaard},
+title =	       {A {Riemannian} Geometry of the Multivariate Normal Model},
+journal =      sjs,
+year =	       {1984},
+volume =       {11},
+number =       {4},
+pages =	       {211--223},
+origyear =     {1981},
+keywords =     {Fisher metric, probability theory},
+note =	       {First publ.\ 1981 as technical report \url{https://statistics.stanford.edu/sites/default/files/EFS\%20NSF\%20167.pdf}}
+}
+
 @Article{skyrms1985,
 author =       {Brian Skyrms},
 title =	       {Maximum entropy inference as a special case of conditionalization},
@@ -98546,6 +98653,39 @@ year =	       {1966},
 volume =       {33},
 number =       {1/2},
 pages =	       {22--39}
+}
+
+@Article{snoussi2005,
+author =       {Hichem Snoussi},
+title =	       {The geometry of prior selection},
+journal =      neuroc,
+year =	       {2005},
+volume =       {67},
+pages =	       {214--244},
+keywords =     {information metric, Bayesian probability theory, exchangeability, maximum-entropy},
+note =	       {\url{http://h.snoussi.free.fr/pdfpaper/geoprior_neuro_2c.pdf}}
+}
+
+@Article{snoussietal2001,
+author =       {Hichem Snoussi and Mohammad‐Djafari, Ali},
+title =	       {Bayesian source separation with mixture of {Gaussians} prior for sources and {Gaussian} prior for mixture coefficients},
+journal =      aipcp,
+year =	       {2001},
+volume =       {568},
+pages =	       {388--406},
+keywords =     {information metric, Bayesian probability theory, exchangeability, maximum-entropy},
+note =	       {\arxiveprint{physics/0111018}}
+}
+
+@Article{snoussietal2003,
+author =       {Hichem Snoussi and Mohammad‐Djafari, Ali},
+title =	       {Information geometry and prior selection},
+journal =      aipcp,
+year =	       {2003},
+volume =       {659},
+pages =	       {307--327},
+keywords =     {information metric, Bayesian probability theory, exchangeability, maximum-entropy},
+note =	       {\url{http://omega.albany.edu:8008/ignorance/snoussi02.pdf}}
 }
 
 @Article{snygg1986,
@@ -108373,6 +108513,16 @@ volume =       {56},
 number =       {6},
 pages =	       {4452--4455},
 note =	       {\arxiveprint{quant-ph/9703025}}
+}
+
+@Article{vehtarietal2012,
+author =       {Aki Vehtari and Janne Ojanen},
+title =	       {A survey of {Bayesian} predictive methods for model assessment, selection and comparison},
+journal =      ssurv,
+year =	       {2012},
+volume =       {6},
+pages =	       {142--228},
+keywords =     {Bayesian probability theory}
 }
 
 @Book{velarde1984,
