@@ -1,0 +1,5 @@
+data{
+  int numdata;
+  vector[numdata] x;
+}
+p

@@ -6,7 +6,7 @@
 %% Home page: http://magnaspesmeretrix.org/
 %% Email (remove ZZ): pglpm0ZZ[at]gmail.com
 %% Created: 2000-08-23T16:53:30+0200
-%% Last-Updated: 2017-07-30T12:20:40+0200
+%% Last-Updated: 2017-08-07T12:11:01+0200
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % NB: This database contains also items whose content's validity I
@@ -198,6 +198,7 @@
 @String{biost = {Biostat.}}
 @String{biosys = {Biosystems}}
 @String{bisi = {Bull.\ Int.\ Statist.\ Inst.}}
+@String{bjmsp = {Brit.\ J. Math.\ Stat.\ Psychol.}}
 @String{bjp = {Braz.\ J. Phys.}}
 @String{bjps = {Brit.\ J. Phil.\ Sci.}}
 @String{bl = {Brain Lang.}}
@@ -279,6 +280,7 @@
 @String{csq = {Cogn.\ Sci.\ Q.}}
 @String{csr = {Chem.\ Soc.\ Rev.}}
 @String{csrsgr = {\langlatin{Commentationes Societatis Regiae Scientiarum Gottingensis recentiores}}}
+@String{cssc = {Comm.\ Stat.\ Simulat.\ Comput.}}
 @String{cst = {Compos.\ Sci.\ Tech.}}
 @String{cstm = {Commun.\ Statist.\ -- Theor.\ Meth.}}
 @String{cuz = {Chemie in unserer Zeit}}
@@ -648,6 +650,7 @@
 @String{neuroc = {Neurocomputing}}
 @String{neuron = {Neuron}}
 @String{nf = {Nuclear Fusion}}
+@String{ni = {NeuroImage}}
 @String{nim = {Nucl.\ Instrum.\ Methods}}
 @String{nimpra = {Nucl.\ Instrum.\ Meth.\ A}}
 @String{njp = {New J. Phys.}}
@@ -802,6 +805,7 @@
 @String{ran = {Risk Anal.}}
 @String{rat = {Ratio}}
 @String{rbaas = {Rep.\ Br.\ Assoc.\ Adv.\ Sci.}}
+@String{rce = {Rev.\ Colomb.\ Estad.}}
 @String{rcmp = {\langitalian{Rendiconti del Circolo Matematico di Palermo}}}
 @String{re = {Radio{\'e}lectricit{\'e}}}
 @String{rendmat = {Rend.\ Matematica}}
@@ -9892,8 +9896,9 @@ journal =      jrssb,
 year =	       {1979},
 volume =       {41},
 number =       {2},
-pages =	       {113--147},
-keywords =     {Bayesian probability theory}
+pages =	       {113--128},
+keywords =     {Bayesian probability theory},
+note =	       {See also discussion \citebi{copasetal1979}}
 }
 
 @Article{bernardo1980,
@@ -10420,6 +10425,18 @@ number =       {1},
 pages =	       {89--102},
 keywords =     {probability theory},
 note =	       {\arxiveprint{1311.6756}}
+}
+
+@Article{besagetal1995,
+author =       {Julian Besag and Peter Green and David Higdon and Kerrie Mengersen},
+title =	       {Bayesian Computation and Stochastic Systems},
+journal =      ss,
+year =	       {1995},
+volume =       {10},
+number =       {1},
+pages =	       {3--41},
+keywords =     {Monte Carlo, Gibbs sampling, Bayesian probability theory},
+note =	       {See also comments and rejoinder \citebi{frigessietal1995}}
 }
 
 @Article{besagetal2002,
@@ -19888,12 +19905,16 @@ keywords =     {Glauber dynamics, Gibbs sampling, maximum-entropy, Markov-chain 
 note =	       {\url{https://hal.inria.fr/inria-00073049/}}
 }
 
-@Misc{celeuxetal2017,
-author =       {Gilles Celeux and Jack Jewson and Julie Josse and Marin, Jean-Michel and Christian P. Robert},
-title =	       {Some discussions on ``{Beyond} subjective and objective in statistics'' by {A. Gelman} and {C. Hennig}},
+@Article{celeuxetal2017,
+author =       {Gilles Celeux and Jack Jewson and Julie Josse and Jean-Michel Marin and Christian P. Robert},
+title =	       {Some discussions on the Read Paper ``{Beyond} subjective and objective in statistics'' by {A. Gelman} and {C. Hennig}},
+journal =      jrssa,
 year =	       {2017},
+volume =       {180},
+number =       {4},
+pages =	       {??},
 keywords =     {priors, Bayesian probability theory},
-note =	       {\arxiveprint{1705.03727}. See \citebi{gelmanetal2015}}
+note =	       {\arxiveprint{1705.03727}. See \citebi{gelmanetal2017}}
 }
 
 @Misc{celletti2007,
@@ -23485,6 +23506,18 @@ year =	       {2000},
 volume =       {282},
 pages =	       {115--137},
 note =	       {\arxiveprint{gr-qc/9904046}}
+}
+
+@Article{copasetal1979,
+author =       {J. B. Copas and O'Hagan, A. and A. F. M. Smith and A. P. Dawid and D. J. Bartholomew and D. V. Lindley and P. J. Brown and C. A. B. Smith and de Finetti, Bruno and DeGroot, M. H. and A. W. F. Edwards and D. A. S. Fraser and S. Geisser and Irving John Good and J. A. Hartigan and S. James Press and A. M. Skene and and Jos{\'e}-Miguel Bernardo},
+title =	       {Discussion of professor {Bernardo's} paper},
+journal =      jrssb,
+year =	       {1979},
+volume =       {41},
+number =       {2},
+pages =	       {128--147},
+keywords =     {Bayesian probability theory, reference priors, Jeffreys prior},
+note =	       {See \citebi{bernardo1979b}}
 }
 
 @Article{copeland1966,
@@ -30996,6 +31029,18 @@ author =       {Dunning-Davies, Jeremy},
 title =	       {Is `superstatistics' really `super'?},
 year =	       {2005},
 note =	       {\arxiveprint{physics/0502153}}
+}
+
+@Article{dunson2017,
+author =       {Dunson, David B.},
+title =	       {Toward Automated Prior Choice},
+journal =      ss,
+year =	       {2017},
+volume =       {32},
+number =       {1},
+pages =	       {41--43},
+keywords =     {Bayesian probability theory, priors, exchangeability},
+note =	       {See \citebi{simpsonetal2017,simpsonetal2017b}}
 }
 
 @Article{dunwoody1976,
@@ -39656,6 +39701,18 @@ pages =	       {566--575},
 keywords =     {an invariant formulation of the Newtonian theory of gravitation and the limit from the Einsteinian to the Newtonian theories, general relativity, Newton-Cartan theory}
 }
 
+@Article{frigessietal1995,
+author =       {Arnoldo Frigessi and Alan E. Gelfand and Bradley P. Carlin and Charles J. Geyer and G. O. Roberts and S. K. Sahu and W. R. Gilks and Wing Hung Wong and Bin Yu and Julian Besag and Peter Green and David Higdon and Kerrie Mengersen},
+title =	       {{[{Bayesian} Computation and stochastic systems:]} {Comments}. {Extracting} More Diagnostic Information from a Single Run Using Cusum Path Plot. {Rejoinder}},
+journal =      ss,
+year =	       {1995},
+volume =       {10},
+number =       {1},
+pages =	       {41--66},
+keywords =     {Monte Carlo, Gibbs sampling, Bayesian probability theory},
+note =	       {See \citebi{besagetal1995}}
+}
+
 @Article{frisch1980,
 author =       {Uriel Frisch},
 title =	       {Fully developed turbulence and intermittency},
@@ -41440,10 +41497,26 @@ pages =        {1--5},
 note =         {\arxiveprint{1006.5366}}
 }
 
-@Misc{gelmanetal2015,
+@Article{gelmanetal2013b,
+author =       {Andrew Gelman and Cosma Rohilla Shalizi},
+title =	       {Philosophy and the practice of {Bayesian} statistics},
+journal =      bjmsp,
+year =	       {2013},
+volume =       {66},
+number =       {1},
+pages =	       {8--38},
+keywords =     {conjugate prior, Bayesian probability theory},
+note =	       {\arxiveprint{1006.3868}}
+}
+
+@Article{gelmanetal2017,
 author =       {Andrew Gelman and Christian Hennig},
 title =	       {Beyond subjective and objective in statistics},
-year =	       {2015},
+journal =      jrssa,
+year =	       {2017},
+volume =       {180},
+number =       {4},
+pages =	       {??},
 keywords =     {priors, Bayesian probability theory},
 note =	       {\arxiveprint{1508.05453}. See also discussion \citebi{celeuxetal2017}}
 }
@@ -41832,6 +41905,18 @@ volume =       {57},
 number =       {6},
 pages =	       {1317--1339},
 keywords =     {probability theory, numerical integration}
+}
+
+@Article{geyer1992,
+author =       {Charles J. Geyer},
+title =	       {Practical Markov Chain {Monte Carlo}},
+journal =      ss,
+year =	       {1992},
+volume =       {7},
+number =       {4},
+pages =	       {472--483},
+keywords =     {Gibbs sampling, Bayesian probability theory},
+mynote =       {inadvertently calculates an improper prior}
 }
 
 @Article{ghashghaieetal1996,
@@ -43544,6 +43629,16 @@ number =       {6},
 pages =	       {1159--1189},
 keywords =     {Johnson prior, exchangeability, frequencies of frequencies},
 note =	       {See also \citebi{crooketal1980}}
+}
+
+@InCollection{good1976b,
+author =       {Irving John Good},
+title =	       {The {Bayesian} influence, or how to sweep subjectivism under the carpet},
+booktitle =    {\citein{harperetal1976b}},
+year =	       {1976},
+pages =	       {125--174},
+keywords =     {Bayesian probability theory, subjective priors, objective priors, logic, axioms of probability, probability intervals, $p$-value},
+note =	       {Repr.\ in \citebi{good1983}, \chap~4, pp.~22--55}
 }
 
 @Article{good1980,
@@ -52126,6 +52221,17 @@ pages =	       {55--65},
 keywords =     {electromagnetism, relativity theory}
 }
 
+@Article{hobertetal1996,
+author =       {James P. Hobert and George Casella},
+title =	       {The Effect of Improper Priors on {Gibbs} Sampling in Hierarchical Linear Mixed Models},
+journal =      jasa,
+year =	       {1996},
+volume =       {91},
+number =       {436},
+pages =	       {1461--1473},
+keywords =     {Bayesian probability theory, Monte Carlo}
+}
+
 @Book{hobson1907,
 author =       {E. W. Hobson},
 title =	       {The Theory of Functions of a Real Variable and the Theory of Fourier's Series},
@@ -57275,7 +57381,7 @@ year =	       {1949},
 volume =       {36},
 number =       {1/2},
 pages =	       {149--176},
-keywords =     {inverse hyperbolic sine transform}
+keywords =     {inverse hyperbolic sine transform, normal distribution, probability theory}
 }
 
 @Article{johnson1960,
@@ -59554,7 +59660,7 @@ title =	       {A Treatise on Probability},
 publisher =    {Macmillan},
 year =	       {1921},
 address =      {London},
-edition = {\url{http://www.archive.org/details/treatiseonprobab007528mbp}; fifth repr. \citebi{keynes1921_1957}}
+edition =      {\url{http://www.archive.org/details/treatiseonprobab007528mbp}; fifth repr. \citebi{keynes1921_1957}}
 }
 
 @Book{keynes1921_r1957,
@@ -59564,7 +59670,7 @@ publisher =    {Macmillan},
 origyear =     {1921},
 year =	       {1957},
 address =      {London},
-note = {\url{http://www.archive.org/details/ATreatiseOnProbability}. First publ.\ 1921}
+note =	       {\url{http://www.archive.org/details/ATreatiseOnProbability}. First publ.\ 1921}
 }
 
 @Book{keynes1923_r1924,
@@ -65766,6 +65872,18 @@ year =	       {2003},
 chapter =      {\chapb~13},
 pages =	       {269--276},
 keywords =     {maximum-entropy, statistical mechanics, probability theory, Gibbs paradox, extensivity, distinguishability}
+}
+
+@Article{lecam1990,
+author =       {Le Cam, Lucien M.},
+title =	       {Maximum Likelihood: An Introduction},
+journal =      isr,
+year =	       {1990},
+volume =       {58},
+number =       {2},
+pages =	       {153--171},
+keywords =     {probability theory},
+note =	       {\url{https://www.stat.washington.edu/people/jaw/COURSES/580s/581/HO/LeCam-1990.ISIRev.pdf}}
 }
 
 @Book{lecametal1972,
@@ -75268,6 +75386,17 @@ pages =	       {1040--1048},
 keywords =     {four-force, relativity theory}
 }
 
+@Article{miller1980,
+author =       {Robert B. Miller},
+title =	       {Bayesian Analysis of the Two-Parameter Gamma Distribution},
+journal =      tm,
+year =	       {1980},
+volume =       {22},
+number =       {1},
+pages =	       {65--69},
+keywords =     {conjugate prior}
+}
+
 @Book{miller1990,
 editor =       {Arthur I. Miller},
 title =	       {Sixty-Two Years of Uncertainty: Historical, Philosophical, and Physical Inquiries into the Foundations of Quantum Mechanics},
@@ -75850,6 +75979,17 @@ title =	       {Laws of Nature},
 publisher =    {Springer},
 year =	       {2005},
 address =      {Berlin}
+}
+
+@Article{moalaetal2013,
+author =       {Fernando Antonio Moala and Pedro Luiz Ramos and Jorge Alberto Achcar},
+title =	       {Bayesian Inference for Two-Parameter Gamma Distribution Assuming Different Noninformative Priors},
+journal =      rce,
+year =	       {2013},
+volume =       {36},
+number =       {2},
+pages =	       {319--336},
+keywords =     {conjugate prior}
 }
 
 @Book{moeller1952_r1955,
@@ -80098,18 +80238,6 @@ pages =        {150--152},
 keywords =     {$p$-value, frequentist probability theory}
 }
 
-@Article{tsobgninyawoetal2017,
-author =       {Tsobgni Nyawo, Pelerine and Hugo Touchette},
-title =	       {A minimal model of dynamical phase transition},
-journal =      epl,
-year =	       {2017},
-volume =       {116},
-number =       {5},
-pages =	       {50009},
-keywords =     {stochastic processes, maximum-entropy, statistical mechanics, convexity of entropy},
-note =	       {\arxiveprint{1611.07707}}
-}
-
 @Article{nyquist1924,
 author =       {H. Nyquist},
 title =	       {Certain Factors Affecting Telegraph Speed},
@@ -83020,7 +83148,7 @@ journal =      {Popular Science Monthly},
 year =	       {1878},
 volume =       {12},
 pages =	       {705--718},
-note =	       {Repr.\ in \citebi{peirce1931}, vol.~3, \chap~7}
+note =	       {\url{https://archive.org/details/popularsciencemo12newy}. Repr.\ in \citebi{peirce1931}, vol.~3, \chap~7}
 }
 
 @Book{peirce1931,
@@ -85702,6 +85830,14 @@ series =       {Lecture notes in physics},
 address =      {Berlin}
 }
 
+@Misc{polsonetal2011,
+author =       {Nicholas G. Polson and James G. Scott},
+title =	       {On the {half-Cauchy} prior for a global scale parameter},
+year =	       {2011},
+keywords =     {Bayesian probability theory, priors, exchangeability},
+note =	       {\arxiveprint{1104.4937}}
+}
+
 @Article{polya1930,
 author =       {George P{\'o}lya},
 title =	       {\langfrench{{Sur} quelques points de la th{\'e}orie des probabilit{\'e}s}},
@@ -86866,6 +87002,18 @@ year =	       {1998},
 address =      {New York},
 edition =      {2},
 note =	       {First publ.\ 1990}
+}
+
+@Article{pradhanetal2011,
+author =       {Biswabrata Pradhan and Debasis Kundu},
+title =	       {Bayes estimation and prediction of the two-parameter gamma distribution},
+journal =      jscs,
+year =	       {2011},
+volume =       {81},
+number =       {9},
+pages =	       {1187--1198},
+keywords =     {conjugate prior},
+note =	       {\url{http://home.iitk.ac.in/~kundu/bayes-gamma-bp-dk.pdf}}
 }
 
 @Book{pradoetal2010,
@@ -90350,6 +90498,18 @@ keywords =     {Bayesian probability theory},
 note =	       {See also comments and rejoinder \citebi{bernardoetal2009}. A poor review}
 }
 
+@Article{robertetal2017,
+author =       {Robert, Christian P. and Rousseau, Judith},
+title =	       {How Principled and Practical Are Penalised Complexity Priors?},
+journal =      ss,
+year =	       {2017},
+volume =       {32},
+number =       {1},
+pages =	       {36--40},
+keywords =     {Bayesian probability theory, priors, exchangeability},
+note =	       {\arxiveprint{1609.06968}. See \citebi{simpsonetal2017,simpsonetal2017b}}
+}
+
 @Article{roberts1965,
 author =       {Harry V. Roberts},
 title =	       {Probabilistic Prediction},
@@ -92212,6 +92372,17 @@ pages =	       {964--989},
 keywords =     {statistical mechanics, heat conduction}
 }
 
+@Article{rubio2015,
+author =       {Francisco J. Rubio},
+title =	       {On the use of improper priors for the shape parameters of asymmetric exponential power models},
+journal =      sc,
+year =	       {2015},
+volume =       {25},
+number =       {6},
+pages =	       {1281--1287},
+keywords =     {Bayesian probability theory}
+}
+
 @Misc{rubiola2005,
 author =       {Enrico Rubiola},
 title =	       {The {Leeson} effect: Phase noise in quasilinear oscillators},
@@ -93475,6 +93646,18 @@ year =	       {2006},
 series =       {Universitext},
 address =      {Berlin},
 note =	       {`With consideration of lectures by E. Heinz'}
+}
+
+@Book{savage1954_r1972,
+author =       {Leonard J. Savage},
+title =	       {The Foundations of Statistics},
+publisher =    {Dover},
+year =	       {1972},
+address =      {New York},
+edition =      {second rev.\ ed.},
+keywords =     {Bayesian probability theory},
+origyear =     {1954},
+note =	       {First publ.\ 1954}
 }
 
 @InCollection{savage1961,
@@ -95307,6 +95490,18 @@ title =	       {Encyclopedia of Nonlinear Science},
 publisher =    {Routledge},
 year =	       {2005},
 address =      {New York}
+}
+
+@Article{scott2017,
+author =       {James G. Scott},
+title =	       {Prior Specification Is Engineering, Not Mathematics},
+journal =      ss,
+year =	       {2017},
+volume =       {32},
+number =       {1},
+pages =	       {29--32},
+keywords =     {Bayesian probability theory, priors, exchangeability},
+note =	       {See \citebi{simpsonetal2017,simpsonetal2017b}}
 }
 
 @InCollection{scottetal1966,
@@ -97555,6 +97750,30 @@ note =	       {\arxiveprint{quant-ph/0601060}},
 keywords =     {quaternions}
 }
 
+@Article{simpsonetal2017,
+author =       {Daniel Simpson and H{\aa}vard Rue and Andrea Riebler and Thiago G. Martins and Sigrunn H. S{\o}rbye},
+title =	       {Penalising Model Component Complexity: A Principled, Practical Approach to Constructing Priors},
+journal =      ss,
+year =	       {2017},
+volume =       {32},
+number =       {1},
+pages =	       {1--28},
+keywords =     {Bayesian probability theory, priors, exchangeability},
+note =	       {\arxiveprint{1403.4630}. See also comments and rejoinder \citebi{scott2017,robertetal2017,dunson2017,simpsonetal2017b}}
+}
+
+@Article{simpsonetal2017b,
+author =       {Daniel Simpson and H{\aa}vard Rue and Andrea Riebler and Thiago G. Martins and Sigrunn H. S{\o}rbye},
+title =	       {You Just Keep on Pushing My Love over the Borderline: A Rejoinder},
+journal =      ss,
+year =	       {2017},
+volume =       {32},
+number =       {1},
+pages =	       {44--46},
+keywords =     {Bayesian probability theory, priors, exchangeability},
+note =	       {See \citebi{simpsonetal2017,scott2017,robertetal2017,dunson2017}}
+}
+
 @Article{singeretal1992,
 author =       {Matthias Singer and Werner Stulpe},
 title =	       {Phase-space representations of general statistical physical theories},
@@ -99124,6 +99343,17 @@ pages =	       {052116},
 note =	       {\arxiveprint{quant-ph/0509133}}
 }
 
+@Article{sonetal2006,
+author =       {Young Sook Son and Mira Oh},
+title =	       {Bayesian Estimation of the Two-Parameter Gamma Distribution},
+journal =      cssc,
+year =	       {2006},
+volume =       {35},
+number =       {2},
+pages =	       {285--293},
+keywords =     {priors, Bayesian probability theory}
+}
+
 @Book{soper1976,
 author =       {Davison Eugene Soper},
 title =        {Classical Field Theory},
@@ -100342,6 +100572,18 @@ publisher =    {Harvard University Press},
 year =	       {1999},
 address =      {Cambridge, USA},
 keywords =     {probability theory}
+}
+
+@Article{stigler2007,
+author =       {Stephen M. Stigler},
+title =	       {The Epic Story of Maximum Likelihood},
+journal =      ss,
+year =	       {2007},
+volume =       {22},
+number =       {4},
+pages =	       {598--620},
+keywords =     {probability theory},
+note =	       {\arxiveprint{0804.2996}}
 }
 
 @Article{stigler2011,
@@ -106236,6 +106478,18 @@ publisher =    {Springer},
 year =	       {2004},
 address =      {Berlin},
 note =	       {Ed.\ by Jean Picard}
+}
+
+@Article{tsobgninyawoetal2017,
+author =       {Tsobgni Nyawo, Pelerine and Hugo Touchette},
+title =	       {A minimal model of dynamical phase transition},
+journal =      epl,
+year =	       {2017},
+volume =       {116},
+number =       {5},
+pages =	       {50009},
+keywords =     {stochastic processes, maximum-entropy, statistical mechanics, convexity of entropy},
+note =	       {\arxiveprint{1611.07707}}
 }
 
 @Article{tsubaki1971,
@@ -114552,6 +114806,27 @@ number =       {1},
 pages =        {1--68},
 keywords =     {neural fields},
 note =         {\url{https://hal.inria.fr/hal-00933715}}
+}
+
+@Article{zhangetal2014b,
+author =       {Linlin Zhang and Michele Guindani and Francesco Versace and Marina Vannucci},
+title =	       {A spatio-temporal nonparametric {Bayesian} variable selection model of {fMRI} data for clustering correlated time courses},
+journal =      ni,
+year =	       {2014},
+volume =       {95},
+pages =	       {162--175},
+keywords =     {exchangeability, Bayesian probability theory, Dirichlet-process prior, Markov-random-field prior}
+}
+
+@Article{zhangetal2016,
+author =       {Linlin Zhang and Michele Guindani and Francesco Versace and Jeffrey M. Engelmann and Marina Vannucci},
+title =	       {A spatiotemporal nonparametric {Bayesian} model of multi-subject {fMRI} data},
+journal =      aas,
+year =	       {2016},
+volume =       {10},
+number =       {2},
+pages =	       {638--666},
+keywords =     {exchangeability, Bayesian probability theory, Dirichlet-process prior, Markov-random-field prior}
 }
 
 @Article{zhaoetal2005,
