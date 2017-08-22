@@ -3,7 +3,7 @@
 %% 
 %% Author: PGL  Porta Mana
 %% Created: 2015-05-01T20:53:34+0200
-%% Last-Updated: 2017-08-22T11:54:36+0200
+%% Last-Updated: 2017-08-22T12:39:20+0200
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Report-no: ***
 \newif\ifafour
@@ -704,6 +704,7 @@ P.G.L. Porta\,Mana%
 %\newcommand*{\widebar}[1]{{\mkern1.5mu\skew{2}\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}}
 
 \newcommand*{\yH}{h}
+\newcommand*{\yD}{D}
 \newcommand*{\yx}{x}
 \newcommand*{\yxx}{\bm{\yx}}
 \newcommand*{\data}{\text{data}}
@@ -729,9 +730,10 @@ P.G.L. Porta\,Mana%
 \newcommand*{\yf}{f}
 \newcommand*{\yq}{\pf}
 \newcommand*{\yp}{q}
+\newcommand*{\ypc}{\Hat{\yp}}
 \newcommand*{\yn}{n}
 \newcommand*{\yd}{d}
-\newcommand*{\yI}{\varIota}
+\newcommand*{\yI}{I}
 \newcommand*{\yno}{\yn_{\yH}}
 \newcommand*{\yna}{\yn_{\ya}}
 \newcommand*{\ynh}{\yn_{\yh}}
@@ -908,7 +910,13 @@ goal at this point is to assess the plausibility
   \pf(\yH_0 \| \yx_0,\; \yH_1,\yx_1, \dotsc, \yH_N, \yx_N,\; \yI),
 \end{equation}
 where $\yI$ denotes additional knowledge or working assumptions to be
-discussed shortly.
+discussed shortly. For brevity we shall denote the data of the $N$
+individuals collectively by $\yD$:
+\begin{equation}
+  \label{eq:collective_data_D}
+  D \defd (\yH_1,\yx_1, \dotsc, \yH_N, \yx_N).
+\end{equation}
+
 
 The labels given to the individuals are arbitrary and we could shuffle them
 without affecting our probability assessment. Said otherwise, suppose that
@@ -924,9 +932,10 @@ The irrelevance of labelling to our plausibility assessment is called
 \emph{exchangeability} and greatly circumscribes our possible plausibility
 assessments. It implies that the plausibility~\eqref{eq:goal_1st} remains
 the same under permutations of the individuals' labels. A theorem by
-de~Finetti \citep{definetti1930,definetti1937,hewittetal1955} states that
-the probability of observing $N$ individuals with health conditions $\yH_i$
-and fMRI data $\yx_i$ must have the form
+de~Finetti \parentext{\citeyear{definetti1930,definetti1937};
+  \cite{hewittetal1955}} states that the probability of observing $N$
+individuals with health conditions $\yH_i$ and fMRI data $\yx_i$ must have
+the form
 \begin{equation}
   \label{eq:definetti_exchangeability}
   \pf(\yH_0, \yx_0,\; \yH_1,\yx_1,\; \dotsc, \yH_N, \yx_N\| \yI)
@@ -935,22 +944,43 @@ and fMRI data $\yx_i$ must have the form
   \pf(\yp \|\yI) \,\di\yp,
 \end{equation}
 where $\yp$ represent a probability distribution over the possible values
-of $(\yH,\yx)$, and the integral is over all such probability distributions.
+of $(\yH,\yx)$, and the integral is over all such probability
+distributions.
 
+An integral over probability distributions is a mathematically complicated
+object and may not seem a great advancement in assessing the
+plausibility~\eqref{eq:goal_1st}. Yet de~Finetti's formula above has
+important consequences for our inference:
+\begin{enumerate}[wide]
+\item Using de~Finetti's formula with the definition of conditional
+  probability we can rewrite our goal plausibility~\eqref{eq:goal_1st} as
+  \begin{gather}
+    \label{eq:goal_1st_exchangeability}
+    \pf(\yH_0 \| \yx_0, \yD, \yI) =
+    \frac{   
+ \int \yp(\yH_0,\yx_0)\, \pf(\yp \|\yD,\yI) \,\di\yp
+    }{
+ \int \sum_{\yH}\yp(\yH,\yx_0)\, \pf(\yp \|\yD,\yI) \,\di\yp
+},
+\\\shortintertext{with}
+\pf(\yp \|\yD,\yI) \,\di\yp =
+   \frac{   
+\bigl[ \prod_i \yp(\yH_i,\yx_i) \bigr]\, \pf(\yp \|\yI)
+}{
+\int  \bigl[ \prod_i \yp(\yH_i,\yx_i) \bigr]\, \pf(\yp \|\yI) \,\di\yp
+}\di\yp.
+\end{gather}
+The latter distribution becomes more and more concentrated on a particular
+distribution $\ypc$ as our data $\yD$ includes a larger and larger number
+of individuals, so that our probability becomes
+\begin{equation}
+  \label{eq:goal_1st_limit}
+  \pf(\yH_0 \| \yx_0, \yD, \yI) \approx
+  \ypc(\yH_0,\yx_0) / \tsum_{\yH}\ypc(\yH,\yx_0),
+\end{equation}
+with $\ypc$ completely determined by the data $\yD$.
+\end{enumerate}
 
-
-, in the sense that
-individual \enquote{$3$}, say, could just as well have been labelled
-\enquote{$7$}, and vice versa. Maybe the labels reflect the temporal order
-in which the individuals were studied, yet we could shuffle them without
-affecting our probability assessment.
-
-
-
-This simple fact is very important
-
-There is an important assumption, which greatly circumscribes our possible
-plausibility assessments
 
 
 
