@@ -3,7 +3,7 @@
 %% 
 %% Author: PGL  Porta Mana
 %% Created: 2015-05-01T20:53:34+0200
-%% Last-Updated: 2017-08-17T13:04:04+0200
+%% Last-Updated: 2017-08-22T11:54:36+0200
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Report-no: ***
 \newif\ifafour
@@ -728,8 +728,10 @@ P.G.L. Porta\,Mana%
 \newcommand*{\yN}{N}
 \newcommand*{\yf}{f}
 \newcommand*{\yq}{\pf}
+\newcommand*{\yp}{q}
 \newcommand*{\yn}{n}
 \newcommand*{\yd}{d}
+\newcommand*{\yI}{\varIota}
 \newcommand*{\yno}{\yn_{\yH}}
 \newcommand*{\yna}{\yn_{\ya}}
 \newcommand*{\ynh}{\yn_{\yh}}
@@ -837,10 +839,10 @@ and burdensome for the patients, since it comprises a battery of
 psychological tests and an extraction of disease specific biomarkers from
 the cerebrospinal fluid (ouch!). A cheaper and more convenient procedure
 would be a diagnosis based on images obtained through fMRI. Based on
-previous polymodal studies demonstrating disrupted inter- and
-intra-cortical connectivity in Alzheimer's Disease [ref], in another
-awesome paper we argue that the functional connectivity of the whole
-cortex, summarized in a computationally manageable number of
+previous polymodal [what does this mean?] studies demonstrating disrupted
+inter- and intra-cortical connectivity in Alzheimer's Disease [ref], in
+another awesome paper we argue that the functional connectivity of the
+whole cortex, summarized in a computationally manageable number of
 graph-theoretic parameters -- derived from the full, computationally
 unmanageable fMRI data -- might be a good predictor for the cause of the
 disease.
@@ -880,6 +882,79 @@ contains remarks on generalizations, approximations, and more.
 
 \section{Problem and method}
 \label{sec:problem}
+
+Our goal, stripped to its essentials, is this.
+
+Given the fMRI data of an individual and other knowledge discussed below,
+assess the plausibility that the individual is healthy or suffers from a
+brain disease, from a set of known possible ones. For example: assess
+whether the individual is healthy, or has Alzheimer's Disease, or is mildly
+cognitively impaired (three possibilities); or: assess whether the
+individual is healthy or has schizophrenia (two possibilities). The brain
+diseases are supposed to be mutually exclusive, and to exhaust the set of
+possible diseases that can be expected in the individual.
+
+The \enquote{other knowledge} fleetingly mentioned above consists in the
+fMRI data of individuals of known health conditions. This knowledge is
+essential for our plausibility assessment, for we would not be able to
+relate fMRI data and health condition otherwise.
+
+Label the individual of unknown health condition with $0$, and those whose
+health conditions and fMRI data are known by $1, \dotsc, N$. Denote the
+fMRI data and health condition of individual $i$ by $\yx_i$ and $\yH_i$ Our
+goal at this point is to assess the plausibility
+\begin{equation}
+  \label{eq:goal_1st}
+  \pf(\yH_0 \| \yx_0,\; \yH_1,\yx_1, \dotsc, \yH_N, \yx_N,\; \yI),
+\end{equation}
+where $\yI$ denotes additional knowledge or working assumptions to be
+discussed shortly.
+
+The labels given to the individuals are arbitrary and we could shuffle them
+without affecting our probability assessment. Said otherwise, suppose that
+individual $3$ was healthy, $\yH_3=\yh$, and had fMRI data $\yx_3=X$; and
+that individual $7$ had Alzheimer, $\yH_7=\ya$, and had fMRI data
+$\yx_7=Y$. What matter is that we have observed the specific pairs
+$(\yh,X)$ and $(\ya,Y)$; whether the individual of the first pair was
+labelled \enquote{$3$} and the other \enquote{$7$}, or vice versa, is
+irrelevant. This is true no matter how many individuals we observed or will
+observe.
+
+The irrelevance of labelling to our plausibility assessment is called
+\emph{exchangeability} and greatly circumscribes our possible plausibility
+assessments. It implies that the plausibility~\eqref{eq:goal_1st} remains
+the same under permutations of the individuals' labels. A theorem by
+de~Finetti \citep{definetti1930,definetti1937,hewittetal1955} states that
+the probability of observing $N$ individuals with health conditions $\yH_i$
+and fMRI data $\yx_i$ must have the form
+\begin{equation}
+  \label{eq:definetti_exchangeability}
+  \pf(\yH_0, \yx_0,\; \yH_1,\yx_1,\; \dotsc, \yH_N, \yx_N\| \yI)
+  =
+  \int \Bigl[ \prod_i \yp(\yH_i,\yx_i) \Bigr]\,
+  \pf(\yp \|\yI) \,\di\yp,
+\end{equation}
+where $\yp$ represent a probability distribution over the possible values
+of $(\yH,\yx)$, and the integral is over all such probability distributions.
+
+
+
+, in the sense that
+individual \enquote{$3$}, say, could just as well have been labelled
+\enquote{$7$}, and vice versa. Maybe the labels reflect the temporal order
+in which the individuals were studied, yet we could shuffle them without
+affecting our probability assessment.
+
+
+
+This simple fact is very important
+
+There is an important assumption, which greatly circumscribes our possible
+plausibility assessments
+
+
+
+\section{Problem and method -- old}
 
 Let's say that each individual can be either Healthy, or suffer from
 Alzheimer, or be mildly Cognitively impaired. This is its health condition.

@@ -199,6 +199,29 @@
       \range{pages}{2}
       \keyw{on the law of probability with exhaustive estimation,sufficient statistics,exponential family,sufficiency}
     \endentry
+    \entry{dawid1982}{incollection}{}
+      \name{author}{1}{}{%
+        {{hash=0961ef4d29a125a610782a8d38dbe96e}{%
+           family={Dawid},
+           family_i={D\bibinitperiod},
+           given={A.\bibnamedelimi Philip},
+           given_i={A\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+      }
+      \strng{namehash}{0961ef4d29a125a610782a8d38dbe96e}
+      \strng{fullhash}{0961ef4d29a125a610782a8d38dbe96e}
+      \field{sortinit}{D}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{labelyear}{1982}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{\citein{kochetal1982}}
+      \field{title}{Intersubjective statistical models}
+      \field{year}{1982}
+      \field{pages}{287\bibrangedash 232}
+      \range{pages}{-54}
+      \keyw{exchangeability,extreme-point model,Bayesian probability theory,sufficiency}
+    \endentry
     \entry{dawid2013}{incollection}{}
       \name{author}{1}{}{%
         {{hash=0961ef4d29a125a610782a8d38dbe96e}{%
