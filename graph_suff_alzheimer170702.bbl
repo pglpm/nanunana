@@ -742,6 +742,41 @@
       \range{pages}{11}
       \keyw{exponential family}
     \endentry
+    \entry{kyburgetal1964_r1980}{book}{}
+      \name{editor}{2}{}{%
+        {{hash=be8a7c897caab27126dec165fd2693de}{%
+           family={Kyburg},
+           family_i={K\bibinitperiod},
+           suffix={Jr.},
+           suffix_i={J\bibinitperiod},
+           given={Henry\bibnamedelima Ely},
+           given_i={H\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+        {{hash=427ba16b68a9dc42148e7480c70bb83c}{%
+           family={Smokler},
+           family_i={S\bibinitperiod},
+           given={Howard\bibnamedelima Edward},
+           given_i={H\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Huntington, USA}%
+      }
+      \list{publisher}{1}{%
+        {Robert E. Krieger}%
+      }
+      \strng{namehash}{e9e9e11c4b8714313c1b0a03cb8544d1}
+      \strng{fullhash}{a6c2a34b24e373a993747c9858f38754}
+      \field{sortinit}{K}
+      \field{sortinithash}{a7d5b3aec5a0890aae7baf85a209abfc}
+      \field{labelyear}{1980}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{editor}
+      \field{labeltitlesource}{title}
+      \field{edition}{2}
+      \field{note}{First publ.\ 1964}
+      \field{origyear}{1964}
+      \field{title}{Studies in Subjective Probability}
+      \field{year}{1980}
+    \endentry
     \entry{lauritzen1982_r1988}{book}{}
       \name{author}{1}{}{%
         {{hash=fe4b57a93ffde01c165af147418a450c}{%
