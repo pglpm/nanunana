@@ -836,6 +836,32 @@
       \field{year}{2008}
       \keyw{Bayesian probability theory}
     \endentry
+    \entry{lindquist2008}{article}{}
+      \name{author}{1}{}{%
+        {{hash=a47c572a28d26681b9b0c2db6dbc085e}{%
+           family={Lindquist},
+           family_i={L\bibinitperiod},
+           given={Martin\bibnamedelima A.},
+           given_i={M\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \strng{namehash}{a47c572a28d26681b9b0c2db6dbc085e}
+      \strng{fullhash}{a47c572a28d26681b9b0c2db6dbc085e}
+      \field{sortinit}{L}
+      \field{sortinithash}{872351f18d0f736066eda0bf18bfa4f7}
+      \field{labelyear}{2008}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Stat.\ Sci.}
+      \field{note}{\arxiveprint{0906.3662}}
+      \field{number}{4}
+      \field{title}{The Statistical Analysis of {fMRI} Data}
+      \field{volume}{23}
+      \field{year}{2008}
+      \field{pages}{439\bibrangedash 464}
+      \range{pages}{26}
+      \keyw{Bayesian probability theory,neuroscience}
+    \endentry
     \entry{minka1998_r2001}{report}{}
       \name{author}{1}{}{%
         {{hash=c1fd48399dd38d0fe54ebe685a846d09}{%

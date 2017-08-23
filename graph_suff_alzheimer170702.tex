@@ -3,7 +3,7 @@
 %% 
 %% Author: PGL  Porta Mana
 %% Created: 2015-05-01T20:53:34+0200
-%% Last-Updated: 2017-08-23T12:04:42+0200
+%% Last-Updated: 2017-08-23T22:40:47+0200
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Report-no: ***
 \newif\ifafour
@@ -950,7 +950,7 @@ integral is over all such distributions $\yp$.
 
 An integral over probability distributions is a mathematically complicated
 object and may not seem a great advancement in assessing the
-plausibility~\eqref{eq:goal_1st}. Yet de~Finetti's formula above has
+plausibility~\eqref{eq:goal_1st}. But de~Finetti's formula above has
 important consequences for our inference:
 \begin{enumerate}[wide]
 \item Using de~Finetti's formula with the definition of conditional
@@ -997,10 +997,17 @@ principle solve our plausibility assessment.
 
 \medskip
 
-If our data $\yD$ do not comprise a large number of individuals, the
-hyperdistribution $\pf(\yp \|\yI)$ and therefore our assumptions $\yI$ have
-an important weight in the determination of the
-probability~\eqref{eq:goal_1st_exchangeability}.
+The general formula~\eqref{eq:goal_1st_exchangeability} is complicated in
+two respects. First, the fMRI \enquote{datum} $\yx$ belonging to an
+individual is a positive-valued vector with $10^7$--$10^8$ components or
+more \citep{lindquist2008}, thus belonging to an incomprehensibly large
+space. Second, our data $\yD$ do not comprise a large number of
+individuals, hence the hyperdistribution $\pf(\yp \|\yI)$ and therefore the
+assumptions in $\yI$ besides exchangeability have an important weight in
+the determination of the probability~\eqref{eq:goal_1st_exchangeability}.
+
+[Where I'm heading: to solve the first problem, we go from a set of fMRI
+data to graph properties; to solve the second, we use a model by sufficiency.]
 
 Lacking further information, several working assumptions are usually tried,
 leading to definite hyperpriors, to see if any of them leads to reasonable
