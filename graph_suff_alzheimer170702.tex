@@ -3,7 +3,7 @@
 %% 
 %% Author: PGL  Porta Mana
 %% Created: 2015-05-01T20:53:34+0200
-%% Last-Updated: 2017-08-23T11:18:20+0200
+%% Last-Updated: 2017-08-23T11:34:33+0200
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Report-no: ***
 \newif\ifafour
@@ -730,7 +730,7 @@ P.G.L. Porta\,Mana%
 \newcommand*{\yf}{f}
 \newcommand*{\yq}{\pf}
 \newcommand*{\yp}{q}
-\newcommand*{\ypc}{\Hat{\yp}}
+\newcommand*{\ypc}{\yp_{\yD}}
 \newcommand*{\yn}{n}
 \newcommand*{\yd}{d}
 \newcommand*{\yI}{I}
@@ -966,7 +966,7 @@ important consequences for our inference:
   \end{gather}
 \end{subequations}
 The latter distribution becomes more and more concentrated on a particular
-distribution $\ypc$ as our data $\yD$ includes a larger and larger number
+distribution $\ypc$ as our data $\yD$ assimilates a larger and larger number
 of individuals, independently of the hyperdistribution $\pf(\yp \|\yI)$ so
 that our probability becomes
 \begin{equation}
@@ -978,15 +978,16 @@ that our probability becomes
 with $\ypc$ completely determined by the data $\yD$. This would in
 principle solve our plausibility assessment.
 \item The latter formula also tells us what is the theoretical limit by
-  which the health condition $\yH_0$ can be identified from fMRI data
+  which an health condition $\yH_0$ can be identified from fMRI data
   $\yx_0$: if $\ypc(\yH_0\|\yx_0)$ is more or less uniform independently of
-  $\yx_0$, for example, it means that fMRI data are no use to differentiate
-  the health condition of the individual. This result follows
+  $\yx_0$, for example, it means that fMRI data are of no use to
+  differentiate the health condition of an individual. This result follows
   mathematically from the simple assumption of
   exchangeability~\eqref{eq:definetti_exchangeability} and the rules of the
   probability calculus, so no amount of ingenuity could overcome this
-  limit. Our hope, of course, is that such a differentiation is possible.
+  limit. Our hope, of course, is that such a differentiation be possible.
 \end{enumerate}
+
 
 
 
