@@ -302,6 +302,33 @@
       \range{pages}{68}
       \keyw{de Finetti's theorem,exchangeability}
     \endentry
+    \entry{definetti1937_t1980}{incollection}{}
+      \name{author}{1}{}{%
+        {{hash=b29f2bfeb0be6b730a5d23e119103854}{%
+           prefix={de},
+           prefix_i={d\bibinitperiod},
+           family={Finetti},
+           family_i={F\bibinitperiod},
+           given={Bruno},
+           given_i={B\bibinitperiod}}}%
+      }
+      \strng{namehash}{b29f2bfeb0be6b730a5d23e119103854}
+      \strng{fullhash}{b29f2bfeb0be6b730a5d23e119103854}
+      \field{sortinit}{d}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{labelyear}{1964}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{\citein{kyburgetal1964_r1980}}
+      \field{note}{Transl.\ of \citebi{definetti1937} by Henry E. Kyburg, Jr.}
+      \field{origyear}{1937}
+      \field{title}{Foresight: Its logical laws, its subjective sources}
+      \field{year}{1964}
+      \field{pages}{53\bibrangedash 118}
+      \range{pages}{66}
+      \keyw{exchangeability,Bayesian probability theory}
+    \endentry
     \entry{degroot1970_r2004}{book}{}
       \name{author}{1}{}{%
         {{hash=af77066eda87ff11d5ebfce4a0f0c867}{%
