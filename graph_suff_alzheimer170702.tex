@@ -3,7 +3,7 @@
 %% 
 %% Author: PGL  Porta Mana
 %% Created: 2015-05-01T20:53:34+0200
-%% Last-Updated: 2017-08-24T14:11:11+0200
+%% Last-Updated: 2017-08-24T18:00:52+0200
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Report-no: ***
 \newif\ifafour
@@ -1019,25 +1019,26 @@ could be performed, would automatically winnow out the relevant information
 lower-dimensional set (not necessarily linear) in the space of fMRI data.
 Being unable to perform the integral, we must try to guess and perform such
 dimensional reduction by hand. The way Alzheimer's Disease works suggest
-that the connection and correlation between brain should be affected and
-different from a healthy condition. This suggests reducing fMRI data to a
-manageable set of graph properties, and apply our inference directly on
-these. \mynote{formulate better. Does this statement make sense?}
+that the connection and correlation between brain regions should be
+affected with respect to a healthy condition. This suggests reducing fMRI
+data to a manageable set of graph properties, and apply our inference
+directly on these. \mynote{formulate better. Does this statement make
+  sense?} We discuss this more in detail in **[other paper].
 
 
-\mynote{against pre-processing of data: Jaynes
-\citey[\sect~17.10]{jaynes1994_r2003} shows that de-trending and seasonal
-adjustment are approximations of the full probability calculation from the
-original data. Bretthorst \citey{bretthorst1988} shows the same about
-Fourier transforms}
+\mynote{against pre-processing of data: Jaynes \citey[\sects~17.5.1,
+  17.10]{jaynes1994_r2003} shows that de-trending and seasonal adjustment
+  are approximations of the full probability calculation from the original
+  data. Bretthorst \citey{bretthorst1988,bretthorst1990} shows the same
+  about Fourier transforms}
 
-Lacking further information, several working assumptions are usually tried,
-leading to definite hyperpriors, to see if any of them leads to reasonable
-predictions. These working assumptions must obviously let our data play a
-role in determining the probability~\eqref{eq:goal_1st_exchangeability}.
-
-In this work we compare different working assumptions based on the concept
-of \emph{sufficiency}.
+Regarding the choice of hyperprior $\pf(\yp \|\yI)$, lacking further
+information we can entertain several working assumptions, each leading to a
+definite hyperprior, and check whether any of them leads to reasonable
+predictions. These working assumptions must still let our data play a role
+in determining the probability~\eqref{eq:goal_1st_exchangeability}. In this
+work we compare different working assumptions based on the concept of
+\emph{sufficiency}.
 
 
 

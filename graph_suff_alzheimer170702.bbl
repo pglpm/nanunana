@@ -162,6 +162,31 @@
       \field{volume}{48}
       \field{year}{1988}
     \endentry
+    \entry{bretthorst1990}{article}{}
+      \name{author}{1}{}{%
+        {{hash=837225229dd7f56c18a75ffff7173b27}{%
+           family={Bretthorst},
+           family_i={B\bibinitperiod},
+           given={G.\bibnamedelimi Larry},
+           given_i={G\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+      }
+      \strng{namehash}{837225229dd7f56c18a75ffff7173b27}
+      \strng{fullhash}{837225229dd7f56c18a75ffff7173b27}
+      \field{sortinit}{B}
+      \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
+      \field{labelyear}{1990}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{J. Magn.\ Reson.}
+      \field{number}{3}
+      \field{title}{Bayesian analysis. {I}. {Parameter} estimation using quadrature {NMR} models. {II}. {Signal} detection and model selection. {III}. {Applications} to {NMR} signal detection, model selection, and parameter estimation}
+      \field{volume}{88}
+      \field{year}{1990}
+      \field{pages}{533\bibrangedash 595}
+      \range{pages}{63}
+      \keyw{Bayesian probability theory,Fourier transform}
+    \endentry
     \entry{damienetal2013}{book}{}
       \name{editor}{4}{}{%
         {{hash=15b8963950a4ba47c6d4d8e60a4484b0}{%
