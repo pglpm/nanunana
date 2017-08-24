@@ -134,6 +134,34 @@
       \field{title}{Pattern Recognition and Machine Learning}
       \field{year}{2006}
     \endentry
+    \entry{bretthorst1988}{book}{}
+      \name{author}{1}{}{%
+        {{hash=837225229dd7f56c18a75ffff7173b27}{%
+           family={Bretthorst},
+           family_i={B\bibinitperiod},
+           given={G.\bibnamedelimi Larry},
+           given_i={G\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Berlin}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{837225229dd7f56c18a75ffff7173b27}
+      \strng{fullhash}{837225229dd7f56c18a75ffff7173b27}
+      \field{sortinit}{B}
+      \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
+      \field{labelyear}{1988}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{\url{http://bayes.wustl.edu/glb/bib.html}}
+      \field{series}{Lecture notes in statistics}
+      \field{title}{{Bayesian} Spectrum Analysis and Parameter Estimation}
+      \field{volume}{48}
+      \field{year}{1988}
+    \endentry
     \entry{damienetal2013}{book}{}
       \name{editor}{4}{}{%
         {{hash=15b8963950a4ba47c6d4d8e60a4484b0}{%

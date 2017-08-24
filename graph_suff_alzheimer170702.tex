@@ -3,7 +3,7 @@
 %% 
 %% Author: PGL  Porta Mana
 %% Created: 2015-05-01T20:53:34+0200
-%% Last-Updated: 2017-08-23T22:40:47+0200
+%% Last-Updated: 2017-08-24T13:54:54+0200
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Report-no: ***
 \newif\ifafour
@@ -697,14 +697,15 @@ P.G.L. Porta\,Mana%
 %\newcommand*{\qem}{\leavevmode\unskip\penalty9999 \hbox{}\nobreak\hfill
 %\quad\hbox{\QEM}}
 
-%\definecolor{notecolour}{RGB}{68,170,153}
+\definecolor{notecolour}{RGB}{68,170,153}
 %\newcommand*{\puzzle}{{\fontencoding{U}\fontfamily{fontawesometwo}\selectfont\symbol{225}}}
-%\newcommand*{\puzzle}{\maltese}
-%\newcommand{\mynote}[1]{ {\color{notecolour}\puzzle\ #1}}
+\newcommand*{\puzzle}{\maltese}
+\newcommand{\mynote}[1]{ {\color{notecolour}\puzzle\ #1}}
 %\newcommand*{\widebar}[1]{{\mkern1.5mu\skew{2}\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}}
 
 \newcommand*{\yH}{h}
 \newcommand*{\yD}{D}
+\newcommand*{\yF}{\bm{F}}
 \newcommand*{\yx}{x}
 \newcommand*{\yxx}{\bm{\yx}}
 \newcommand*{\data}{\text{data}}
@@ -903,27 +904,27 @@ relate fMRI data and health condition otherwise.
 
 Label the individual of unknown health condition with $0$, and those whose
 health conditions and fMRI data are known by $1, \dotsc, N$. Denote the
-fMRI data and health condition of individual $i$ by $\yx_i$ and $\yH_i$ Our
+fMRI data and health condition of individual $i$ by $\yF_i$ and $\yH_i$ Our
 goal at this point is to assess the plausibility
 \begin{equation}
   \label{eq:goal_1st}
-  \pf(\yH_0 \| \yx_0,\; \yH_1,\yx_1, \dotsc, \yH_N, \yx_N,\; \yI),
+  \pf(\yH_0 \| \yF_0,\; \yH_1,\yF_1, \dotsc, \yH_N, \yF_N,\; \yI),
 \end{equation}
 where $\yI$ denotes additional knowledge or working assumptions to be
 discussed shortly. For brevity we shall denote the data of the $N$
 individuals collectively by $\yD$:
 \begin{equation}
   \label{eq:collective_data_D}
-  D \defd (\yH_1,\yx_1, \dotsc, \yH_N, \yx_N).
+  D \defd (\yH_1,\yF_1, \dotsc, \yH_N, \yF_N).
 \end{equation}
 
 
 The labels given to the individuals are arbitrary and we could shuffle them
 without affecting our probability assessment. Said otherwise, suppose that
-individual $3$ was healthy, $\yH_3=\yh$, and had fMRI data $\yx_3=X$; and
+individual $3$ was healthy, $\yH_3=\yh$, and had fMRI data $\yF_3=\bm{}$; and
 that individual $7$ had Alzheimer, $\yH_7=\ya$, and had fMRI data
-$\yx_7=Y$. What matter is that we have observed the specific pairs
-$(\yh,X)$ and $(\ya,Y)$; whether the individual of the first pair was
+$\yF_7=\bm{}$. What matter is that we have observed the specific pairs
+$(\yh,\bm{})$ and $(\ya,\bm{})$; whether the individual of the first pair was
 labelled \enquote{$3$} and the other \enquote{$7$}, or vice versa, is
 irrelevant. This is true no matter how many individuals we observed or will
 observe.
@@ -934,17 +935,17 @@ assessments. It implies that the plausibility~\eqref{eq:goal_1st} remains
 the same under permutations of the individuals' labels. A theorem by
 de~Finetti \parentext{\citeyear{definetti1930,definetti1937};
   \cite{hewittetal1955}} states that the probability of observing $N$
-individuals with health conditions $\yH_i$ and fMRI data $\yx_i$ must have
+individuals with health conditions $\yH_i$ and fMRI data $\yF_i$ must have
 the form
 \begin{equation}
   \label{eq:definetti_exchangeability}
-  \pf(\yH_0, \yx_0,\; \yH_1,\yx_1,\; \dotsc, \yH_N, \yx_N\| \yI)
+  \pf(\yH_0, \yF_0,\; \yH_1,\yF_1,\; \dotsc, \yH_N, \yF_N\| \yI)
   =
-  \int \Bigl[ \prod_i \yp(\yH_i,\yx_i) \Bigr]\,
+  \int \Bigl[ \prod_i \yp(\yH_i,\yF_i) \Bigr]\,
   \pf(\yp \|\yI) \,\di\yp,
 \end{equation}
 where $\yp$ represent a probability distribution over the possible values
-of $(\yH,\yx)$; $\pf(\yp \|\yI)$ is a \enquote{hyperdistribution},
+of $(\yH,\yF)$; $\pf(\yp \|\yI)$ is a \enquote{hyperdistribution},
 determined by the assumptions $\yI$, over such distributions; and the
 integral is over all such distributions $\yp$.
 
@@ -957,18 +958,18 @@ important consequences for our inference:
   probability we can rewrite our goal plausibility~\eqref{eq:goal_1st} as
 \begin{equation}\label{eq:goal_1st_exchangeability}
 \begin{gathered}
-    \pf(\yH_0 \| \yx_0, \yD, \yI) =
+    \pf(\yH_0 \| \yF_0, \yD, \yI) =
     \frac{
-      \int \yp(\yH_0,\yx_0)\,
+      \int \yp(\yH_0,\yF_0)\,
       \pf(\yp \|\yD,\yI) \,\di\yp
     }{
-      \int \sum_{\yH}\yp(\yH,\yx_0)\,
+      \int \sum_{\yH}\yp(\yH,\yF_0)\,
       \pf(\yp \|\yD,\yI) \,\di\yp },
     \\ \text{with} \quad \pf(\yp \|\yD,\yI) \,\di\yp =
-    \frac{ \bigl[ \prod_i \yp(\yH_i,\yx_i) \bigr]\,
+    \frac{ \bigl[ \prod_i \yp(\yH_i,\yF_i) \bigr]\,
       \pf(\yp \|\yI)
     }{
-      \int \bigl[ \prod_i \yp(\yH_i,\yx_i) \bigr]\,
+      \int \bigl[ \prod_i \yp(\yH_i,\yF_i) \bigr]\,
       \pf(\yp \|\yI) \,\di\yp }\di\yp.
 \end{gathered}
 \end{equation}
@@ -978,15 +979,15 @@ of individuals, independently of the hyperdistribution $\pf(\yp \|\yI)$ so
 that our probability becomes
 \begin{equation}
   \label{eq:goal_1st_limit}
-  \pf(\yH_0 \| \yx_0, \yD, \yI) \approx
-  \ypc(\yH_0,\yx_0) / \tsum_{\yH}\ypc(\yH,\yx_0)
-  \equiv \ypc(\yH_0\|\yx_0),
+  \pf(\yH_0 \| \yF_0, \yD, \yI) \approx
+  \ypc(\yH_0,\yF_0) / \tsum_{\yH}\ypc(\yH,\yF_0)
+  \equiv \ypc(\yH_0\|\yF_0),
 \end{equation}
 with $\ypc$ completely determined by the data $\yD$. This would in
 principle solve our plausibility assessment.
 \item The latter formula also tells us the theoretical limit by which the
-  health condition $\yH_0$ can be identified from fMRI data $\yx_0$: if
-  $\ypc(\yH_0\|\yx_0)$ is more or less uniform independently of $\yx_0$,
+  health condition $\yH_0$ can be identified from fMRI data $\yF_0$: if
+  $\ypc(\yH_0\|\yF_0)$ is more or less uniform independently of $\yF_0$,
   for example, then fMRI data are of no use to differentiate the
   health condition of an individual. This result follows mathematically
   from the simple assumption of
@@ -998,7 +999,7 @@ principle solve our plausibility assessment.
 \medskip
 
 The general formula~\eqref{eq:goal_1st_exchangeability} is complicated in
-two respects. First, the fMRI \enquote{datum} $\yx$ belonging to an
+two respects. First, an fMRI \enquote{datum} $\yF$ belonging to an
 individual is a positive-valued vector with $10^7$--$10^8$ components or
 more \citep{lindquist2008}, thus belonging to an incomprehensibly large
 space. Second, our data $\yD$ do not comprise a large number of
@@ -1006,8 +1007,29 @@ individuals, hence the hyperdistribution $\pf(\yp \|\yI)$ and therefore the
 assumptions in $\yI$ besides exchangeability have an important weight in
 the determination of the probability~\eqref{eq:goal_1st_exchangeability}.
 
-[Where I'm heading: to solve the first problem, we go from a set of fMRI
-data to graph properties; to solve the second, we use a model by sufficiency.]
+\mynote{Where I'm heading: to solve the first problem, we go from a set of fMRI
+data to graph properties; to solve the second, we use a model by
+sufficiency.}
+
+It is conceivable that not all information contained in the fMRI datum
+$\yF$ of an individual be relevant to determine the individual's health
+condition $\yH$. The integral~\eqref{eq:goal_1st_exchangeability}, if it
+could be performed, would automatically eliminate the redundant information
+\citep{jaynes1994_r2003}, possibly reducing the problem to a
+lower-dimensional set (not necessarily linear) in the space of fMRI data.
+Being unable to perform the integral, we must try to guess and perform such
+dimensional reduction by hand. The way Alzheimer's Disease works suggest
+that the connection and correlation between brain should be affected and
+different from a healthy condition. This suggests reducing fMRI data to a
+manageable set of graph properties, and apply our inference directly on
+these. \mynote{formulate better. Does this statement make sense?}
+
+
+\mynote{against pre-processing of data: Jaynes
+\citey[\sect~17.10]{jaynes1994_r2003} shows that de-trending and seasonal
+adjustment are approximations of the full probability calculation from the
+original data. Bretthorst \citey{bretthorst1988} shows the same about
+Fourier transforms}
 
 Lacking further information, several working assumptions are usually tried,
 leading to definite hyperpriors, to see if any of them leads to reasonable
