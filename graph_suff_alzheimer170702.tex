@@ -3,7 +3,7 @@
 %% 
 %% Author: PGL  Porta Mana
 %% Created: 2015-05-01T20:53:34+0200
-%% Last-Updated: 2017-08-25T11:33:41+0200
+%% Last-Updated: 2017-08-25T11:42:28+0200
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Report-no: ***
 \newif\ifafour
@@ -829,9 +829,9 @@ Discuss:
 (refs to other literature).
 
 
-\enquote{Where do probability models come from? To judge by the resounding silence
-over this question on the part of most statisticians, it seems highly embarrass-
-ing.}  \citep{dawid1982}
+\enquote{Where do probability models come from? To judge by the resounding
+  silence over this question on the part of most statisticians, it seems
+  highly embarrassing.} \citep{dawid1982}
 
 
 
@@ -923,19 +923,19 @@ individuals collectively by $\yD$:
 
 The labels given to the individuals are arbitrary and we could shuffle them
 without affecting our probability assessment. Said otherwise, suppose that
-individual $3$ was healthy, $\yH_3=\yh$, and had fMRI data $\yF_3=\bm{}$; and
-that individual $7$ had Alzheimer, $\yH_7=\ya$, and had fMRI data
-$\yF_7=\bm{}$. What matter is that we have observed the specific pairs
-$(\yh,\bm{})$ and $(\ya,\bm{})$; whether the individual of the first pair was
-labelled \enquote{$3$} and the other \enquote{$7$}, or vice versa, is
+individual $3$ was healthy, $\yH_3=\yh$, and had fMRI data $\yF_3=\bm{X}$;
+and that individual $7$ had Alzheimer, $\yH_7=\ya$, and had fMRI data
+$\yF_7=\bm{Y}$. What matter is that we have observed the specific pairs
+$(\yh,\bm{X})$ and $(\ya,\bm{Y})$; whether the individual of the first pair
+was labelled \enquote{$3$} and the other \enquote{$7$}, or vice versa, is
 irrelevant. This is true no matter how many individuals we observed or will
 observe.
 
-The irrelevance of labelling to our plausibility assessment is called
+The labelling irrelevance in our plausibility assessment is called
 \emph{exchangeability} and greatly circumscribes our possible plausibility
 assessments. It implies that the plausibility~\eqref{eq:goal_1st} remains
 the same under permutations of the individuals' labels. A theorem by
-de~Finetti \parentext{\citeyear{definetti1930,definetti1937};
+de~Finetti \parentext{\cite*{definetti1930,definetti1937};
   \cite{hewittetal1955}} states that the probability of observing $N$
 individuals with health conditions $\yH_i$ and fMRI data $\yF_i$ must have
 the form
@@ -1017,7 +1017,7 @@ It is conceivable that not all information contained in the fMRI datum
 $\yF$ of an individual be relevant to determine the individual's health
 condition $\yH$. The integral~\eqref{eq:goal_1st_exchangeability}, if it
 could be performed, would automatically winnow out the relevant information
-\citep{jaynes1994_r2003}, possibly reducing the problem to a
+\citep[\chap~17]{jaynes1994_r2003}, possibly reducing the problem to a
 lower-dimensional set (not necessarily linear) in the space of fMRI data.
 Being unable to perform the integral, we must try to guess and perform such
 dimensional reduction by hand. The way Alzheimer's Disease works suggest
