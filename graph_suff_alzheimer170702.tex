@@ -3,7 +3,7 @@
 %% 
 %% Author: PGL  Porta Mana
 %% Created: 2015-05-01T20:53:34+0200
-%% Last-Updated: 2017-08-25T11:42:28+0200
+%% Last-Updated: 2017-08-25T13:55:43+0200
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Report-no: ***
 \newif\ifafour
@@ -913,14 +913,21 @@ goal at this point is to assess the plausibility
   \pf(\yH_0 \| \yF_0,\; \yH_1,\yF_1, \dotsc, \yH_N, \yF_N,\; \yI),
 \end{equation}
 where $\yI$ denotes additional knowledge or working assumptions to be
-discussed shortly. For brevity we shall denote the data of the $N$
+discussed shortly.
+
+We approach this problem from first principles, using probability theory as
+extended logic \citep{jaynes1994_r2003}, a point of view that has brought
+forth much progress in the field of magnetic-resonance imaging
+\citep{bretthorst1990}.
+
+
+
+For brevity we shall denote the data of the $N$
 individuals collectively by $\yD$:
 \begin{equation}
   \label{eq:collective_data_D}
   D \defd (\yH_1,\yF_1, \dotsc, \yH_N, \yF_N).
 \end{equation}
-
-
 The labels given to the individuals are arbitrary and we could shuffle them
 without affecting our probability assessment. Said otherwise, suppose that
 individual $3$ was healthy, $\yH_3=\yh$, and had fMRI data $\yF_3=\bm{X}$;
