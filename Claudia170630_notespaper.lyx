@@ -1,0 +1,485 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass paper
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "times" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 2
+\use_package amssymb 2
+\use_package cancel 0
+\use_package esint 0
+\use_package mathdots 1
+\use_package mathtools 0
+\use_package mhchem 1
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 2
+\tocdepth 2
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Subsubsection
+Introduction
+\end_layout
+
+\begin_layout Standard
+Schizophrenia (SZ) is a psychiatric disorder that comprises various symptoms
+ that are categorized into positive (e.g.
+ hallucinations), negative (e.g.
+ loss of motivation) and cognitive (e.g.
+ memory impairment) disease patterns.
+ A common disease cause for all these widespread symptoms is not found yet.
+ However, many studies found profound changes in macroscopic brain structures,
+ e.g.
+ a shrinkage of whole brain and ventricular volume, reduced gray matter
+ in frontal, temporal cortex and Thalamus, and changes in white matter volume
+ in frontal and temporal cortex.
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: which other areas are involved
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Shenton2010,Wright2009,Wright2010"
+
+\end_inset
+
+ Since both gray matter loss and white matter changes are found, it is reasonabl
+e to conclude that not only the intrinsic activity of single areas is modified
+ but also the interplay of different brain areas in particular in frontal
+ and temporal cortex.
+ It is even argued that these alterations in long range connectivity are
+ responsible for a range of disease symptoms that are not attributed to
+ single areas.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Friston1995"
+
+\end_inset
+
+
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: more citations
+\end_layout
+
+\end_inset
+
+.
+ Taking this disconnect hypothesis as starting point, research focus shifted
+ towards functional connectivity.
+ Intuitively, a similar functional connectivity should result in similar
+ cognitive processing.
+ So, if functional connectivity is modified, it might be even sufficient
+ to modify small pieces of the system in order to recover functional connectivit
+y and it is not necessary needed to adjust brain structures modified by
+ disease to healthy ones.
+ 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: Is this sentence understandable? 
+\end_layout
+
+\end_inset
+
+Functional connectivity is measured either asking the subject to fulfill
+ a certain task or at rest, instructing the subject to think about nothing
+ specific but not fall asleep.
+ At rest, different activity pattern in the different subnetworks were reported
+ comparing schizophrenic individuals with controls.
+ Thus, in seed-based rfMRI studies, where the mean temporal signal of a
+ region of interest (ROI) in the brain is chosen and the temporal correlated
+ activity to the rest of the brain is measured, connectivity changes in
+ the default mode network (DMN), the dorsal attention network (DAN) and
+ the executive control network (ECN) are detected.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Woodward2011,Yu2012"
+
+\end_inset
+
+In studies where the principal components, distracted from the all voxel
+ time series, are used in order to identify functional connected networks,
+ also widespread changes in connectivity are found including cingulate cortex,
+ temporal regions and prefrontal areas 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Yu2012"
+
+\end_inset
+
+ 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: here we can add other regions that might be relevant later on
+\end_layout
+
+\end_inset
+
+In addition to these studies, where specific connections are target, graph
+ theory-based analysis tried to find differences in the meta structure of
+ the considered function network.
+ Here every graph node is defined as a specific brain area identified with
+ the help of an atlas of the standard brain.
+ The graph weights, which mirror the functional connectivity, are then calculate
+d by applying a correlation measure to the temporal mean activity across
+ the voxels such an area.
+ The further analysis of such graphs derived from brains in rest revealed
+ contradicting results in SZ so far.
+ So, for example ....
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Yu2012"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this study we also investigate different graph properties for healthy
+ and SZ subjects.
+ In addition we also look at individual connections in the graphs and investigat
+e whether differences that can be found for individual connections are also
+ visible in overall graph structures.
+ Or whether compensation mechanisms preserve global graph properties.
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: and vice versa
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, we target the question whether a set of graph weights or properties
+ derived from the entire graph (e.g weighted degree, closeness centrality)
+ serve better to discriminate controls from SZ.
+ The therefor applied statistical analysis is based on the model by sufficiency
+ ...
+ 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: adding result of MOS -> multidimensional probability densities + how
+ we quantify overlap of these densities
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Data acquisition
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: Should we use here present to past?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We requested data of Schizophrenic patients and control individuals from
+ Schizconnect (http://schizconnect.org), a virtual database for public schizophre
+nia neuroimaging data.
+ In our request we asked for resting state T2*-weighted functional and T1-weight
+ed structural magnet resonance images (MRI) from individuals participating
+ in the COBRE study either with no known disorder or diagnosed as schizophrenic
+ according to the Diagnostic and Statistical Manual of Mental Disorders
+ (DSM) IV, excluding schizoaffective disorders.
+ The resultant provided data set comprised 91 control individuals and 74
+ schizophrenic patients 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: We did not use all the data for now.
+\end_layout
+
+\end_inset
+
+, whose voluntary and informed participation in the COBRE study was ensured
+ by the institutional guidelines at the University of New Mexico Human Research
+ Protections Office.
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: Is this ment by 'Informed consent' ?
+\end_layout
+
+\end_inset
+
+ A detailed description on the exact experimental design and the MRI scanning
+ is provided by (citation: Cetin at all).
+\end_layout
+
+\begin_layout Subsubsection
+Data preprocessing
+\end_layout
+
+\begin_layout Standard
+Preprocessing of the rfMRI images is carried out by FSL (Smith et al., 2004;
+ Jenkinson et al., 2012) including the following steps: removal of the first
+ 10 images; motion correction (MCFLIRT); spacial filtering with a 4mm FWHM
+ Gaussian kernel
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: is this true?
+\end_layout
+
+\end_inset
+
+; temporal high-pass filtering with a cut-off frequency of 0.2Hz; white matter
+ and CSF regression (fsl_regfilt)
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: is there anything else to say -> look up publications
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection*
+Graph construction
+\end_layout
+
+\begin_layout Standard
+For each subject we register the rfMRI image first to structural space (FSL)
+ and then to the MNI standard space (Ants).
+ Regions of the resulting functional image in standard space are extracted
+ such that they match the 96 regions identified by the Oxford lateral cortical
+ atlas (with a probability above 50 percents).
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: How to cite this?
+\end_layout
+
+\end_inset
+
+ The resulting regions of interest form the nodes of the individual graphs.
+ Edge weights are measured based on the absolute value of the Pearson correlatio
+n coefficient calculated the mean activity of the two nodes considered.
+ Thus, we end up with a weighted, fully connected graph of 96 nodes for
+ each patient.
+ 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: thresholding?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Selection of graph weights
+\end_layout
+
+\begin_layout Subsubsection
+Graph properties
+\end_layout
+
+\begin_layout Standard
+We calculate the normalized weighted degree, closeness centrality and cluster
+ coefficient for all nodes of each graph (python package 'networx'); the
+ shortest path for all pairs of nodes for each graph (python package 'networx');
+ and the modularity for each graph (python package 'community').
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+put equation and code in appendix
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+Apart from the single-value modularity we calculate for all other multi-value
+ properties the first four moments (mean, variance, skewness and kurtosis)
+ of the distributions 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: is distribution right here? 
+\end_layout
+
+\end_inset
+
+derived from the other node specific properties are the properties 
+\end_layout
+
+\begin_layout Standard
+that ..
+ each subject and are the parameters of the MOS ...
+\end_layout
+
+\begin_layout Itemize
+graph properties
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+graph weights
+\end_layout
+
+\begin_layout Itemize
+weighted degree
+\end_layout
+
+\begin_layout Itemize
+shortest path, averaged shortest path, closeness centrality
+\end_layout
+
+\begin_layout Itemize
+modularity (one value)
+\end_layout
+
+\begin_layout Itemize
+cluster coefficient
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+properties of graph distributions
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+mean, variance, skewness, kurtosis
+\end_layout
+
+\begin_layout Itemize
+entropy?
+\end_layout
+
+\end_deeper
+\begin_layout Subsection*
+Discussion
+\end_layout
+
+\begin_layout Itemize
+medication
+\end_layout
+
+\begin_layout Itemize
+graph weights as diagnosis tools 
+\end_layout
+
+\begin_layout Itemize
+classifier often used, entire data
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "brain"
+options "bibtotoc,brainplain"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
