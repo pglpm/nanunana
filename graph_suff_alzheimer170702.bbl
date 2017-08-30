@@ -134,6 +134,59 @@
       \field{title}{Pattern Recognition and Machine Learning}
       \field{year}{2006}
     \endentry
+    \entry{bretthorst1988}{book}{}
+      \name{author}{1}{}{%
+        {{hash=837225229dd7f56c18a75ffff7173b27}{%
+           family={Bretthorst},
+           family_i={B\bibinitperiod},
+           given={G.\bibnamedelimi Larry},
+           given_i={G\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Berlin}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{837225229dd7f56c18a75ffff7173b27}
+      \strng{fullhash}{837225229dd7f56c18a75ffff7173b27}
+      \field{sortinit}{B}
+      \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
+      \field{labelyear}{1988}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{\url{http://bayes.wustl.edu/glb/bib.html}}
+      \field{series}{Lecture notes in statistics}
+      \field{title}{{Bayesian} Spectrum Analysis and Parameter Estimation}
+      \field{volume}{48}
+      \field{year}{1988}
+    \endentry
+    \entry{bretthorst1990}{article}{}
+      \name{author}{1}{}{%
+        {{hash=837225229dd7f56c18a75ffff7173b27}{%
+           family={Bretthorst},
+           family_i={B\bibinitperiod},
+           given={G.\bibnamedelimi Larry},
+           given_i={G\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+      }
+      \strng{namehash}{837225229dd7f56c18a75ffff7173b27}
+      \strng{fullhash}{837225229dd7f56c18a75ffff7173b27}
+      \field{sortinit}{B}
+      \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
+      \field{labelyear}{1990}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{J. Magn.\ Reson.}
+      \field{number}{3}
+      \field{title}{Bayesian analysis. {I}. {Parameter} estimation using quadrature {NMR} models. {II}. {Signal} detection and model selection. {III}. {Applications} to {NMR} signal detection, model selection, and parameter estimation}
+      \field{volume}{88}
+      \field{year}{1990}
+      \field{pages}{533\bibrangedash 595}
+      \range{pages}{63}
+      \keyw{Bayesian probability theory,Fourier transform}
+    \endentry
     \entry{damienetal2013}{book}{}
       \name{editor}{4}{}{%
         {{hash=15b8963950a4ba47c6d4d8e60a4484b0}{%
@@ -199,6 +252,29 @@
       \range{pages}{2}
       \keyw{on the law of probability with exhaustive estimation,sufficient statistics,exponential family,sufficiency}
     \endentry
+    \entry{dawid1982}{incollection}{}
+      \name{author}{1}{}{%
+        {{hash=0961ef4d29a125a610782a8d38dbe96e}{%
+           family={Dawid},
+           family_i={D\bibinitperiod},
+           given={A.\bibnamedelimi Philip},
+           given_i={A\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+      }
+      \strng{namehash}{0961ef4d29a125a610782a8d38dbe96e}
+      \strng{fullhash}{0961ef4d29a125a610782a8d38dbe96e}
+      \field{sortinit}{D}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{labelyear}{1982}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{\citein{kochetal1982}}
+      \field{title}{Intersubjective statistical models}
+      \field{year}{1982}
+      \field{pages}{287\bibrangedash 232}
+      \range{pages}{-54}
+      \keyw{exchangeability,extreme-point model,Bayesian probability theory,sufficiency}
+    \endentry
     \entry{dawid2013}{incollection}{}
       \name{author}{1}{}{%
         {{hash=0961ef4d29a125a610782a8d38dbe96e}{%
@@ -222,6 +298,89 @@
       \field{pages}{19\bibrangedash 29}
       \range{pages}{11}
       \keyw{Bayesian probability theory}
+    \endentry
+    \entry{definetti1930}{article}{}
+      \name{author}{1}{}{%
+        {{hash=b29f2bfeb0be6b730a5d23e119103854}{%
+           prefix={de},
+           prefix_i={d\bibinitperiod},
+           family={Finetti},
+           family_i={F\bibinitperiod},
+           given={Bruno},
+           given_i={B\bibinitperiod}}}%
+      }
+      \strng{namehash}{b29f2bfeb0be6b730a5d23e119103854}
+      \strng{fullhash}{b29f2bfeb0be6b730a5d23e119103854}
+      \field{sortinit}{d}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{labelyear}{1930}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Atti Accad.\ Lincei: Sc.\ Fis.\ Mat.\ Nat.}
+      \field{note}{\url{http://www.brunodefinetti.it/Opere.htm}}
+      \field{number}{5}
+      \field{title}{\langitalian{{Funzione} caratteristica di un fenomeno aleatorio}}
+      \field{volume}{IV}
+      \field{year}{1930}
+      \field{pages}{86\bibrangedash 133}
+      \range{pages}{48}
+      \keyw{characteristic function of a probabilistic phenomenon,probability theory,exchangeability}
+    \endentry
+    \entry{definetti1937}{article}{}
+      \name{author}{1}{}{%
+        {{hash=b29f2bfeb0be6b730a5d23e119103854}{%
+           prefix={de},
+           prefix_i={d\bibinitperiod},
+           family={Finetti},
+           family_i={F\bibinitperiod},
+           given={Bruno},
+           given_i={B\bibinitperiod}}}%
+      }
+      \strng{namehash}{b29f2bfeb0be6b730a5d23e119103854}
+      \strng{fullhash}{b29f2bfeb0be6b730a5d23e119103854}
+      \field{sortinit}{d}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{labelyear}{1937}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Ann.\ Inst.\ Henri Poincaré}
+      \field{note}{Transl.\ as \citebi{definetti1937_t1980}}
+      \field{number}{1}
+      \field{title}{\langfrench{{La} prévision: ses lois logiques, ses sources subjectives}}
+      \field{volume}{7}
+      \field{year}{1937}
+      \field{pages}{1\bibrangedash 68}
+      \range{pages}{68}
+      \keyw{de Finetti's theorem,exchangeability}
+    \endentry
+    \entry{definetti1937_t1980}{incollection}{}
+      \name{author}{1}{}{%
+        {{hash=b29f2bfeb0be6b730a5d23e119103854}{%
+           prefix={de},
+           prefix_i={d\bibinitperiod},
+           family={Finetti},
+           family_i={F\bibinitperiod},
+           given={Bruno},
+           given_i={B\bibinitperiod}}}%
+      }
+      \strng{namehash}{b29f2bfeb0be6b730a5d23e119103854}
+      \strng{fullhash}{b29f2bfeb0be6b730a5d23e119103854}
+      \field{sortinit}{d}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{labelyear}{1964}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{\citein{kyburgetal1964_r1980}}
+      \field{note}{Transl.\ of \citebi{definetti1937} by Henry E. Kyburg, Jr.}
+      \field{origyear}{1937}
+      \field{title}{Foresight: Its logical laws, its subjective sources}
+      \field{year}{1964}
+      \field{pages}{53\bibrangedash 118}
+      \range{pages}{66}
+      \keyw{exchangeability,Bayesian probability theory}
     \endentry
     \entry{degroot1970_r2004}{book}{}
       \name{author}{1}{}{%
@@ -441,6 +600,36 @@
       \field{year}{2014}
       \keyw{cubature,integration,Monte Carlo}
     \endentry
+    \entry{hewittetal1955}{article}{}
+      \name{author}{2}{}{%
+        {{hash=bad518edbc49f555fc80bc4f4feebbea}{%
+           family={Hewitt},
+           family_i={H\bibinitperiod},
+           given={Edwin},
+           given_i={E\bibinitperiod}}}%
+        {{hash=be6cc1de7cfe85df3e9c87f3ab304933}{%
+           family={Savage},
+           family_i={S\bibinitperiod},
+           given={Leonard\bibnamedelima J.},
+           given_i={L\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+      }
+      \strng{namehash}{8162771cadde35987ceec77e26bc68a9}
+      \strng{fullhash}{f57a85181393d262227867656ff4ea29}
+      \field{sortinit}{H}
+      \field{sortinithash}{82012198d5dfa657b8c4a168793268a6}
+      \field{labelyear}{1955}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Trans.\ Am.\ Math.\ Soc.}
+      \field{number}{2}
+      \field{title}{Symmetric Measures on {Cartesian} Products}
+      \field{volume}{80}
+      \field{year}{1955}
+      \field{pages}{470\bibrangedash 501}
+      \range{pages}{32}
+      \keyw{de Finetti's theorem,exchangeability}
+    \endentry
     \entry{hipp1974}{article}{}
       \name{author}{1}{}{%
         {{hash=479c1634dd8b8d7f0f8fc2336f301cb8}{%
@@ -550,6 +739,37 @@
       \field{year}{2005}
       \keyw{Bayesian probability theory,exchangeability}
     \endentry
+    \entry{kochetal1982}{book}{}
+      \name{editor}{2}{}{%
+        {{hash=a9c4526f419f743a57142c1c19f62f69}{%
+           family={Koch},
+           family_i={K\bibinitperiod},
+           given={Giorgio},
+           given_i={G\bibinitperiod}}}%
+        {{hash=a30e8e8e1b6830c9142c3c4cd3479eb8}{%
+           family={Spizzichino},
+           family_i={S\bibinitperiod},
+           given={Fabio},
+           given_i={F\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Amsterdam}%
+      }
+      \list{publisher}{1}{%
+        {North-Holland}%
+      }
+      \strng{namehash}{0fb87077f9c401ab1e53902af24433e4}
+      \strng{fullhash}{f73e8e87ce1b8b8d6fb2ab1209f24cd8}
+      \field{sortinit}{K}
+      \field{sortinithash}{a7d5b3aec5a0890aae7baf85a209abfc}
+      \field{labelyear}{1982}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{editor}
+      \field{labeltitlesource}{title}
+      \field{title}{Exchangeability in Probability and Statistics\subtitleproc{: Proceedings of the International Conference on Exchangeability in Probability and Statistics}}
+      \field{year}{1982}
+      \keyw{exchangeability,exponential family,Bayesian probability theory}
+    \endentry
     \entry{koopman1936}{article}{}
       \name{author}{1}{}{%
         {{hash=5adcdf5414082721c379f6cc2227053a}{%
@@ -574,6 +794,41 @@
       \field{pages}{399\bibrangedash 409}
       \range{pages}{11}
       \keyw{exponential family}
+    \endentry
+    \entry{kyburgetal1964_r1980}{book}{}
+      \name{editor}{2}{}{%
+        {{hash=be8a7c897caab27126dec165fd2693de}{%
+           family={Kyburg},
+           family_i={K\bibinitperiod},
+           suffix={Jr.},
+           suffix_i={J\bibinitperiod},
+           given={Henry\bibnamedelima Ely},
+           given_i={H\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+        {{hash=427ba16b68a9dc42148e7480c70bb83c}{%
+           family={Smokler},
+           family_i={S\bibinitperiod},
+           given={Howard\bibnamedelima Edward},
+           given_i={H\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Huntington, USA}%
+      }
+      \list{publisher}{1}{%
+        {Robert E. Krieger}%
+      }
+      \strng{namehash}{e9e9e11c4b8714313c1b0a03cb8544d1}
+      \strng{fullhash}{a6c2a34b24e373a993747c9858f38754}
+      \field{sortinit}{K}
+      \field{sortinithash}{a7d5b3aec5a0890aae7baf85a209abfc}
+      \field{labelyear}{1980}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{editor}
+      \field{labeltitlesource}{title}
+      \field{edition}{2}
+      \field{note}{First publ.\ 1964}
+      \field{origyear}{1964}
+      \field{title}{Studies in Subjective Probability}
+      \field{year}{1980}
     \endentry
     \entry{lauritzen1982_r1988}{book}{}
       \name{author}{1}{}{%
@@ -633,6 +888,32 @@
       \field{title}{Introduction to Probability and Statistics from a Bayesian Viewpoint. Part 2: Inference}
       \field{year}{2008}
       \keyw{Bayesian probability theory}
+    \endentry
+    \entry{lindquist2008}{article}{}
+      \name{author}{1}{}{%
+        {{hash=a47c572a28d26681b9b0c2db6dbc085e}{%
+           family={Lindquist},
+           family_i={L\bibinitperiod},
+           given={Martin\bibnamedelima A.},
+           given_i={M\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \strng{namehash}{a47c572a28d26681b9b0c2db6dbc085e}
+      \strng{fullhash}{a47c572a28d26681b9b0c2db6dbc085e}
+      \field{sortinit}{L}
+      \field{sortinithash}{872351f18d0f736066eda0bf18bfa4f7}
+      \field{labelyear}{2008}
+      \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Stat.\ Sci.}
+      \field{note}{\arxiveprint{0906.3662}}
+      \field{number}{4}
+      \field{title}{The Statistical Analysis of {fMRI} Data}
+      \field{volume}{23}
+      \field{year}{2008}
+      \field{pages}{439\bibrangedash 464}
+      \range{pages}{26}
+      \keyw{Bayesian probability theory,neuroscience}
     \endentry
     \entry{minka1998_r2001}{report}{}
       \name{author}{1}{}{%

@@ -3,7 +3,7 @@
 %% 
 %% Author: PGL  Porta Mana
 %% Created: 2015-05-01T20:53:34+0200
-%% Last-Updated: 2017-07-02T00:39:19+0200
+%% Last-Updated: 2017-08-28T18:58:22+0200
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Report-no: ***
 \newif\ifafour
@@ -553,13 +553,15 @@ totalheight=\heightof{@}]{atblack.png}}\makeatother
 \author{\ifpublic% 
 %\hspace*{\stretch{1}}\protect\makebox[0pt][c]%
 %{\firstname{***}\ \surname{***}}%
-%\hspace*{\stretch{1}}\protect\makebox[0pt][c]%
-P.G.L. Porta\,Mana%
-%\hspace*{\stretch{1}}%
+\hspace*{\stretch{1}}\protect\makebox[0pt][c]%
+{C. Bachmann}%
+\hspace*{\stretch{1}}\protect\makebox[0pt][c]%
+{P.G.L. Porta\,Mana}%
+\hspace*{\stretch{1}}\protect\makebox[0pt][c]%
+{A. Morrison}%
+\hspace*{\stretch{1}}%
 % \\[2\jot]%
 \else Luca\fi
-\quad
-\epost{\email{pgl}{portamana.org}}%
 }
 
 %\date{Draft of \today\ (first drafted \firstdraft)}
@@ -697,13 +699,15 @@ P.G.L. Porta\,Mana%
 %\newcommand*{\qem}{\leavevmode\unskip\penalty9999 \hbox{}\nobreak\hfill
 %\quad\hbox{\QEM}}
 
-%\definecolor{notecolour}{RGB}{68,170,153}
+\definecolor{notecolour}{RGB}{68,170,153}
 %\newcommand*{\puzzle}{{\fontencoding{U}\fontfamily{fontawesometwo}\selectfont\symbol{225}}}
-%\newcommand*{\puzzle}{\maltese}
-%\newcommand{\mynote}[1]{ {\color{notecolour}\puzzle\ #1}}
+\newcommand*{\puzzle}{\maltese}
+\newcommand{\mynote}[1]{ {\color{notecolour}\puzzle\ #1}}
 %\newcommand*{\widebar}[1]{{\mkern1.5mu\skew{2}\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}}
 
 \newcommand*{\yH}{h}
+\newcommand*{\yD}{D}
+\newcommand*{\yF}{\bm{F}}
 \newcommand*{\yx}{x}
 \newcommand*{\yxx}{\bm{\yx}}
 \newcommand*{\data}{\text{data}}
@@ -728,8 +732,11 @@ P.G.L. Porta\,Mana%
 \newcommand*{\yN}{N}
 \newcommand*{\yf}{f}
 \newcommand*{\yq}{\pf}
+\newcommand*{\yp}{q}
+\newcommand*{\ypc}{\yp_{\yD}}
 \newcommand*{\yn}{n}
 \newcommand*{\yd}{d}
+\newcommand*{\yI}{I}
 \newcommand*{\yno}{\yn_{\yH}}
 \newcommand*{\yna}{\yn_{\ya}}
 \newcommand*{\ynh}{\yn_{\yh}}
@@ -822,7 +829,9 @@ Discuss:
 (refs to other literature).
 
 
-
+\enquote{Where do probability models come from? To judge by the resounding
+  silence over this question on the part of most statisticians, it seems
+  highly embarrassing.} \citep{dawid1982}
 
 
 
@@ -835,10 +844,10 @@ and burdensome for the patients, since it comprises a battery of
 psychological tests and an extraction of disease specific biomarkers from
 the cerebrospinal fluid (ouch!). A cheaper and more convenient procedure
 would be a diagnosis based on images obtained through fMRI. Based on
-previous polymodal studies demonstrating disrupted inter- and
-intra-cortical connectivity in Alzheimer's Disease [ref], in another
-awesome paper we argue that the functional connectivity of the whole
-cortex, summarized in a computationally manageable number of
+previous polymodal [what does this mean?] studies demonstrating disrupted
+inter- and intra-cortical connectivity in Alzheimer's Disease [ref], in
+another awesome paper we argue that the functional connectivity of the
+whole cortex, summarized in a computationally manageable number of
 graph-theoretic parameters -- derived from the full, computationally
 unmanageable fMRI data -- might be a good predictor for the cause of the
 disease.
@@ -878,6 +887,171 @@ contains remarks on generalizations, approximations, and more.
 
 \section{Problem and method}
 \label{sec:problem}
+
+We approach this problem from first principles, using probability theory as
+extended logic \citep{jaynes1994_r2003}, a point of view that has brought
+forth much progress in many fields, including magnetic-resonance imaging
+\citep{bretthorst1990}.
+
+Our goal, stripped to its essentials, is this.
+
+Given the fMRI data of an individual and other knowledge discussed below,
+assess the plausibility that the individual is healthy or suffers from a
+brain disease, from a set of known possible ones. For example: assess
+whether the individual is healthy, or has Alzheimer's Disease, or is mildly
+cognitively impaired (three possibilities); or: assess whether the
+individual is healthy or has schizophrenia (two possibilities). The brain
+diseases are supposed to be mutually exclusive, and to exhaust the set of
+possible diseases that can be expected in the individual.
+
+The \enquote{other knowledge} fleetingly mentioned above consists in the
+fMRI data of individuals of known health conditions. This knowledge is
+essential for our plausibility assessment, for we would not be able to
+relate fMRI data and health condition otherwise.
+
+Label the individual of unknown health condition with $0$, and those whose
+health conditions and fMRI data are known by $1, \dotsc, N$. Denote the
+fMRI data and health condition of individual $i$ by $\yF_i$ and $\yH_i$ Our
+goal at this point is to assess the plausibility
+\begin{equation}
+  \label{eq:goal_1st}
+  \pf(\yH_0 \| \yF_0,\; \yH_1,\yF_1, \dotsc, \yH_N, \yF_N,\; \yI),
+\end{equation}
+where $\yI$ denotes additional knowledge or working assumptions to be
+discussed shortly.
+
+For brevity we shall denote the data of the $N$
+individuals collectively by $\yD$:
+\begin{equation}
+  \label{eq:collective_data_D}
+  D \defd (\yH_1,\yF_1, \dotsc, \yH_N, \yF_N).
+\end{equation}
+The labels given to the individuals are arbitrary and we could shuffle them
+without affecting our probability assessment. Said otherwise, suppose that
+individual $3$ was healthy, $\yH_3=\yh$, and had fMRI data $\yF_3=\bm{X}$;
+and that individual $7$ had Alzheimer, $\yH_7=\ya$, and had fMRI data
+$\yF_7=\bm{Y}$. What matter is that we have observed the specific pairs
+$(\yh,\bm{X})$ and $(\ya,\bm{Y})$; whether the individual of the first pair
+was labelled \enquote{$3$} and the other \enquote{$7$}, or vice versa, is
+irrelevant. This is true no matter how many individuals we observed or will
+observe.
+
+The labelling irrelevance in our plausibility assessment is called
+\emph{exchangeability} and greatly circumscribes our possible plausibility
+assessments. It implies that the plausibility~\eqref{eq:goal_1st} remains
+the same under permutations of the individuals' labels. A theorem by
+de~Finetti \parentext{\cite*{definetti1930,definetti1937};
+  \cite{hewittetal1955}} states that the probability of observing $N$
+individuals with health conditions $\yH_i$ and fMRI data $\yF_i$ must have
+the form
+\begin{equation}
+  \label{eq:definetti_exchangeability}
+  \pf(\yH_0, \yF_0,\; \yH_1,\yF_1,\; \dotsc, \yH_N, \yF_N\| \yI)
+  =
+  \int \Bigl[ \prod_i \yp(\yH_i,\yF_i) \Bigr]\,
+  \pf(\yp \|\yI) \,\di\yp,
+\end{equation}
+where $\yp$ represent a probability distribution over the possible values
+of $(\yH,\yF)$; $\pf(\yp \|\yI)$ is a \enquote{hyperdistribution},
+determined by the assumptions $\yI$, over such distributions; and the
+integral is over all such distributions $\yp$.
+
+An integral over probability distributions is a mathematically complicated
+object and may not seem a great advancement in assessing the
+plausibility~\eqref{eq:goal_1st}. But de~Finetti's formula above has
+important consequences for our inference:
+\begin{enumerate}[wide]
+\item Using de~Finetti's formula with the definition of conditional
+  probability we can rewrite our goal plausibility~\eqref{eq:goal_1st} as
+\begin{equation}\label{eq:goal_1st_exchangeability}
+\begin{gathered}
+    \pf(\yH_0 \| \yF_0, \yD, \yI) =
+    \frac{
+      \int \yp(\yH_0,\yF_0)\,
+      \pf(\yp \|\yD,\yI) \,\di\yp
+    }{
+      \int \sum_{\yH}\yp(\yH,\yF_0)\,
+      \pf(\yp \|\yD,\yI) \,\di\yp },
+    \\ \text{with} \quad \pf(\yp \|\yD,\yI) \,\di\yp =
+    \frac{ \bigl[ \prod_i \yp(\yH_i,\yF_i) \bigr]\,
+      \pf(\yp \|\yI)
+    }{
+      \int \bigl[ \prod_i \yp(\yH_i,\yF_i) \bigr]\,
+      \pf(\yp \|\yI) \,\di\yp }\di\yp.
+\end{gathered}
+\end{equation}
+The latter distribution becomes more and more concentrated on a particular
+distribution $\ypc$ as our data $\yD$ assimilates a larger and larger number
+of individuals, independently of the hyperdistribution $\pf(\yp \|\yI)$ so
+that our probability becomes
+\begin{equation}
+  \label{eq:goal_1st_limit}
+  \pf(\yH_0 \| \yF_0, \yD, \yI) \approx
+  \ypc(\yH_0,\yF_0) / \tsum_{\yH}\ypc(\yH,\yF_0)
+  \equiv \ypc(\yH_0\|\yF_0),
+\end{equation}
+with $\ypc$ completely determined by the data $\yD$. This would in
+principle solve our plausibility assessment.
+\item The latter formula also tells us the theoretical limit by which the
+  health condition $\yH_0$ can be identified from fMRI data $\yF_0$: if
+  $\ypc(\yH_0\|\yF_0)$ is more or less uniform independently of $\yF_0$,
+  for example, then fMRI data are of no use to differentiate the
+  health condition of an individual. This result follows mathematically
+  from the simple assumption of
+  exchangeability~\eqref{eq:definetti_exchangeability} and the rules of the
+  probability calculus, hence no amount of ingenuity could overcome this
+  limit. Our hope, of course, is that such a differentiation be possible.
+\end{enumerate}
+
+\medskip
+
+The general formula~\eqref{eq:goal_1st_exchangeability} is complicated in
+two respects. First, an fMRI \enquote{datum} $\yF$ belonging to an
+individual is a positive-valued vector with $10^7$--$10^8$ components or
+more \citep{lindquist2008}, thus belonging to an incomprehensibly large
+space. Second, our data $\yD$ do not comprise a large number of
+individuals, hence the hyperdistribution $\pf(\yp \|\yI)$ and therefore the
+assumptions in $\yI$ besides exchangeability have an important weight in
+the determination of the probability~\eqref{eq:goal_1st_exchangeability}.
+
+\mynote{Where I'm heading: to solve the first problem, we go from a set of fMRI
+data to graph properties; to solve the second, we use a model by
+sufficiency.}
+
+It is conceivable that not all information contained in the fMRI datum
+$\yF$ of an individual be relevant to determine the individual's health
+condition $\yH$. The integral~\eqref{eq:goal_1st_exchangeability}, if it
+could be performed, would automatically winnow out the relevant information
+\citep[\chap~17]{jaynes1994_r2003}, possibly reducing the problem to a
+lower-dimensional set (not necessarily linear) in the space of fMRI data.
+Being unable to perform the integral, we must try to guess and perform such
+dimensional reduction by hand. For example, the way Alzheimer's Disease
+works suggests that the connection and correlation between brain regions
+should be affected with respect to a healthy condition. We can thus address
+the first problem by reducing fMRI data to a manageable set of graph
+properties, and apply our inference directly on these. \mynote{formulate
+  better. Does this statement make sense?} We discuss this more in detail
+in **[other paper].
+
+
+\mynote{against pre-processing of data: Jaynes \citey[\sects~17.5.1,
+  17.10]{jaynes1994_r2003} shows that de-trending and seasonal adjustment
+  are approximations of the full probability calculation from the original
+  data. Bretthorst \citey{bretthorst1988,bretthorst1990} shows the same
+  about Fourier transforms}
+
+Regarding the choice of hyperprior $\pf(\yp \|\yI)$, lacking further
+information we can entertain several working assumptions, each leading to a
+definite hyperprior, and check whether any of them leads to reasonable
+predictions. These working assumptions must still let our data play a role
+in determining the probability~\eqref{eq:goal_1st_exchangeability}. In this
+work we compare different working assumptions based on the concept of
+\emph{sufficiency}. The present work focuses on this approach to address
+the second problem.
+
+
+
+\section{Problem and method -- old}
 
 Let's say that each individual can be either Healthy, or suffer from
 Alzheimer, or be mildly Cognitively impaired. This is its health condition.
