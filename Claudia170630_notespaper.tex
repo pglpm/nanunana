@@ -1,0 +1,143 @@
+%% LyX 2.2.1 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{paper}
+\usepackage{mathptmx}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{geometry}
+\geometry{verbose}
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{babel}
+\begin{document}
+
+\subsubsection{Introduction}
+
+A fundamental problem in brain research consists in the high variability
+between individual brains. Especially when it comes to disease diagnosis,
+it is often hard to find a unique measurable quantity with non-overlapping
+value distributions  such that healthy and diseased subjects can
+be unmistakably distinguished. As a consequence, a better disease
+classification should be reached, if a variety of measured properties
+are taking into account, even if their value distributions strongly
+overlap. The resulting high dimensionality space spanned by the different
+measured properties is difficult to handle unless classifier such
+SVM and ... are applied. But classifiers usually need a large sample
+size for training to prevent underfitting, which often cannot be provided.
+
+Here we provide a statistical framework that handles high dimensional
+data, deals with small data sets and estimates in how far more data
+would improve prediction. In addition, it can be easily updated by
+data that is handed in later on and extracts the most informative
+parameters. Furthermore, the underlying probability model, the so
+called model by sufficiency, does not require any predefined statistical
+model, because it is uniquely determined by the assumption that the
+means and covariances of the measured properties are sufficient to
+make future predictions. 
+
+In this work we apply this statistical framework to a particular data
+set of resting-state functional magnet resonance imaging (rfMRI) data
+of schizophrenic (SZ) and control (C) individuals. The data was freely
+provided by Schizonet a virtual database for public schizophrenia
+neuroimaging data. Since SZ is a disease that affects the entire brain,
+as it is explained in more detail below, we expect that analyzing
+functional connectivity results in high dimensional data with overlapping
+properties distributions well suited for our analysis.
+
+SZ is a psychiatric disorder that comprises various symptoms that
+are categorized into positive (e.g. hallucinations), negative (e.g.
+loss of motivation) and cognitive (e.g. memory impairment) disease
+patterns. A common disease cause for all these widespread symptoms
+is not found yet. However, many studies found profound changes in
+macroscopic brain structures, e.g. a shrinkage of whole brain and
+ventricular volume, reduced gray matter in frontal, temporal cortex
+and Thalamus, and changes in white matter volume in frontal and temporal
+cortex.\cite{Shenton2010,Wright2009,Wright2010} Since both gray
+matter loss and white matter changes are found, it is reasonable to
+conclude that not only the intrinsic activity of single areas is modified
+but also the interplay of different brain areas in particular in frontal
+and temporal cortex. It is even argued that these alterations in long
+range connectivity are responsible for a range of disease symptoms
+that are not attributed to single areas.\cite{Friston1995} Taking
+this disconnect hypothesis as starting point, research more and more
+focuses on functional connectivity. 
+
+In general, functional connectivity is measured either by asking the
+subject to fulfill a certain task or at rest, instructing the subject
+to think about nothing specific but not fall asleep. At rest, changes
+in functional connectivity of different subnetworks are reported in
+SZ. For example, both increased and decreased functional connectivity
+is found in the default mode network (DMN), but the hyperactivity
+seems to be reported more often.\cite{Hu2017} Moreover widespread
+connectivity changes in the dorsal attention network (DAN) and the
+executive control network (ECN) are detected.\cite{Woodward2011,Yu2012}
+
+In order to account for all these possible changes in functional connectivities
+across the different networks, we construct graphs with edges representing
+the functional connectivity between two cortex areas. Comparing the
+distribution of individual edge weights across the SZ subjects with
+the one of the controls, we find highly overlapping distributions.
+But despite this high overlap we achieve a (very) good separability
+of the two groups by applying the model by sufficiency framework.
+
+\subsubsection{Data acquisition}
+
+We requested data of Schizophrenic patients and control individuals
+from Schizconnect (http://schizconnect.org), a virtual database for
+public schizophrenia neuroimaging data. In our request we asked for
+resting state T2{*}-weighted functional and T1-weighted structural
+magnet resonance images (MRI) from individuals participating in the
+COBRE study either with no known disorder or diagnosed as schizophrenic
+according to the Diagnostic and Statistical Manual of Mental Disorders
+(DSM) IV, excluding schizoaffective disorders. The resultant provided
+data set comprised 91 control individuals and 74 schizophrenic patients
+, whose voluntary and informed participation in the COBRE study was
+ensured by the institutional guidelines at the University of New Mexico
+Human Research Protections Office. A detailed description on the
+exact experimental design and the MRI scanning is provided by (citation:
+Cetin at all).
+
+\subsubsection{Data preprocessing}
+
+Preprocessing of the rfMRI images is carried out by FSL (Smith et
+al., 2004; Jenkinson et al., 2012) including the following steps:
+removal of the first 10 images; motion correction (MCFLIRT); spacial
+filtering with a 4mm FWHM Gaussian kernel; temporal high-pass filtering
+with a cut-off frequency of 0.2Hz; white matter and CSF regression
+(fsl\_regfilt).
+
+\subsubsection*{Graph construction}
+
+For each subject we register the rfMRI image first to structural space
+(FSL) and then to the MNI standard space (Ants). Regions of the resulting
+functional image in standard space are extracted such that they match
+the 94 regions identified by the Oxford lateral cortical atlas (with
+a probability above 50 percents). The resulting regions of interest
+form the nodes of the individual graphs. Edge weights are measured
+based on the (absolute) value of the Pearson correlation coefficient
+calculated the mean activity of the two nodes considered. Thus, we
+end up with a weighted, undirected, fully connected graph of 94 nodes
+for each patient. 
+
+\subsubsection*{Selection of graph weights}
+
+Because we want to avoid computational overload we pe-select a small
+subset of all possible 4371 edges. The pre-selection was done such
+that we considered only ten edge weights with the highest differences
+in the means between the two populations.
+
+\subsubsection{}
+
+\subsection*{Discussion}
+\begin{itemize}
+\item medication
+\item graph weights as diagnosis tools 
+\item classifier often used, entire data
+\end{itemize}
+
+\bibliographystyle{brainplain}
+\addcontentsline{toc}{section}{\refname}\bibliography{brain}
+
+\end{document}
