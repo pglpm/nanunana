@@ -76,8 +76,189 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-Schizophrenia (SZ) is a psychiatric disorder that comprises various symptoms
- that are categorized into positive (e.g.
+\begin_inset Note Note
+status open
+
+\begin_layout Itemize
+brain is very variable, problem of having overlapping distributions -> how
+ can the data still be used for classification?
+\end_layout
+
+\begin_layout Itemize
+huge amount of data for classifier needed
+\end_layout
+
+\begin_layout Itemize
+estimation of whether the sample size is big enough, or whether more data
+ would improve prediction
+\end_layout
+
+\begin_layout Itemize
+adding examples, updating the model
+\end_layout
+
+\begin_layout Itemize
+no predefined model, simple assumption, everything result from logic 
+\end_layout
+
+\begin_layout Itemize
+getting the variables that matter
+\end_layout
+
+\begin_layout Itemize
+our solution->MBS
+\end_layout
+
+\begin_layout Itemize
+demonstrating method for a particular data set
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Itemize
+Why this data set?
+\end_layout
+
+\begin_layout Itemize
+whole brain data, disconnect hypothesis in SZ
+\end_layout
+
+\begin_layout Itemize
+data available 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Itemize
+something about SZ, refering to disconnect hypothesis in SZ, expecting results
+ with modest overlapping distribution 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A fundamental problem in brain research consists in the high variability
+ between individual brains.
+ Especially when it comes to disease diagnosis, it is often hard to find
+ a unique measurable quantity with non-overlapping value distributions 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: is there a better word for that?
+\end_layout
+
+\end_inset
+
+ such that healthy and diseased subjects can be unmistakably distinguished.
+ As a consequence, a better disease classification should be reached, if
+ a variety of measured properties are taking into account, even if their
+ value distributions strongly overlap.
+ The resulting high dimensionality space spanned by the different measured
+ properties is difficult to handle unless classifier such SVM and ...
+ are applied.
+ But classifiers usually need a large sample size for training to prevent
+ underfitting, which often cannot be provided.
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: put this to discussion In addition new data points cannot be integrated
+ after training completion.
+ Another problem, which is still not entirely solved yet, consists in finding
+ the parameters that are most informative and mainly responsible for training
+ success
+\end_layout
+
+\end_inset
+
+
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: Is this true? Ask Renato.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here we provide a statistical framework that handles high dimensional data,
+ deals with small data sets and estimates in how far more data would improve
+ prediction.
+ In addition, it can be easily updated by data that is handed in later on
+ and extracts the most informative parameters.
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: define parameters in a better way
+\end_layout
+
+\end_inset
+
+ Furthermore, the underlying probability model, the so called model by sufficien
+cy, does not require any predefined statistical model
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: is this correct?
+\end_layout
+
+\end_inset
+
+, because it is uniquely determined by the assumption that the means and
+ covariances of the measured properties are sufficient to make future prediction
+s.
+ 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: shall we say something about the exchangeablitiy?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this work we apply this statistical framework to a particular data set
+ of resting-state functional magnet resonance imaging (rfMRI) data of schizophre
+nic (SZ) and control (C) individuals.
+ The data was freely provided by Schizonet a virtual database for public
+ schizophrenia neuroimaging data.
+ Since SZ is a disease that affects the entire brain, as it is explained
+ in more detail below, we expect that analyzing functional connectivity
+ results in high dimensional data with overlapping properties distributions
+ well suited for our analysis.
+\end_layout
+
+\begin_layout Standard
+SZ is a psychiatric disorder that comprises various symptoms that are categorize
+d into positive (e.g.
  hallucinations), negative (e.g.
  loss of motivation) and cognitive (e.g.
  memory impairment) disease patterns.
@@ -96,7 +277,7 @@ CB: which other areas are involved
 
 \end_inset
 
- 
+
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Shenton2010,Wright2009,Wright2010"
@@ -110,7 +291,6 @@ e to conclude that not only the intrinsic activity of single areas is modified
  It is even argued that these alterations in long range connectivity are
  responsible for a range of disease symptoms that are not attributed to
  single areas.
- 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Friston1995"
@@ -127,118 +307,45 @@ CB: more citations
 
 \end_inset
 
-.
- Taking this disconnect hypothesis as starting point, research focus shifted
- towards functional connectivity.
- Intuitively, a similar functional connectivity should result in similar
- cognitive processing.
- So, if functional connectivity is modified, it might be even sufficient
- to modify small pieces of the system in order to recover functional connectivit
-y and it is not necessary needed to adjust brain structures modified by
- disease to healthy ones.
+ Taking this disconnect hypothesis as starting point, research more and
+ more focuses on functional connectivity.
  
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-CB: Is this sentence understandable? 
 \end_layout
+
+\begin_layout Standard
+In general, functional connectivity is measured either by asking the subject
+ to fulfill a certain task or at rest, instructing the subject to think
+ about nothing specific but not fall asleep.
+ At rest, changes in functional connectivity of different subnetworks are
+ reported in SZ.
+ For example, both increased and decreased functional connectivity is found
+ in the default mode network (DMN), but the hyperactivity seems to be reported
+ more often.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Hu2017"
 
 \end_inset
 
-Functional connectivity is measured either asking the subject to fulfill
- a certain task or at rest, instructing the subject to think about nothing
- specific but not fall asleep.
- At rest, different activity pattern in the different subnetworks were reported
- comparing schizophrenic individuals with controls.
- Thus, in seed-based rfMRI studies, where the mean temporal signal of a
- region of interest (ROI) in the brain is chosen and the temporal correlated
- activity to the rest of the brain is measured, connectivity changes in
- the default mode network (DMN), the dorsal attention network (DAN) and
- the executive control network (ECN) are detected.
+ Moreover widespread connectivity changes in the dorsal attention network
+ (DAN) and the executive control network (ECN) are detected.
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Woodward2011,Yu2012"
 
 \end_inset
 
-In studies where the principal components, distracted from the all voxel
- time series, are used in order to identify functional connected networks,
- also widespread changes in connectivity are found including cingulate cortex,
- temporal regions and prefrontal areas 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Yu2012"
-
-\end_inset
-
- 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-CB: here we can add other regions that might be relevant later on
-\end_layout
-
-\end_inset
-
-In addition to these studies, where specific connections are target, graph
- theory-based analysis tried to find differences in the meta structure of
- the considered function network.
- Here every graph node is defined as a specific brain area identified with
- the help of an atlas of the standard brain.
- The graph weights, which mirror the functional connectivity, are then calculate
-d by applying a correlation measure to the temporal mean activity across
- the voxels such an area.
- The further analysis of such graphs derived from brains in rest revealed
- contradicting results in SZ so far.
- So, for example ....
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Yu2012"
-
-\end_inset
-
 
 \end_layout
 
 \begin_layout Standard
-In this study we also investigate different graph properties for healthy
- and SZ subjects.
- In addition we also look at individual connections in the graphs and investigat
-e whether differences that can be found for individual connections are also
- visible in overall graph structures.
- Or whether compensation mechanisms preserve global graph properties.
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-CB: and vice versa
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Thus, we target the question whether a set of graph weights or properties
- derived from the entire graph (e.g weighted degree, closeness centrality)
- serve better to discriminate controls from SZ.
- The therefor applied statistical analysis is based on the model by sufficiency
- ...
- 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-CB: adding result of MOS -> multidimensional probability densities + how
- we quantify overlap of these densities
-\end_layout
-
-\end_inset
-
-
+In order to account for all these possible changes in functional connectivities
+ across the different networks, we construct graphs with edges representing
+ the functional connectivity between two cortex areas.
+ Comparing the distribution of individual edge weights across the SZ subjects
+ with the one of the controls, we find highly overlapping distributions.
+ But despite this high overlap we achieve a (very) good separability of
+ the two groups by applying the model by sufficiency framework.
 \end_layout
 
 \begin_layout Subsubsection
@@ -334,7 +441,7 @@ Graph construction
 For each subject we register the rfMRI image first to structural space (FSL)
  and then to the MNI standard space (Ants).
  Regions of the resulting functional image in standard space are extracted
- such that they match the 96 regions identified by the Oxford lateral cortical
+ such that they match the 94 regions identified by the Oxford lateral cortical
  atlas (with a probability above 50 percents).
 \begin_inset Note Note
 status open
@@ -346,10 +453,11 @@ CB: How to cite this?
 \end_inset
 
  The resulting regions of interest form the nodes of the individual graphs.
- Edge weights are measured based on the absolute value of the Pearson correlatio
-n coefficient calculated the mean activity of the two nodes considered.
- Thus, we end up with a weighted, fully connected graph of 96 nodes for
- each patient.
+ Edge weights are measured based on the (absolute) value of the Pearson
+ correlation coefficient calculated the mean activity of the two nodes considere
+d.
+ Thus, we end up with a weighted, undirected, fully connected graph of 94
+ nodes for each patient.
  
 \begin_inset Note Note
 status open
@@ -367,11 +475,37 @@ CB: thresholding?
 Selection of graph weights
 \end_layout
 
+\begin_layout Standard
+Because we want to avoid computational overload we pe-select a small subset
+ of all possible 4371 edges.
+ The pre-selection was done such that we considered only ten edge weights
+ with the highest differences in the means between the two populations.
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: The way we will do it in the end is not really clear for now and needs
+ to be discussed with Luca
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+Not needed anymore:
+\end_layout
+
 \begin_layout Subsubsection
 Graph properties
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 We calculate the normalized weighted degree, closeness centrality and cluster
  coefficient for all nodes of each graph (python package 'networx'); the
  shortest path for all pairs of nodes for each graph (python package 'networx');
@@ -409,7 +543,7 @@ CB: is distribution right here?
 derived from the other node specific properties are the properties 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 that ..
  each subject and are the parameters of the MOS ...
 \end_layout
@@ -454,6 +588,11 @@ entropy?
 \end_layout
 
 \end_deeper
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection*
 Discussion
 \end_layout
@@ -468,6 +607,132 @@ graph weights as diagnosis tools
 
 \begin_layout Itemize
 classifier often used, entire data
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: further advantage of method: sample size can be different for different
+ groups
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Itemize
+move this to discussion:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+disadvantages of seed-based, ICA
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+graph theoretic approaches have disadvantages: 
+\end_layout
+
+\begin_layout Itemize
+abstract
+\end_layout
+
+\begin_layout Itemize
+difference - > not insight into mechanisms of the disease
+\end_layout
+
+\begin_layout Itemize
+not considering spacial arrangement of the nodes
+\end_layout
+
+\begin_layout Itemize
+might be to global –> white matter alterations in many but not all regions
+\end_layout
+
+\end_deeper
+\end_deeper
+\end_inset
+
+
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: Thus,in seed-based rfMRI studies, where the mean temporal signal of
+ a region of interest (ROI) in the brain is chosen and the temporal correlated
+ activity to the rest of the brain is measured, connectivity changes in
+ the default mode network (DMN), the dorsal attention network (DAN) and
+ the executive control network (ECN) are detected.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Woodward2011,Yu2012"
+
+\end_inset
+
+In studies where the principal components, distracted from the all voxel
+ time series, are used in order to identify functional connected networks,
+ also widespread changes in connectivity are found including cingulate cortex,
+ temporal regions and prefrontal areas 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Yu2012"
+
+\end_inset
+
+ 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: here we can add other regions that might be relevant later on
+\end_layout
+
+\end_inset
+
+In addition to these studies, where specific connections are target, graph
+ theory-based analysis tried to find differences in the meta structure of
+ the considered function network.
+ Here every graph node is defined as a specific brain area identified with
+ the help of an atlas of the standard brain.
+ The graph weights, which mirror the functional connectivity, are then calculate
+d by applying a correlation measure to the temporal mean activity across
+ the voxels such an area.
+ The further analysis of such graphs derived from brains in rest revealed
+ contradicting results in SZ so far.
+ So, for example ....
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Yu2012"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+CB: disadvantages of using entire graphs: 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
