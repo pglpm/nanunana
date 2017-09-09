@@ -3,7 +3,7 @@
 %% 
 %% Author: PGL  Porta Mana
 %% Created: 2015-05-01T20:53:34+0200
-%% Last-Updated: 2017-08-28T18:58:22+0200
+%% Last-Updated: 2017-09-08T23:40:55+0200
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Report-no: ***
 \newif\ifafour
@@ -40,17 +40,14 @@ british%
 % \newunicodechar{Ĭ}{\u{I}}
 % \newunicodechar{ĭ}{\u{\i}}
 % \newunicodechar{Ŏ}{\u{O}}
-% \newunicodechar{ŏ}{\u{o}}
 % \newunicodechar{Ŭ}{\u{U}}
 % \newunicodechar{ŭ}{\u{u}}
 % \newunicodechar{Ā}{\=A}
-% \newunicodechar{ā}{\=a}
 % \newunicodechar{Ē}{\=E}
 % \newunicodechar{ē}{\=e}
 % \newunicodechar{Ī}{\=I}
 % \newunicodechar{ī}{\={\i}}
 % \newunicodechar{Ō}{\=O}
-% \newunicodechar{ō}{\=o}
 % \newunicodechar{Ū}{\=U}
 % \newunicodechar{ū}{\=u}
 % \newunicodechar{Ȳ}{\=Y}
@@ -167,7 +164,7 @@ british%
 \def\prod{\DOTSI\prodop\slimits@}
 \def\coprod{\DOTSI\coprodop\slimits@}
 \makeatother
-\input{undefinegreek.tex} % to make sure no CMF greek letters sneak in
+%\input{undefinegreek.tex} % to make sure no CMF greek letters sneak in
 % Greek letters not usually given in LaTeX. Comment the unneeded ones
 % \DeclareMathSymbol{\varpartial}{\mathalpha}{egreeki}{"40}
  \DeclareMathSymbol{\partialup}{\mathalpha}{egreekr}{"40}
@@ -304,16 +301,13 @@ british%
 
 \usepackage[usenames]{xcolor}
 % Tol (2012) colour-blind-, print-, screen-friendly colours; Munsell terminology
-\definecolor{mybluishpurple}{RGB}{51,34,136}
-\definecolor{myblue}{RGB}{136,204,238}
-\definecolor{mybluishgreen}{RGB}{68,170,153}
-\definecolor{mygreen}{RGB}{17,119,51}
-\definecolor{mygreenishyellow}{RGB}{153,153,51}
-\definecolor{myyellow}{RGB}{221,204,119}
-\definecolor{myred}{RGB}{204,102,119}
-\definecolor{mypurplishred}{RGB}{136,34,85}
-\definecolor{myreddishpurple}{RGB}{170,68,153}
-\definecolor{mygrey}{RGB}{221,221,221}
+\definecolor{mypurpleblue}{RGB}{68,119,170}
+\definecolor{myblue}{RGB}{102,204,238}
+\definecolor{mygreen}{RGB}{34,136,51}
+\definecolor{myyellow}{RGB}{204,187,68}
+\definecolor{myred}{RGB}{238,102,119}
+\definecolor{myredpurple}{RGB}{170,51,119}
+\definecolor{mygrey}{RGB}{187,187,187}
 %\newcommand*\mycolourbox[1]{%
 %\colorbox{mygrey}{\hspace{1em}#1\hspace{1em}}}
 \colorlet{shadecolor}{mygrey}
@@ -345,6 +339,7 @@ citestyle=authoryear-comp,bibstyle=pglpm-authoryear,autopunct=false,sorting=ny,s
 \DeclareDelimFormat{compcitedelim}{\addsemicolon\space}
 \DeclareDelimFormat{postnotedelim}{\space}
 \addbibresource{portamanabib.bib}
+\addbibresource{brain.bib}
 \renewcommand{\bibfont}{\footnotesize}
 %\appto{\citesetup}{\footnotesize}% smaller font for citations
 \defbibheading{bibliography}[\bibname]{\section*{#1}\addcontentsline{toc}{section}{#1}%\markboth{#1}{#1}
@@ -403,8 +398,8 @@ citestyle=authoryear-comp,bibstyle=pglpm-authoryear,autopunct=false,sorting=ny,s
 \usepackage{hyperref}
 \usepackage[depth=4]{bookmark}
 \hypersetup{colorlinks=true,bookmarksnumbered,pdfborder={0 0 0.25},citebordercolor={0.2 0.1333 0.5333},%bluish
-citecolor=mybluishpurple,linkbordercolor={0.0667 0.4667 0.2},%greenish
-linkcolor=mypurplishred,urlbordercolor={0.5333 0.1333 0.3333},%reddish
+citecolor=mypurpleblue,linkbordercolor={0.2666 0.4666 0.6666},%greenish
+linkcolor=myredpurple,urlbordercolor={0.9333 0.4 0.4666},%reddish
 urlcolor=mygreen,breaklinks=true,pdftitle={\pdftitle},pdfauthor={\pdfauthor}}
 % \usepackage[vertfit=local]{breakurl}% only for arXiv
 \providecommand*{\urlalt}{\href}
@@ -454,8 +449,8 @@ urlcolor=mygreen,breaklinks=true,pdftitle={\pdftitle},pdfauthor={\pdfauthor}}
 %\setaftersecskip{1.3ex plus .2ex }% plus 1ex minus .2ex}
 %\setsubsubsecheadstyle{\bfseries\sffamily\slshape\raggedright}
 %\setbeforesubsecskip{1.25ex plus 1ex minus .2ex }% plus 1ex minus .2ex}
-\setaftersubsecskip{-1em}%{-0.5ex plus .2ex}% plus 1ex minus .2ex}
-\setsubsecindent{0pt}%0ex plus 1ex minus .2ex}
+%\setaftersubsecskip{-1em}%{-0.5ex plus .2ex}% plus 1ex minus .2ex}
+%\setsubsecindent{0pt}%0ex plus 1ex minus .2ex}
 \setparaheadstyle{\bfseries\sffamily%
 \raggedright}
 \setcounter{secnumdepth}{2}
@@ -475,15 +470,14 @@ urlcolor=mygreen,breaklinks=true,pdftitle={\pdftitle},pdfauthor={\pdfauthor}}
 \headtitle}}
 \makeoddfoot{manaart}{}{\thepage}{}
 \newcommand*\autanet{\includegraphics[height=\heightof{M}]{autanet.pdf}}
-\definecolor{mygray}{gray}{0.333}
 \iftypodisclaim%
 \ifafour\newcommand\addprintnote{\begin{picture}(0,0)%
-\put(245,176){\makebox(0,0){\rotatebox{90}{\tiny\color{mygray}\textsf{This
+\put(245,176){\makebox(0,0){\rotatebox{90}{\tiny\color{mygrey}\textsf{This
             document is typographically designed for screen reading and
             two-up printing on A4 or Letter paper}}}}%
 \end{picture}}% A4
 \else\newcommand\addprintnote{\begin{picture}(0,0)%
-\put(176,132){\makebox(0,0){\rotatebox{90}{\tiny\color{mygray}\textsf{This
+\put(176,132){\makebox(0,0){\rotatebox{90}{\tiny\color{mygrey}\textsf{This
             document is typographically designed for screen reading and
             two-up printing on A4 or Letter paper}}}}%
 \end{picture}}\fi%afourtrue
@@ -547,8 +541,8 @@ totalheight=\heightof{@}]{atblack.png}}\makeatother
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Paper's details %%%%
-\title{\propertitle%\\
-%  {\large A geometric commentary on maximum-entropy proofs}% ***
+\title{\propertitle%
+%Inferring health conditions from fMRI-graph data
 }
 \author{\ifpublic% 
 %\hspace*{\stretch{1}}\protect\makebox[0pt][c]%
@@ -564,8 +558,8 @@ totalheight=\heightof{@}]{atblack.png}}\makeatother
 \else Luca\fi
 }
 
-%\date{Draft of \today\ (first drafted \firstdraft)}
-\date{\oggi}
+\date{Draft of \oggi\ (first drafted \firstdraft)}
+%\date{\oggi}
 
 %@@@@@@@@@@ new macros @@@@@@@@@@
 % Common ones - uncomment as needed
@@ -605,7 +599,7 @@ totalheight=\heightof{@}]{atblack.png}}\makeatother
 %\newcommand*{\incr}{\triangle}%finite increment
 \newcommand*{\defd}{\coloneqq}
 \newcommand*{\defs}{\eqqcolon}
-%\newcommand*{\Land}{\bigwedge}
+\newcommand*{\Land}{\bigwedge}
 %\newcommand*{\Lor}{\bigvee}
 %\newcommand*{\lland}{\mathbin{\ \land\ }}
 %\newcommand*{\llor}{\mathbin{\ \lor\ }}
@@ -669,7 +663,7 @@ totalheight=\heightof{@}]{atblack.png}}\makeatother
 \newcommand*{\cf}{{cf.}}
 %\newcommand*{\Cf}{{Cf.}}
 %\newcommand*{\vd}{{v.}}
-%\newcommand*{\etal}{{et al.}}
+\newcommand*{\etal}{{et al.}}
 %\newcommand*{\etsim}{{et sim.}}
 %\newcommand*{\ibid}{{ibid.}}
 %\newcommand*{\sic}{{sic}}
@@ -688,7 +682,7 @@ totalheight=\heightof{@}]{atblack.png}}\makeatother
 %\newcommand*{\sprod}{\mathop{\textstyle\prod}}
 %\newcommand*{\ssum}{\mathop{\textstyle\sum}}
 %\newcommand*{\sint}{\begingroup\textstyle\int\endgroup}
-%\newcommand*{\sland}{\mathop{\textstyle\bigwedge}}
+\newcommand*{\sland}{\mathop{\textstyle\bigwedge}}
 %\newcommand*{\slor}{\mathop{\textstyle\bigvee}}
 \newcommand*{\T}{^\intercal}%transpose
 \newcommand*{\E}{\mathrm{E}}
@@ -699,57 +693,65 @@ totalheight=\heightof{@}]{atblack.png}}\makeatother
 %\newcommand*{\qem}{\leavevmode\unskip\penalty9999 \hbox{}\nobreak\hfill
 %\quad\hbox{\QEM}}
 
-\definecolor{notecolour}{RGB}{68,170,153}
+\definecolor{notecolour}{RGB}{34,136,51}
 %\newcommand*{\puzzle}{{\fontencoding{U}\fontfamily{fontawesometwo}\selectfont\symbol{225}}}
 \newcommand*{\puzzle}{\maltese}
-\newcommand{\mynote}[1]{ {\color{notecolour}\puzzle\ #1}}
-%\newcommand*{\widebar}[1]{{\mkern1.5mu\skew{2}\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}}
+\newcommand{\mynote}[1]{ {\footnotesize\color{notecolour}\puzzle\ #1} }
+\newcommand*{\widebar}[1]{{\mkern1.5mu\skew{2}\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}}
 
-\newcommand*{\yH}{h}
+\newcommand*{\yH}{H}
+\newcommand*{\yh}{h}
 \newcommand*{\yD}{D}
-\newcommand*{\yF}{\bm{F}}
+\newcommand*{\yF}{F}
+\newcommand*{\yf}{\bm{f}}
 \newcommand*{\yx}{x}
 \newcommand*{\yxx}{\bm{\yx}}
 \newcommand*{\data}{\text{data}}
 \newcommand*{\ya}{\mathrm{A}}
 \newcommand*{\yi}{\mathrm{C}}
-\newcommand*{\yh}{\mathrm{H}}
+\newcommand*{\yhe}{\mathrm{H}}
 \newcommand*{\yfa}{\nu_{\ya}}
 \newcommand*{\yfi}{\nu_{\yi}}
-\newcommand*{\yfh}{\nu_{\yh}}
+\newcommand*{\yfh}{\nu_{\yhe}}
 \newcommand*{\yff}{\bm{f}}
 \newcommand*{\ym}{\mu}
 \newcommand*{\ymm}{\bm{\ym}}
 \newcommand*{\ymma}{\ymm_{\ya}}
-\newcommand*{\ymmh}{\ymm_{\yh}}
+\newcommand*{\ymmh}{\ymm_{\yhe}}
 \newcommand*{\ymmi}{\ymm_{\yi}}
 \newcommand*{\ys}{\varSigma}
 \newcommand*{\yss}{\bm{\ys}}
 \newcommand*{\yssa}{\yss_{\ya}}
-\newcommand*{\yssh}{\yss_{\yh}}
+\newcommand*{\yssh}{\yss_{\yhe}}
 \newcommand*{\yssi}{\yss_{\yi}}
 \newcommand*{\half}{\tfrac{1}{2}}
 \newcommand*{\yN}{N}
-\newcommand*{\yf}{f}
 \newcommand*{\yq}{\pf}
 \newcommand*{\yp}{q}
+\newcommand*{\yt}{\theta}
 \newcommand*{\ypc}{\yp_{\yD}}
+\newcommand*{\yih}{i_{\yh}}
+\newcommand*{\yihb}{i_{\yh'}}
 \newcommand*{\yn}{n}
 \newcommand*{\yd}{d}
 \newcommand*{\yI}{I}
-\newcommand*{\yno}{\yn_{\yH}}
+\newcommand*{\yM}{M}
+\newcommand*{\yT}{T}
+\newcommand*{\ynT}{\widebar{\yT}}
+\newcommand*{\yu}{u}
+\newcommand*{\yno}{\yn_{\yh}}
 \newcommand*{\yna}{\yn_{\ya}}
-\newcommand*{\ynh}{\yn_{\yh}}
+\newcommand*{\ynh}{\yn_{\yhe}}
 \newcommand*{\yni}{\yn_{\yi}}
 \newcommand*{\yNa}{m_{\ya}}
-\newcommand*{\yNh}{m_{\yh}}
+\newcommand*{\yNh}{m_{\yhe}}
 \newcommand*{\yNi}{m_{\yi}}
-\newcommand*{\vxxo}{\overline{\yxx}_{\yH}}
-\newcommand*{\vxto}{\overline{\yxx\T\yxx}_{\yH}}
+\newcommand*{\vxxo}{\overline{\yxx}_{\yh}}
+\newcommand*{\vxto}{\overline{\yxx\T\yxx}_{\yh}}
 \newcommand*{\vxxa}{\overline{\yxx}_{\ya}}
 \newcommand*{\vxta}{\overline{\yxx\T\yxx}_{\ya}}
-\newcommand*{\vxxh}{\overline{\yxx}_{\yh}}
-\newcommand*{\vxth}{\overline{\yxx\T\yxx}_{\yh}}
+\newcommand*{\vxxh}{\overline{\yxx}_{\yhe}}
+\newcommand*{\vxth}{\overline{\yxx\T\yxx}_{\yhe}}
 \newcommand*{\vxxi}{\overline{\yxx}_{\yi}}
 \newcommand*{\vxti}{\overline{\yxx\T\yxx}_{\yi}}
 %@@@@@@@@@@ new macros end @@@@@@@@@@
@@ -788,56 +790,214 @@ totalheight=\heightof{@}]{atblack.png}}\makeatother
 
 %\textbf{\texttt{To be updated with Claudia's new awesome data}}
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%   T H E   T E X T   S T A R T S   H E R E   %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
 {\footnotesize Note: human males and females are equal, but they are both
   inferior to robots, therefore we use \enquote{its} instead of
   \enquote{his} or \enquote{her}.\par}
 
 
-***
-Draft structure:
 
-– introduction: method and philosophy explained in simple words, with
-advantages
-(strict connection assumptions-final eqn, first principles, built-in
-quantification of reliability and \enquote{summary prediction percentage}, computationally
-feasible, it works, relation to freq methods (t-distr), works with simple
-samples, dynamic features – prevent overfitting). Examples from
-other fields.
+% ***
+% Draft structure:
 
-– sufficiency: idea. how the formulae discard redundant info, but it's
-cheaper to do it by hand
+% – introduction: method and philosophy explained in simple words, with
+% advantages
+% (strict connection assumptions-final eqn, first principles, built-in
+% quantification of reliability and \enquote{summary prediction percentage}, computationally
+% feasible, it works, relation to freq methods (t-distr), works with simple
+% samples, dynamic features – prevent overfitting). Examples from
+% other fields.
 
-– explain the generic problem: general formulae simply explained.
+% – sufficiency: idea. how the formulae discard redundant info, but it's
+% cheaper to do it by hand
 
-* code to do the final calculation.
+% – explain the generic problem: general formulae simply explained.
 
-
-– practical application to fmri data:
-
-Discuss:
-
-* how sharp the prediction
-
-* self-quantification of reliability
-
-* summary prediction for next patient
-
-* which graph properties give the best results
+% * code to do the final calculation.
 
 
-– final discussion: relation and \enquote{validation} with nonparametrics
-(refs to other literature).
+% – practical application to fmri data:
 
+% Discuss:
+
+% * how sharp the prediction
+
+% * self-quantification of reliability
+
+% * summary prediction for next patient
+
+% * which graph properties give the best results
+
+
+% – final discussion, possibly: relation and \enquote{validation} with nonparametrics
+% (refs to other literature).
+
+\bigskip
 
 \enquote{Where do probability models come from? To judge by the resounding
   silence over this question on the part of most statisticians, it seems
   highly embarrassing.} \citep{dawid1982}
 
+\bigskip
 
+
+
+\textbf{\Large Structure of the paper}
+
+--- example will follow theory within each section ---
+
+\begin{itemize}
+  \item Intro
+\item derivation of problem from first principles [results]
+\item  \ [results] \begin{itemize}
+   \item explanation of two main math difficulties 
+  \item how to solve the first difficulty: graph properties (other paper)
+  \item how to solve the second: sufficiency model (this paper)
+\item some remarks
+  \end{itemize}
+\item explanation of schizophrenia -> which graph quantities to choose
+  [methods]
+\item explanation of model by sufficiency [results]
+\item \enquote{model} selection [results]
+\item discriminative power of the model (entropy) [results]
+\item \ [results]
+  \begin{itemize}
+  \item reliability of the model
+  \item method allows for different number of patients
+  \item how method updates and become more reliable with more patients +
+    formulae for this update
+  \end{itemize}
+  [results]
+\item summarize and discuss [discussion]
+\end{itemize}
 
 \section{Introduction}
 \label{sec:synopsis}
 
+\mynote{Claudia's}
+
+\subsubsection{Introduction}
+
+A fundamental problem in brain research consists in the high variability
+between individual brains. Especially when it comes to disease diagnosis,
+it is often hard to find a unique measurable quantity with non-overlapping
+value distributions  such that healthy and diseased subjects can
+be unmistakably distinguished. As a consequence, a better disease
+classification should be reached, if a variety of measured properties
+are taking into account, even if their value distributions strongly
+overlap. The resulting high dimensionality space spanned by the different
+measured properties is difficult to handle unless classifier such
+SVM and ... are applied. But classifiers usually need a large sample
+size for training to prevent underfitting, which often cannot be provided.
+
+Here we provide a statistical framework that handles high dimensional
+data, deals with small data sets and estimates in how far more data
+would improve prediction. In addition, it can be easily updated by
+data that is handed in later on and extracts the most informative
+parameters. Furthermore, the underlying probability model, the so
+called model by sufficiency, does not require any predefined statistical
+model, because it is uniquely determined by the assumption that the
+means and covariances of the measured properties are sufficient to
+make future predictions. 
+
+In this work we apply this statistical framework to a particular data
+set of resting-state functional magnet resonance imaging (rfMRI) data
+of schizophrenic (SZ) and control (C) individuals. The data was freely
+provided by Schizonet a virtual database for public schizophrenia
+neuroimaging data. Since SZ is a disease that affects the entire brain,
+as it is explained in more detail below, we expect that analyzing
+functional connectivity results in high dimensional data with overlapping
+properties distributions well suited for our analysis.
+
+SZ is a psychiatric disorder that comprises various symptoms that
+are categorized into positive (e.g. hallucinations), negative (e.g.
+loss of motivation) and cognitive (e.g. memory impairment) disease
+patterns. A common disease cause for all these widespread symptoms
+is not found yet. However, many studies found profound changes in
+macroscopic brain structures, e.g. a shrinkage of whole brain and
+ventricular volume, reduced gray matter in frontal, temporal cortex
+and Thalamus, and changes in white matter volume in frontal and temporal
+cortex \citep{Shenton2010,Wright2009,Wright2010}. Since both gray
+matter loss and white matter changes are found, it is reasonable to
+conclude that not only the intrinsic activity of single areas is modified
+but also the interplay of different brain areas in particular in frontal
+and temporal cortex. It is even argued that these alterations in long
+range connectivity are responsible for a range of disease symptoms
+that are not attributed to single areas \citep{Friston1995}. Taking
+this disconnect hypothesis as starting point, research more and more
+focuses on functional connectivity. 
+
+In general, functional connectivity is measured either by asking the
+subject to fulfill a certain task or at rest, instructing the subject
+to think about nothing specific but not fall asleep. At rest, changes
+in functional connectivity of different subnetworks are reported in
+SZ. For example, both increased and decreased functional connectivity
+is found in the default mode network (DMN), but the hyperactivity
+seems to be reported more often \citep{Hu2017}. Moreover widespread
+connectivity changes in the dorsal attention network (DAN) and the
+executive control network (ECN) are detected \citep{Woodward2011,Yu2012}.
+
+In order to account for all these possible changes in functional connectivities
+across the different networks, we construct graphs with edges representing
+the functional connectivity between two cortex areas. Comparing the
+distribution of individual edge weights across the SZ subjects with
+the one of the controls, we find highly overlapping distributions.
+But despite this high overlap we achieve a (very) good separability
+of the two groups by applying the model by sufficiency framework.
+
+\subsubsection{Data acquisition}
+
+We requested data of Schizophrenic patients and control individuals from
+Schizconnect (\url{http://schizconnect.org}), a virtual database for public
+schizophrenia neuroimaging data. In our request we asked for resting state
+T2{*}-weighted functional and T1-weighted structural magnet resonance
+images (MRI) from individuals participating in the COBRE study either with
+no known disorder or diagnosed as schizophrenic according to the Diagnostic
+and Statistical Manual of Mental Disorders (DSM) IV, excluding
+schizoaffective disorders. The resultant provided data set comprised 91
+control individuals and 74 schizophrenic patients , whose voluntary and
+informed participation in the COBRE study was ensured by the institutional
+guidelines at the University of New Mexico Human Research Protections
+Office. A detailed description on the exact experimental design and the MRI
+scanning is provided by (citation: Cetin at all).
+
+\subsubsection{Data preprocessing}
+
+Preprocessing of the rfMRI images is carried out by FSL (Smith et
+al., 2004; Jenkinson et al., 2012) including the following steps:
+removal of the first 10 images; motion correction (MCFLIRT); spacial
+filtering with a 4mm FWHM Gaussian kernel; temporal high-pass filtering
+with a cut-off frequency of 0.2Hz; white matter and CSF regression
+(fsl\_regfilt).
+
+\subsubsection*{Graph construction}
+
+For each subject we register the rfMRI image first to structural space
+(FSL) and then to the MNI standard space (Ants). Regions of the resulting
+functional image in standard space are extracted such that they match
+the 94 regions identified by the Oxford lateral cortical atlas (with
+a probability above 50 percents). The resulting regions of interest
+form the nodes of the individual graphs. Edge weights are measured
+based on the (absolute) value of the Pearson correlation coefficient
+calculated the mean activity of the two nodes considered. Thus, we
+end up with a weighted, undirected, fully connected graph of 94 nodes
+for each patient. 
+
+\subsubsection*{Selection of graph weights}
+
+Because we want to avoid computational overload we pe-select a small
+subset of all possible 4371 edges. The pre-selection was done such
+that we considered only ten edge weights with the highest differences
+in the means between the two populations.
+
+\mynote{--- OLD INTRODUCTION ---}
 
 Diagnosing Alzheimer's Disease, especially in the early stage, is costly
 and burdensome for the patients, since it comprises a battery of
@@ -867,7 +1027,7 @@ second empirical moments, for example -- are \emph{sufficient} to infer the
 health condition. This working assumption determines a \emph{unique}
 probability model thanks to the Koopman-Pitman-Darmois theorem
 \cites{koopman1936,pitman1936,darmois1935}[see
-also]{hipp1974,andersen1970,denny1967,fraser1963,barankinetal1963}.
+also][]{hipp1974,andersen1970,denny1967,fraser1963,barankinetal1963}.
 
 The fact that our working hypothesis determines a unique probability model
 is very powerful. If the inferences made by the model do not satisfy us,
@@ -893,6 +1053,9 @@ extended logic \citep{jaynes1994_r2003}, a point of view that has brought
 forth much progress in many fields, including magnetic-resonance imaging
 \citep{bretthorst1990}.
 
+\subsection{Logical analysis}
+\label{sec:logical_analysis}
+
 Our goal, stripped to its essentials, is this.
 
 Given the fMRI data of an individual and other knowledge discussed below,
@@ -902,19 +1065,95 @@ whether the individual is healthy, or has Alzheimer's Disease, or is mildly
 cognitively impaired (three possibilities); or: assess whether the
 individual is healthy or has schizophrenia (two possibilities). The brain
 diseases are supposed to be mutually exclusive, and to exhaust the set of
-possible diseases that can be expected in the individual.
+possible diseases that can be expected in the individual. \mynote{Sox \etal
+  \citey{soxetal1988_r2013} use the technical term \enquote{target
+  condition}.}
 
-The \enquote{other knowledge} fleetingly mentioned above consists in the
+The \enquote{other knowledge} mentioned above consists in the
 fMRI data of individuals of known health conditions. This knowledge is
 essential for our plausibility assessment, for we would not be able to
-relate fMRI data and health condition otherwise.
+correlate fMRI data and health condition otherwise.
+
+Let us describe our context more precisely and set up some mathematical
+notation. We have:
+\begin{itemize}[para]
+\item A number of possible health conditions, for example \enquote{healthy}
+  and \enquote{Alzheimer disease}. The variable $\yh$ indicates health
+  condition.
+
+\item A set of possible fMRI data. They are positive-valued vectors with
+  $10^7$--$10^8$ components or more \citep{lindquist2008}. The variable
+  $\yf$ indicates an fMRI datum.
+
+\item A set of $\yn$ individuals, numbered or labelled. The variable $i$
+  indicates the label of an individual. These labels may reflect a temporal
+  or spatial ordering of how the individuals have been examined.
+
+\item Knowledge of the health condition and the result of the fMRI scan of
+  each of these individuals. Denote by $\yH_i^{\yh}$ and $\yF_i^{\yf}$ the propositions
+  \begin{align}
+    \label{eq:prop_health}
+    \yH_i^{\yh} &\defd \text{\enquote{Individual $i$ has health condition $\yh$}},
+    \\
+    \label{eq:prop_fmri}
+    \yF_i^{\yf} &\defd \text{\enquote{Individual $i$ has fMRI result $\yf$}}.  
+  \end{align}
+  Another possible notation for $\yH_i^{\yh}$ could be $\yH_i = \yh$; our
+  choice is conveniently more compact. Let the variable $\yih$ range only
+  over the labels of the individuals that have health condition $\yh$.
+
+\item An individual, labelled \enquote{$0$}, whose fMRI datum is known, but
+  whose health condition is not.
+\end{itemize}
+
+Our goal is to assign the plausibility that the individual $0$ has a
+particular health condition, given: the fMRI datum $\yf$ of that
+individual, our knowledge of the health conditions and fMRI data of the
+other $\yn$ individuals, and any other relevant information, denoted by
+$\yI$. In formulae, we want to assess the plausibility
+\begin{equation}
+  \label{eq:goal_1st}
+  \p\bigl( \yH_0^{\yh} \bigcond \yF_0^{\yf},\;
+  \yH_1^{\yh_1}, \yF_1^{\yf_1},\;
+  \dotsc,\;
+  \yH_{\yn}^{\yh_{\yn}}, \yF_{\yn}^{\yf_{\yn}},\;
+%  \land (\yH_{i}^{\yh_{i}} \land \yF_{i}^{\yf_{i}})
+%  \Land_{\yih} (\yH_{\yih}^{\yh} \land \yF_{\yih}^{\yf_{\yih}})
+%  \Land_{\yihb} (\yH_{\yihb}^{\yh} \land \yF_{\yihb}^{\yf_{\yihb}})
+%  \dotsb \land
+  \yI \bigr).
+\end{equation}
+\mynote{alternative: $\p\Bigl[\yH_0^{\yh} \bigcond \yF_0^{\yf}
+  \sland_{i} (\yH_{i}^{\yh_{i}} \land \yF_{i}^{\yf_{i}})
+%  \Land_{\yih} (\yH_{\yih}^{\yh} \land \yF_{\yih}^{\yf_{\yih}})
+%  \Land_{\yihb} (\yH_{\yihb}^{\yh} \land \yF_{\yihb}^{\yf_{\yihb}})
+%  \dotsb
+  \land \yI \Bigr].$}
+
+Some natural assumptions help us to partially assess the probability above.
+
+Within a group of individuals \emph{having the same health condition}, we
+assume that the probability that an individual $i$ has particular fMRI
+datum $\yf_i$ does not depend on the particular value of the label $i$, no
+matter how many individuals we have in that group. If the labels have a
+temporal meaning, for example, this means that we do not expect to observe
+particular kinds of fMRI data more often in the future than in the past.
+Similarly if the labels have a geographical meaning. This assumption is
+called \emph{exchangeability}. We cannot make an exchangeability assumption
+for the health conditions of our individuals, on the other hand, because
+the incidence of a disease can increase or decrease with time or depend on
+geographical location.
+
+\parencites[\sect~3]{diaconisetal1990}[\sect~4.6]{bernardoetal1994_r2000}
+
+\bigskip\hrule\par\smallskip\par\hrule\bigskip
 
 Label the individual of unknown health condition with $0$, and those whose
 health conditions and fMRI data are known by $1, \dotsc, N$. Denote the
 fMRI data and health condition of individual $i$ by $\yF_i$ and $\yH_i$ Our
 goal at this point is to assess the plausibility
 \begin{equation}
-  \label{eq:goal_1st}
+  \label{eq:goal_1st_simple}
   \pf(\yH_0 \| \yF_0,\; \yH_1,\yF_1, \dotsc, \yH_N, \yF_N,\; \yI),
 \end{equation}
 where $\yI$ denotes additional knowledge or working assumptions to be
@@ -943,7 +1182,11 @@ the same under permutations of the individuals' labels. A theorem by
 de~Finetti \parentext{\cite*{definetti1930,definetti1937};
   \cite{hewittetal1955}} states that the probability of observing $N$
 individuals with health conditions $\yH_i$ and fMRI data $\yF_i$ must have
-the form
+the form \mynote{The formula below has to be corrected: we cannot assume
+  exchangeability for the probability for the health condition (incidence
+  of diseases may increase or decrease in time, for example). But, given
+  the individuals having the same health condition, we can assume
+  exchangeability for the probability for the fMRI data}
 \begin{equation}
   \label{eq:definetti_exchangeability}
   \pf(\yH_0, \yF_0,\; \yH_1,\yF_1,\; \dotsc, \yH_N, \yF_N\| \yI)
@@ -960,30 +1203,32 @@ An integral over probability distributions is a mathematically complicated
 object and may not seem a great advancement in assessing the
 plausibility~\eqref{eq:goal_1st}. But de~Finetti's formula above has
 important consequences for our inference:
-\begin{enumerate}[wide]
+\begin{enumerate}
 \item Using de~Finetti's formula with the definition of conditional
   probability we can rewrite our goal plausibility~\eqref{eq:goal_1st} as
-\begin{equation}\label{eq:goal_1st_exchangeability}
-\begin{gathered}
-    \pf(\yH_0 \| \yF_0, \yD, \yI) =
-    \frac{
-      \int \yp(\yH_0,\yF_0)\,
-      \pf(\yp \|\yD,\yI) \,\di\yp
-    }{
-      \int \sum_{\yH}\yp(\yH,\yF_0)\,
-      \pf(\yp \|\yD,\yI) \,\di\yp },
-    \\ \text{with} \quad \pf(\yp \|\yD,\yI) \,\di\yp =
-    \frac{ \bigl[ \prod_i \yp(\yH_i,\yF_i) \bigr]\,
-      \pf(\yp \|\yI)
-    }{
-      \int \bigl[ \prod_i \yp(\yH_i,\yF_i) \bigr]\,
-      \pf(\yp \|\yI) \,\di\yp }\di\yp.
-\end{gathered}
-\end{equation}
-The latter distribution becomes more and more concentrated on a particular
-distribution $\ypc$ as our data $\yD$ assimilates a larger and larger number
-of individuals, independently of the hyperdistribution $\pf(\yp \|\yI)$ so
-that our probability becomes
+  \begin{subequations}\label{eq:goal_1st_exchangeability}
+      \begin{gather}
+        \pf(\yH_0 \| \yF_0, \yD, \yI)
+        = \frac{ \int \yp(\yH_0,\yF_0)\,
+          \pf(\yp \|\yD,\yI) \,\di\yp
+        }{
+          \int \sum_{\yH}\yp(\yH,\yF_0)\,
+          \pf(\yp \|\yD,\yI) \,\di\yp },
+        \\
+        \text{with} \quad
+        \pf(\yp\|\yD,\yI) \,\di\yp
+        = \frac{ \bigl[ \prod_i \yp(\yH_i,\yF_i) \bigr]\,
+          \pf(\yp \|\yI)
+        }{
+          \int \bigl[ \prod_i \yp(\yH_i,\yF_i)\bigr]\,
+          \pf(\yp \|\yI) \,\di\yp }\di\yp.
+        \label{eq:updated_hyperprior}
+      \end{gather}
+  \end{subequations}
+  The latter hyperdistribution becomes more and more concentrated on a
+  particular distribution $\ypc$ as our data $\yD$ comprise a larger and
+  larger number of individuals, independently of the hyperdistribution
+  $\pf(\yp \|\yI)$. Our probability thus becomes
 \begin{equation}
   \label{eq:goal_1st_limit}
   \pf(\yH_0 \| \yF_0, \yD, \yI) \approx
@@ -1005,18 +1250,18 @@ principle solve our plausibility assessment.
 
 \medskip
 
-The general formula~\eqref{eq:goal_1st_exchangeability} is complicated in
+The general formula~\eqref{eq:goal_1st_exchangeability} is complex in
 two respects. First, an fMRI \enquote{datum} $\yF$ belonging to an
 individual is a positive-valued vector with $10^7$--$10^8$ components or
-more \citep{lindquist2008}, thus belonging to an incomprehensibly large
+more \citep{lindquist2008}, thus belonging to an unfathomably large
 space. Second, our data $\yD$ do not comprise a large number of
 individuals, hence the hyperdistribution $\pf(\yp \|\yI)$ and therefore the
 assumptions in $\yI$ besides exchangeability have an important weight in
 the determination of the probability~\eqref{eq:goal_1st_exchangeability}.
 
-\mynote{Where I'm heading: to solve the first problem, we go from a set of fMRI
-data to graph properties; to solve the second, we use a model by
-sufficiency.}
+\mynote{Where I'm heading to: to solve the first problem, we go from a set
+  of fMRI data to graph properties; to solve the second, we use a model by
+  sufficiency.}
 
 It is conceivable that not all information contained in the fMRI datum
 $\yF$ of an individual be relevant to determine the individual's health
@@ -1049,6 +1294,191 @@ work we compare different working assumptions based on the concept of
 \emph{sufficiency}. The present work focuses on this approach to address
 the second problem.
 
+\section{Remarks on prior knowledge, data reduction, sufficiency}
+\label{sec:data_prior_model}
+
+\mynote{This section is still badly explained}
+
+The two devices to tame the complexity of our inference problem, just
+explained, seem to act on very different levels. The first reduces the
+dimension of the fMRI-data space; the second reduces the choice of
+possible hyperpriors through sufficiency assumptions. Yet, both devices are
+in fact simply restricting the choice of hyperpriors over $\yp$-space. Both
+state that our hyperprior $\pf(\yp \|\yI)$ should give zero weight to
+particular kinds of distributions $\yp(\yH, \yF)$; the hyperprior thus is
+non-zero only within a subset of $\yp$-space, a subset of much fewer
+dimensions, which can be parametrized by some variable $\yt$. Within this
+subset the data will have more influence on the predictive
+distribution~\eqref{eq:goal_1st_exchangeability}.
+
+By restricting the hyperprior in these two ways we have not bypassed the
+issue of the influence of the hyperprior on the predictive distribution,
+though. Quite the opposite: we have excluded some predictive distributions
+a priori, before even seeing the data. The a-priori assumption can be
+supported by biological reasons, in which case it is reasonable. Or it can
+just be a working hypothesis, a convenient conceptual device to overcome
+the mathematical difficulties related to the hyperprior and the large
+dimensions of $\yp$-space. In this case it is good to consider several such
+working assumptions.
+
+This strong kind of working assumption is not necessarily fatal for our
+inferential problem. It is still possible that we will be able to
+discriminate the health condition $\yH_0$ of the new individual sharply
+enough, notwithstanding the sufficiency assumption. Mathematically this
+means that the discrimination would have been even sharper without the
+sufficiency assumption; but this increased precision may be insignificant
+for our purposes. An intuitive illustration of this is given in
+\fig~\ref{restriction_hyperprior}.
+\begin{figure}[!b]
+  \centering
+\includegraphics[width=0.49\linewidth]{d12.png}%
+\includegraphics[width=0.49\linewidth]{suf12.png}%
+\caption{Restriction of hyperprior to a subset of $\yp$-space.\mynote{sketch}}
+\label{restriction_hyperprior}
+\end{figure}
+The plot on the left shows that the data
+select two distinct distributions in $\yp$-space for two health categories,
+corresponding to the modes of the blue and red hyperdistributions. We now
+assume that our hyperprior is zero outside of the black line, thus reducing
+the dimensionality of our inference problem. The plot on the right shows
+the two distribution selected by the same data on the space of restricted
+hyperpriors, again corresponding to the modes of the blue and red curve.
+Although less sharply separated than in the full $\yp$-space, the two
+distributions are enough distinct for our inference purposes.
+
+
+
+If the working assumption, on the other hand, does not lead to a sharp
+enough discrimination of the health condition, we have to consider
+alternative working assumptions. Eventually, if we gather enough data and
+gain more computational power, we may abandon working assumptions of
+sufficiency altogether and return to the more flexible
+equation~\eqref{eq:goal_1st_exchangeability}.
+
+
+\section{Models by sufficiency}
+\label{sec:sufficiency}
+
+***
+
+\section{Discrimination power of a model}
+\label{sec:discrimination}
+
+***
+
+\section{Reliability of a model}
+\label{sec:reliability}
+
+***
+
+\section{Selection of model, \ie\ graph properties and sufficient statistics}
+\label{sec:model_selection}
+
+For our simplified inference we can choose among different sets of graph
+properties and of sufficient statistics. Let us call each possible combined
+choice a \emph{model} $\yM_m$ It is important to decide which of these
+models is the most reliable, or most probable on the assumption that one
+among them is biologically valid. The answer is given by the probability
+calculus:\mynote{this formula has to be modified: health conditions are known}
+\begin{equation}
+  \label{eq:model_selection}
+  \p(\yM_m \| \yD, \yI) =
+  \frac{
+\p(\yD \| \yM_m, \yI)\, \p(\yM_m \| \yI)
+}{ \p(\yD \| \yI)}.
+\end{equation}
+If we assume all models to be equally possible a priori, $\p(\yM_m \| \yI)$
+is the same for all $m$.
+
+It can be shown that the formula above corresponds to a mixture of $n$-out
+cross-selection procedures. Moreover, the formula automatically gives a
+lower probability to models that are more complex, \ie\ that use a greater
+number of graph properties or sufficient statistics \citep{mackay1992}.
+
+
+
+\section{Decision-theoretic analysis}
+\label{sec:decision_theory}
+
+
+Once we have the probabilities for the possible health conditions of an
+individual given the fMRI data, $\pf(\yH \|\yF, \yD, \yI)$, there remains
+to decide upon a course of action. This is the domain of decision theory
+\parencites{raiffaetal1961_r2000}[\chaps~13, 14]{jaynes1994_r2003}[see
+also][\chaps~6, 7]{soxetal1988_r2013}.
+
+Suppose we have only two courses of action: treatment $\yT$ or no-treatment
+$\ynT$. A decision theoretical analysis needs, besides the probabilities
+for the health conditions, also the utilities (or costs) of choosing an
+action given the individual's true health condition. For example, it could
+be that treatment of a healthy individual could harm the latter, or that
+the treatment is innocuous on healthy individuals. With two health
+conditions and two courses of action we have four utilities $\yu$:
+\begin{equation}
+  \label{eq:utilities}
+  \begin{aligned}
+    &\yu(\ynT \| \yh), & &\yu(\ynT \|\ya),\\
+    &\yu(\yT \| \yh), & &\yu(\yT \|\ya).\\
+  \end{aligned}
+\end{equation}
+The expected utilities of an actions are, as their names say,
+\begin{equation}
+  \label{eq:expected_utilities}
+  \begin{aligned}
+    \expeb{\yu(\yT)} &=
+    \yu(\ynT \| \yh)\, \pf(\yh \|\yF, \yD, \yI)
+    + \yu(\ynT \| \ya)\, \pf(\ya \|\yF, \yD, \yI),
+\\
+    \expeb{\yu(\ynT)} &=
+    \yu(\yT \| \yh)\, \pf(\yh \|\yF, \yD, \yI)
+    + \yu(\yT \| \ya)\, \pf(\ya \|\yF, \yD, \yI).
+  \end{aligned}
+\end{equation}
+
+Decision theory says the action to be chosen is the one having maximum
+expected utility.
+
+Enforcing the two expected utilities to be equal, assuming the values of
+the utilities as given, and the two probabilities $p_{\yh}$, $p_{\ya}$ as
+unknown, with $p_{\yh} + p_{\ya} = 1$, we arrive at the following
+condition, written in matrix form:
+\begin{equation}
+  \label{eq:utilities_equal}
+  \begin{pmatrix}
+    \yu(\ynT \| \yh) - \yu(\yT \| \yh)
+    &
+    \yu(\ynT \| \ya) - \yu(\yT \| \ya)
+  \end{pmatrix}
+  \cdot
+  \begin{pmatrix}
+    p_{\yh}
+    \\
+     p_{\ya}
+   \end{pmatrix}
+   = 0.
+\end{equation}
+The utilities $\yu(\ynT \| \yh)$, $\yu(\yT \| \ya)$ are typically positive
+and $\yu(\yT \| \yh)$, $\yu(\ynT \| \ya)$ negative. The two-dimensional
+row-vector in the equation above therefore lies in the fourth,
+$(\mathord{+},\mathord{-})$ quadrant. The vector of probabilities lies in
+the first quadrant and is normalized. The condition above thus determines a
+unique value of the probability $p_{\yh}$, and hence of
+$p_{\ya} \equiv 1 - p_{\yh}$. This is the threshold value above which we
+consider the individual as being healthy; and below, as having the target
+condition. That is, if $\pf(\yh \|\yF, \yD, \yI) > p_{\yh}$ we can consider
+the individual as healthy. The threshold probability is determined only by
+the utilities and does not need to be $50\,\%$.
+
+
+
+
+\bigskip
+\hrule
+
+\hrule
+
+\bigskip
+\mynote{FROM HERE ON: OLD SECTIONS}
 
 
 \section{Problem and method -- old}
@@ -1536,7 +1966,7 @@ $38$ & C & $(0.689622, 1.49152, 0.697921, 162.061, 0.044468, 236)$
 
 \begin{figure}[!h]
   \centering
-\includegraphics[width=\linewidth]{stds_6_params.pdf}%
+figure%\includegraphics[width=\linewidth]{stds_6_params.pdf}%
 \caption{Contours of 1 and 2 standard deviations of the distributions
   $\pf(\yxx \| \text{health condition}, \data)$, on a two-dimensional
   section of the six-dimensional parameter space. The sectioning plane
@@ -1548,9 +1978,9 @@ $38$ & C & $(0.689622, 1.49152, 0.697921, 162.061, 0.044468, 236)$
 
 \begin{figure}[!h]
   \centering
-\hfill\includegraphics[width=0.3\linewidth]{nodesize_vs_modularity3D.pdf}\\%
-\vspace{-0.36\linewidth}  
-\includegraphics[width=\linewidth]{nodesize_vs_modularity.pdf}%
+figure%\hfill\includegraphics[width=0.3\linewidth]{nodesize_vs_modularity3D.pdf}\\%
+%\vspace{-0.36\linewidth}  
+%\includegraphics[width=\linewidth]{nodesize_vs_modularity.pdf}%
 \caption{Approximate representation of
   $\pf(\yxx \| \text{health condition},
   \data)$. The indicator $\yxx$ is the vector
