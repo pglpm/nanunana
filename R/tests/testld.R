@@ -4,7 +4,7 @@ library('ellipse')
 library('LaplacesDemon')
 
 draws <- rnorm(40,1,2)
-
+print(mean(draws))
 Data <- list(data=draws, mon.names='', parm.names=c('mu','sigma'),N=length(draws))
 
 Model=function(parm,Data){
@@ -15,7 +15,7 @@ Model=function(parm,Data){
     LP <- LL + mu.prior + sigma.prior
     return=list(LP=LP,Dev=2*LL,Monitor=1,yhat=1,parm=parm)}
 
-FitCoin2D=LaplacesDemon(Model, Data, Initial.Values=c(0,1),
+FitCoin2D <- LaplacesDemon(Model, Data, Initial.Values=c(0,1),
                         Covar=NULL, Iterations=10000, Status=1000, Thinning=1,
                         Algorithm="AFSS",
                         Specs=list(A=500, B=NULL, m=100, n=0, w=1))
