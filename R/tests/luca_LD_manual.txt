@@ -9,7 +9,8 @@ arguments a 'Model'. Let's explain what Model must be.
 must be a function of 'parm' and 'data' which returns three main outputs:
 - the log-posterior 'LP',
 - the parameters 'parm', possibly changed,
-- the predicted variable 'yhat'.
+- the predicted variable 'yhat',
+- a monitor variable 'Monitor'.
 
 The functional relation between these output variables and the two input
 ones could really be whatever we please. But these outputs are used in
@@ -36,6 +37,16 @@ The steps above show that we could, for example generate constant samples,
 by having the Model function output a constant 'parm' independently of the
 input one.
 
+This function can be used to generate the posterior distribution of the
+parameters of the model given the data. There are some 'plot' functions
+included in the package that nicely display the posterior.
+
+This function also records the Monitor output of the Model. This can be
+used to generate the posterior predictive distribution by specifying an
+appropriate Monitor output in Model.
+
+This function does not use the 'yhat' output of the Model.
+
 
 
 * predict(Fit, Model, Data, ...):
@@ -44,9 +55,15 @@ creates samples of the variable 'yhat' by using the samples of 'parm'
 contained in Fit$Posterior2 (or Fit$Posterior1, if $Posterior2 is too
 small), the Model, and Data. 'Fit' must have been produced with the
 'LaplacesDemon' function. The samples of 'yhat' are produced iteratively:
-takes the Nth sample of 'parm' from Fit$Posterior1, feed it in Model
+take the Nth sample of 'parm' from Fit$Posterior1, feed it in Model
 together with Data, and read out 'yhat' from Model. This 'yhat' is the Nth
 sample of 'yhat'.
 
 From this algorithm it is clear that Model or Data do not need to be the
 same ones used to generated Fit via the 'LaplacesDemon' function.
+
+This function can be used to generate the posterior predictive distribution
+of the model. To do this, the Model should not be the same one used to
+generate Fit, and should not use the Data.
+
+This function does not use the 'Monitor' output of Model.
