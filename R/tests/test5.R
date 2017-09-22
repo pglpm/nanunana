@@ -3,22 +3,32 @@ library('mvtnorm')
 library('ellipse')
 library('LaplacesDemon')
 library('RColorBrewer')
+library('metRology')
+library('magrittr')
 
-mymu <- 3
-mysigma <- 0.1
-myrate <- 20
 
-draws <- rexp(30,4)
-n <- length(draws)
-print(mean(draws))
-
-print(sd(draws)*(n-1)/n)
-
-PGF <- function(data){
-    return(rhalfcauchy(1,25))
+densplot <- function (x,adjust=1,...) {
+  density(x,adjust) %>%
+      plot(.,...)
 }
 
-mydata <- list(data=draws, PGF=PGF, mon.names='y', parm.names=c('theta'),N=n, y=mean(draws))
+mu <- 3
+
+draws <- rnorm(2,mu,3)
+n <- length(draws)
+
+shape <- 2 + n/2
+scale <- 1/(1 + sd(draws)*(n-1)/2)
+
+df <- 2*shape
+sd <- 1/sqrt(shape*scale)
+
+PGF <- function(data){
+    return(rgamma(1,shape=shape,scale=scale))
+}
+
+
+mydata <- list(data=draws, PGF=PGF, mon.names='y', parm.names=c('tau'),N=n, y=mean(draws))
 
 model <- function(parm,number=1){
     return <- rexp(number, rate=parm)
@@ -26,32 +36,52 @@ model <- function(parm,number=1){
 
 
 hyperprior <- function(parm,data){
-    parm <- interval(parm,0,1e6)
-    theta.prior <- dhalfcauchy(parm, 25, log=TRUE)
-    LL <- sum(dexp(data$data,parm,log=T))
-    LP <- LL+ theta.prior
-    return <- list(LP=LP, Dev=-2*LL, Monitor=model(parm),yhat=model(parm),parm=parm)
+    parm <- interval(parm,1e-6,1e6)
+    tau.prior <- dgamma(parm,shape=shape,scale=scale, log=T)
+    LL <- sum(dnormp(data$data,mean=mu,prec=parm,log=T))
+    LP <- LL+ tau.prior
+    return <- list(LP=LP, Dev=-2*LL, Monitor=rnormp(1,mean=mu,prec=parm),yhat=rnormp(1,mean=mu,prec=parm),parm=parm)
 }
 
 posterior <- function(parm,data){
-    LP <- dnorm(parm,30,1,log=T) 
-    return <- list(LP=LP,Dev=1,Monitor=1,yhat=model(parm),parm=parm)
+    LP <- 1
+    return <- list(LP=LP,Dev=1,Monitor=1,yhat=rnormp(1,mean=mu,prec=parm),parm=parm)
 }
 
-quadr <- IterativeQuadrature(posterior, c(1), mydata, Covar=NULL, Iterations=1000,
-                             sir=F, Algorithm="AGHSG",
-                             Specs=list(K=5, Kmax=10, Packages=NULL, Dyn.libs=NULL),
-                             Stop.Tolerance=c(1e-5,1e-15), CPUs=1)
 
-stop()
-
-Sample <- LaplacesDemon(hyperprior, mydata, Initial.Values=c(10), Thinning=10,
-                     Iterations=5000, Status=200,
+Sample <- LaplacesDemon(hyperprior, mydata, Initial.Values=c(1), Thinning=1,
+                     Iterations=10000, Status=200,
                      Algorithm="AFSS",
                      Specs=list(A=500, B=NULL, m=100, n=0, w=1)
                      )
 
 plot(Sample,BurnIn=500,mydata,PDF=TRUE,Parms=NULL)
+
+
+postpredictive <- predict(Sample,posterior,mydata,CPUs=2)
+
+densplot(postpredictive$yhat,
+    adjust=0.1,
+    main='test',
+    xlab='tau2')
+
+xx <- seq(-8,8,0.1)
+yy <- dt.scaled(xx,df,mean=mu,sd=sd)
+lines(x=xx,y=yy,col='green')
+
+
+plot(postpredictive, Style="Density",PDF=TRUE)
+
+stop()
+densplot(Sample$Monitor,
+    adjust=1,
+    main='test',
+    xlab='tau')
+
+xx <- seq(-8,8,0.1)
+yy <- dt.scaled(xx,df,mean=mu,sd=sd)
+lines(x=xx,y=yy,col='green')
+
 
 quadr <- IterativeQuadrature(hyperprior, c(5), mydata, Covar=NULL, Iterations=500,
                              sir=F, Algorithm="AGHSG",
@@ -60,9 +90,6 @@ quadr <- IterativeQuadrature(hyperprior, c(5), mydata, Covar=NULL, Iterations=50
 
 
 
-postpredictive <- predict(Sample,hyperprior,mydata,CPUs=2)
-
-plot(postpredictive, Style="Density",PDF=TRUE)
 
 stop()
 
