@@ -27,7 +27,7 @@ Model2 <- function(parm,Data){
 #    mu.prior <- dunif(parm, 0, 1000, log=TRUE)
 #    LL <- sum(dnorm(Data$y,parm,mysigma, log=TRUE))
     LP <- dunif(parm,0,1,log=TRUE)
-    return=list(LP=2,Dev=1,Monitor=1,yhat=parm,parm=parm)}
+    return=list(LP=2,Dev=1,Monitor=1,yhat=parm+Data$y,parm=parm)}
 
 Fit <- LaplacesDemon(Model, Data, Initial.Values=c(4), Thinning=1,
                      Iterations=20, Status=1,
