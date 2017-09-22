@@ -1,0 +1,52 @@
+- Reverse-engineering of some functions in the package LaplacesDemon -
+
+
+The functions 'LaplacesDemon' and 'predict' take as one of their input
+arguments a 'Model'. Let's explain what Model must be.
+
+* Model <- function(parm,data):
+
+must be a function of 'parm' and 'data' which returns three main outputs:
+- the log-posterior 'LP',
+- the parameters 'parm', possibly changed,
+- the predicted variable 'yhat'.
+
+The functional relation between these output variables and the two input
+ones could really be whatever we please. But these outputs are used in
+particular ways in the functions 'LaplacesDemon' and 'predict'.
+
+
+
+* LaplacesDemon(Model, Data, ...):
+
+creates Monte Carlo samples of the vector variable 'parm'. It does this
+iteratively as follows:
+1. take the Nth sample of 'parm',
+2. from this 'parm' and LP, generate a temporary 'tparm',
+3. feed this 'tparm' and Data into Model, and read out 'parm' and LP
+4. this 'parm' is the (N+1)th sample, and LP will be used in the next iteration.
+
+The generation algorithm of 'tparm' in step 2 depends on the Monte Carlo
+sampler used.
+
+All generated samples of 'parm' are in the $Posterior1 variable of the
+output, and the stationary ones in $Posterior2.
+
+The steps above show that we could, for example generate constant samples,
+by having the Model function output a constant 'parm' independently of the
+input one.
+
+
+
+* predict(Fit, Model, Data, ...):
+
+creates samples of the variable 'yhat' by using the samples of 'parm'
+contained in Fit$Posterior2 (or Fit$Posterior1, if $Posterior2 is too
+small), the Model, and Data. 'Fit' must have been produced with the
+'LaplacesDemon' function. The samples of 'yhat' are produced iteratively:
+takes the Nth sample of 'parm' from Fit$Posterior1, feed it in Model
+together with Data, and read out 'yhat' from Model. This 'yhat' is the Nth
+sample of 'yhat'.
+
+From this algorithm it is clear that Model or Data do not need to be the
+same ones used to generated Fit via the 'LaplacesDemon' function.
