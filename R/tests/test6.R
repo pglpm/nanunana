@@ -18,7 +18,8 @@ mu <- 4
 sigma0 <- 100
 mu0 <- 5
 
-draws <- rnorm(1,mu,sigma)
+draws <- rnorm(3,mu,sigma)
+draws0 <- 6
 n <- length(draws)
 me <- mean(draws)
 
@@ -32,7 +33,7 @@ PGF <- function(data){
 }
 
 
-mydata <- list(data=draws, PGF=PGF, mon.names='y', parm.names=c(expression('mu')),N=n, y=mean(draws))
+mydata <- list(data=draws, predict=draws0,PGF=PGF, mon.names=c('P(d0)','y'), parm.names=c(expression('mu')),N=n, y=mean(draws))
 
 model <- function(parm,number=1){
     return <- rexp(number, rate=parm)
@@ -43,7 +44,8 @@ hyperprior <- function(parm,data){
     parm.prior <- dnormv(parm,mu0,sigma0, log=T)
     LL <- sum(dnormv(data$data,parm,sigma,log=T))
     LP <- LL+ parm.prior
-    return <- list(LP=LP, Dev=-2*LL, Monitor=rnormv(1,parm,sigma),yhat=rnormv(1,parm,sigma),parm=parm)
+    return <- list(LP=LP, Dev=-2*LL, Monitor=c(dnormv(data$predict,parm,sigma),rnormv(1,parm,sigma))
+                  ,yhat=rnormv(1,parm,sigma),parm=parm)
 }
 
 posterior <- function(parm,data){
@@ -52,8 +54,8 @@ posterior <- function(parm,data){
 }
 
 
-Sample <- LaplacesDemon(hyperprior, mydata, Initial.Values=c(1), Thinning=1,
-                     Iterations=10000, Status=1000,
+Sample <- LaplacesDemon(hyperprior, mydata, Initial.Values=c(1), Thinning=2,
+                     Iterations=20000, Status=1000,
                      Algorithm="AFSS",
                      Specs=list(A=500, B=NULL, m=100, n=0, w=1)
                      )
@@ -68,19 +70,30 @@ densplot(postpredictive$yhat,
     adjust=0.1,
     main='test normal-normal',
     xlab=expression('mu'))
-
 xx <- seq(mun-3*sigmat,mun+3*sigmat,0.1)
 yy <- dnormv(xx,mun,sigmat)
 lines(x=xx,y=yy,col='green')
 dev.off()
 
-densplot(Sample$Monitor,
+png('predictive_probability.png')
+densplot(Sample$Monitor[,1],
+    adjust=0.001,
+    main='predictive probability for data_0 + probability of probability distr.',
+    xlab=expression('P(data_0 | data_training)'),
+    ylab='p(P)')
+abline(v=mean(Sample$Monitor[,1]),col='green')
+dev.off()
+
+png('predictive_posterior.png')
+densplot(Sample$Monitor[,2],
     adjust=0.1,
-    main='monitor',
-    xlab=expression('mu'))
+    main='predictive posterior distribution',
+    xlab=expression('data_0'),
+    ylab=expression('P(data_0 | data_training)'))
 xx <- seq(mun-3*sigmat,mun+3*sigmat,0.1)
 yy <- dnormv(xx,mun,sigmat)
 lines(x=xx,y=yy,col='red')
+dev.off()
 
 plot(postpredictive, Style="Density",PDF=TRUE)
 
