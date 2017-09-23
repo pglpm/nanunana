@@ -15,7 +15,7 @@ densplot <- function (x,adjust=1,...) {
 sigma <- 4
 
 mu <- 4
-sigma0 <- 100
+sigma0 <- 1000
 mu0 <- 5
 
 draws <- rnorm(3,mu,sigma)
@@ -63,7 +63,7 @@ posterior <- function(parm,data){
 
 
 Sample <- LaplacesDemon(hyperprior, mydata, Initial.Values=c(1), Thinning=2,
-                     Iterations=20000, Status=1000,
+                     Iterations=100000, Status=10000,
                      Algorithm="AFSS",
                      Specs=list(A=500, B=NULL, m=100, n=0, w=1)
                      )
@@ -105,7 +105,7 @@ lines(x=xx,y=yy,col='red')
 dev.off()
 
 Sample0 <- LaplacesDemon(hyperprior0, mydata0, Initial.Values=c(1), Thinning=2,
-                     Iterations=20000, Status=1000,
+                     Iterations=100000, Status=10000,
                      Algorithm="AFSS",
                      Specs=list(A=500, B=NULL, m=100, n=0, w=1)
                      )
@@ -119,8 +119,9 @@ densplot(Sample0$Monitor[,1],
 abline(v=pmodel,col='green')
 dev.off()
 
+plot(Sample0,BurnIn=500,mydata0,PDF=TRUE,Parms=NULL)
 
-plot(postpredictive, Style="Density",PDF=TRUE)
+
 
 stop()
 densplot(Sample$Monitor,
