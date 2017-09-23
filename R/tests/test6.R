@@ -35,6 +35,8 @@ PGF <- function(data){
 
 mydata <- list(data=draws, predict=draws0,PGF=PGF, mon.names=c('P(d0)','y'), parm.names=c(expression('mu')),N=n, y=mean(draws))
 
+mydata0 <- list(data=draws, predict=draws0, PGF=PGF, mon.names=c('P(all data)'), parm.names=c(expression('mu')),N=n, y=mean(draws))
+
 model <- function(parm,number=1){
     return <- rexp(number, rate=parm)
 }
@@ -46,6 +48,12 @@ hyperprior <- function(parm,data){
     LP <- LL+ parm.prior
     return <- list(LP=LP, Dev=-2*LL, Monitor=c(dnormv(data$predict,parm,sigma),rnormv(1,parm,sigma))
                   ,yhat=rnormv(1,parm,sigma),parm=parm)
+}
+
+hyperprior0 <- function(parm,data){
+    parm.prior <- dnormv(parm,mu0,sigma0, log=T)
+    LP <- parm.prior
+    return <- list(LP=LP, Dev=-2*LP, Monitor=exp(sum(dnormv(data$data,parm,sigma,log=T))) ,yhat=rnormv(1,parm,sigma),parm=parm)
 }
 
 posterior <- function(parm,data){
@@ -63,25 +71,26 @@ Sample <- LaplacesDemon(hyperprior, mydata, Initial.Values=c(1), Thinning=2,
 plot(Sample,BurnIn=500,mydata,PDF=TRUE,Parms=NULL)
 
 
-postpredictive <- predict(Sample,posterior,mydata,CPUs=2)
+#postpredictive <- predict(Sample,posterior,mydata,CPUs=2)
 
-png('testnormal_normal.png')
-densplot(postpredictive$yhat,
-    adjust=0.1,
-    main='test normal-normal',
-    xlab=expression('mu'))
-xx <- seq(mun-3*sigmat,mun+3*sigmat,0.1)
-yy <- dnormv(xx,mun,sigmat)
-lines(x=xx,y=yy,col='green')
-dev.off()
+## png('testnormal_normal.png')
+## densplot(postpredictive$yhat,
+##     adjust=0.1,
+##     main='test normal-normal',
+##     xlab=expression('mu'))
+## xx <- seq(mun-3*sigmat,mun+3*sigmat,0.1)
+## yy <- dnormv(xx,mun,sigmat)
+## lines(x=xx,y=yy,col='green')
+## dev.off()
 
 png('predictive_probability.png')
+pdata <- mean(Sample$Monitor[,1])
 densplot(Sample$Monitor[,1],
-    adjust=0.001,
-    main='predictive probability for data_0 + probability of probability distr.',
-    xlab=expression('P(data_0 | data_training)'),
+    adjust=0.002,
+    main='predictive probability for data_0 + uncertainty',
+    xlab=paste('P(data_0 = ',toString(draws0),' | data_training) = ',toString(pdata)),
     ylab='p(P)')
-abline(v=mean(Sample$Monitor[,1]),col='green')
+abline(v=pdata,col='green')
 dev.off()
 
 png('predictive_posterior.png')
@@ -94,6 +103,22 @@ xx <- seq(mun-3*sigmat,mun+3*sigmat,0.1)
 yy <- dnormv(xx,mun,sigmat)
 lines(x=xx,y=yy,col='red')
 dev.off()
+
+Sample0 <- LaplacesDemon(hyperprior0, mydata0, Initial.Values=c(1), Thinning=2,
+                     Iterations=20000, Status=1000,
+                     Algorithm="AFSS",
+                     Specs=list(A=500, B=NULL, m=100, n=0, w=1)
+                     )
+
+png('model_probability.png')
+pmodel <- mean(Sample0$Monitor[,1])
+densplot(Sample0$Monitor[,1],
+    adjust=max(Sample0$Monitor[,1])/50,
+    main='probability of model + uncertainty',
+    xlab=paste('P(model | data) = ',toString(pmodel)))
+abline(v=pmodel,col='green')
+dev.off()
+
 
 plot(postpredictive, Style="Density",PDF=TRUE)
 
