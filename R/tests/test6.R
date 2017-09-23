@@ -80,28 +80,30 @@ plot(Sample,BurnIn=500,mydata,PDF=TRUE,Parms=NULL)
 ##     xlab=expression('mu'))
 ## xx <- seq(mun-3*sigmat,mun+3*sigmat,0.1)
 ## yy <- dnormv(xx,mun,sigmat)
-## lines(x=xx,y=yy,col='green')
+## lines(x=xx,y=yy,col='red')
 ## dev.off()
 
 png('predictive_probability.png')
+exactpdata <- dnormv(mydata$predict,mun,sigmat)
 pdata <- mean(Sample$Monitor[,1])
 densplot(Sample$Monitor[,1],
     adjust=0.002,
     main='predictive probability for data_0 + uncertainty',
-    xlab=paste('P(data_0 = ',toString(draws0),' | data_training) = ',toString(pdata)),
+    xlab=paste('P(data_0 = ',draws0,' | data_training) = ',pdata,' (red = est., blue = exact)'),
     ylab='p(P)')
-abline(v=pdata,col='green')
+abline(v=pdata,col='red')
+abline(v=exactpdata,col='blue')
 dev.off()
 
 png('predictive_posterior.png')
 densplot(Sample$Monitor[,2],
     adjust=0.1,
     main='predictive posterior distribution',
-    xlab=expression('data_0'),
+    xlab=expression('data_0 (blue = exact distr)'),
     ylab=expression('P(data_0 | data_training)'))
 xx <- seq(mun-3*sigmat,mun+3*sigmat,0.1)
 yy <- dnormv(xx,mun,sigmat)
-lines(x=xx,y=yy,col='red')
+lines(x=xx,y=yy,col='blue')
 dev.off()
 
 Sample0 <- LaplacesDemon(hyperprior0, mydata0, Initial.Values=c(1), Thinning=2,
@@ -110,13 +112,17 @@ Sample0 <- LaplacesDemon(hyperprior0, mydata0, Initial.Values=c(1), Thinning=2,
                      Specs=list(A=500, B=NULL, m=100, n=0, w=1)
                      )
 
+
 png('model_probability.png')
+exactp <- sqrt(sigma)/sqrt((2*pi*sigma)^n*(n*sigma0+sigma))*exp(
+-sum(draws^2)/(2*sigma)-mu0^2/(2*sigma0)+(sigma0*n^2*me^2/sigma + sigma*mu0^2/sigma0 + 2*n*me*mu0)/(2*(n*sigma0+sigma)))
 pmodel <- mean(Sample0$Monitor[,1])
 densplot(Sample0$Monitor[,1],
     adjust=max(Sample0$Monitor[,1])/50,
     main='probability of model + uncertainty',
-    xlab=paste('P(model | data) = ',toString(pmodel)))
-abline(v=pmodel,col='green')
+    xlab=paste('P(model | data) = ',pmodel,' (red=est., blue=exact)'))
+abline(v=pmodel,col='red')
+abline(v=exactp,col='blue')
 dev.off()
 
 plot(Sample0,BurnIn=500,mydata0,PDF=TRUE,Parms=NULL)
@@ -124,6 +130,22 @@ plot(Sample0,BurnIn=500,mydata0,PDF=TRUE,Parms=NULL)
 
 
 stop()
+
+sum(exp(-(mu0-draws)^2/(2*(sigma+sigma0))))/sqrt(2*pi*(sigma+sigma0))
+
+
+                                       
+
+
+
+len <- length(Sample0$Posterior2)
+summ <-0
+for(i in 1:len){
+summ <- summ + prod(len*dnormv(draws,Sample0$Posterior2[i],sigma))
+}
+summ/len^length(draws)/len
+
+
 densplot(Sample$Monitor,
     adjust=1,
     main='test',
@@ -131,7 +153,7 @@ densplot(Sample$Monitor,
 
 xx <- seq(-8,8,0.1)
 yy <- dt.scaled(xx,df,mean=mu,sd=sd)
-lines(x=xx,y=yy,col='green')
+lines(x=xx,y=yy,col='red')
 
 
 quadr <- IterativeQuadrature(hyperprior, c(5), mydata, Covar=NULL, Iterations=500,
