@@ -175,7 +175,7 @@ stop()
 tsample <- Sample0
 for(i in 1:4){
     for(j in (i+1):5){
-png(paste0('testplottrajectory_af_',i,j,'.png'))
+png(paste0('testplottrajectory',i,j,'.png'))
 magplot(tsample$Posterior1[seq(1,dim(tsample$Posterior1)[1],length.out=200),c(i,j)],type='l',col=hsv(alpha=0.3),xlab=mydata$parm.names[i],ylab=mydata$parm.names[j])
 dev.off()
     }}
@@ -183,7 +183,7 @@ dev.off()
 for(i in 1:4){
     for(j in (i+1):5){
 png(paste0('testplotdens',i,j,'.png'))
-magcon(tsample$Posterior2[1000:10000,i],tsample$Posterior2[1000:10000,j],
+magcon(tsample$Posterior2[,i],tsample$Posterior2[,j],
        conlevels=c(0.5,0.68,0.95), lty=c(2,1,3), imcol=brewer.pal(n=9,name='Blues'))
 title(xlab=mydata$parm.names[i],ylab=mydata$parm.names[j])
 ##polygon(ellipse(cov.rob(tsample$Posterior2)$cov,centre=tsample$Summary2[,'Mean'],
