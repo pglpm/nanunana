@@ -121,15 +121,14 @@ stop()
 ## dev.off()
 
 png('predictive_probability.png')
-exactpdata <- dnormv(mydata$predict,mun,sigmat)
-pdata <- mean(Sample$Monitor[,1])
-densplot(Sample$Monitor[,1],
-    adjust=0.002,
+pdata <- signif(mean(psamp),2)
+densplot(psamp,
+    adjust=0.0002,
     main='predictive probability for data_0 + uncertainty',
-    xlab=paste('P(data_0 = ',draws0,' | data_training) = ',pdata,' (red = est., blue = exact)'),
+    xlab=paste0('P(data_0 = (',signif(datanew[1],2),',',signif(datanew[2],2),') | data_training) = ',pdata,' (red = est., blue = exact)'),
     ylab='p(P)')
 abline(v=pdata,col='red')
-abline(v=exactpdata,col='blue')
+abline(v=pnew.exact0,col='blue', lty=2)
 dev.off()
 
 png('predictive_posterior.png')
@@ -171,7 +170,7 @@ stop()
 
 #### garbage & temp scripts ####
 
-
+mean(dmvnorm(data$predict,mean=mu,sigma=sigma)
 
 tsample <- Sample0
 for(i in 1:4){
