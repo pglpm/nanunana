@@ -1,12 +1,13 @@
 ## test script for normal model with normal-Wishart prior (cf minka1998_r2001)
-
-library('magicaxis')
-library('ellipse')
-library('MCMCpack')
-library('LaplacesDemon')
-library('RColorBrewer')
-library('mvtnorm')
-library('magrittr')
+library('pacman')
+p_load('magicaxis')
+p_load('ellipse')
+p_load('MCMCpack')
+p_load('LaplacesDemon')
+p_load('RColorBrewer')
+p_load('mvtnorm')
+p_load('magrittr')
+p_load('bayesplot')
 
 ## density-plot function
 densplot <- function (x,adjust=1,...) { density(x,adjust) %>% plot(.,...)}
