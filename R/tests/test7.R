@@ -209,9 +209,7 @@ dev.off()
 
 
 
-samplest <- mvtnorm::rmvt(5000, delta=meant, sigma=scattermt*(nt+1)/(nt-d+1), df=nt-d+1, type='shifted')
-
-tsample <- Sample0
+samplest <- mvtnorm::rmvt(100000, delta=meant, sigma=scattermt*(nt+1)/(nt-d+1), df=nt-d+1, type='shifted')
 png(paste0('testplotdensposterior_exact.png'))
 magcon(samplest[,1],samplest[,2], xlim=c(-20,20), ylim=c(-40,40),
        conlevels=c(0.5,0.68,0.95), lty=c(2,1,3), imcol=brewer.pal(n=9,name='Blues'))
