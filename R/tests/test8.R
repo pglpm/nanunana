@@ -42,10 +42,7 @@ scattermt0 <- (nt*scattermt + n0*scatterm0)/nt0 +
 ## extra datum
 datanew <- signif(rmvnorm(1,mud,sigmad),2)
 
-## exact results:
-
-## P(datanew | datat, prior) is t-student
-pnew.exact0 <- mvtnorm::dmvt(datanew, delta=meant, sigma=scattermt*(nt+1)/(nt-d+1), df=nt-d+1, type='shifted',log=F)
+## exact results: no analytic solution exists
 
 ## function to generate initial values (don't know how it works)
 PGF <- function(data){
