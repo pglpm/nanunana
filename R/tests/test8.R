@@ -98,23 +98,31 @@ hyperprior0 <- function(parm,data){
 
 ## Monte Carlo sampling
 Initial.Values <- c(0,0,0,0,0)
-Sample0 <- LaplacesDemon(hyperprior0, mydata, Initial.Values,
+Sampleinitial <- LaplacesDemon(hyperprior0, mydata, Initial.Values,
                         Covar=NULL,
-                        Thinning=10,
-                        Iterations=10000, Status=1000,
+                        Thinning=2,
+                        Iterations=2000, Status=1000,
 ##                        Algorithm="NUTS", Specs=list(A=1000, delta=0.6, epsilon=1, Lmax=5)
                         Algorithm="AFSS", Specs=list(A=1000, B=NULL, m=100, n=0, w=1)
+                        )
+
+Sample0 <- LaplacesDemon(hyperprior0, mydata, as.initial.values(Sampleinitial),
+                        Covar=Sampleinitial$Covar,
+                        Thinning=2,
+                        Iterations=10000, Status=1000,
+##                        Algorithm="NUTS", Specs=list(A=1000, delta=0.6, epsilon=1, Lmax=5)
+                        Algorithm="AFSS", Specs=list(A=0, B=NULL, m=100, n=0, w=1)
                         )
 
 ### plots:
 
 ## predictive distribution as scatter + marginals
-png('predictive_distr_grid_test8.png')
+png('predictive_distr_grid_test8b.png')
 mcmc_pairs(Sample0$Monitor[,2:3])
 dev.off()
 
 ## predictive distribution as density
-png('predictive_distr_dens_test8.png')
+png('predictive_distr_dens_test8b.png')
 magcon(Sample0$Monitor[,2],Sample0$Monitor[,3],# xlim=c(-20,20), ylim=c(-40,40),
        conlevels=c(0.05,0.5,0.95), lty=c(2,1,3),
        imcol=brewer.pal(n=9,name='Blues'))
@@ -127,7 +135,7 @@ points(datat[i,1],datat[i,2], col='#BBBBBB',pch=18)
 dev.off()
 
 ## probability for datanew + 'uncertainty'
-png('prob_datanew_test8.png')
+png('prob_datanew_test8b.png')
 pnew.mean <- mean(Sample0$Monitor[,1])
 densplot(Sample0$Monitor[,1],
     adjust=0.0005,
@@ -139,10 +147,11 @@ dev.off()
 
 
 ## posterior for the parameters
-png('posterior_parameters_test8.png')
+png('posterior_parameters_test8b.png')
 mcmc_pairs(Sample0$Posterior2)
 dev.off()
 
+save.image(file='normalnormaljeffreys2.RData')
 
 stop()
 
