@@ -9,6 +9,15 @@ library('mvtnorm')
 library('magrittr')
 library('bayesplot')
 
+mypurpleblue <- '#4477AA'
+myblue <- '#66CCEE'
+mygreen <- '#228833'
+myyellow <- '#CCBB44'
+myred <- '#EE6677'
+myredpurple <- '#AA3377'
+mygrey <- '#BBBBBB'
+palette(c(myblue, myred, mygreen, myyellow, myredpurple, mypurpleblue, mygrey, 'black'))
+
 ## density-plot function
 densplot <- function (x,adjust=1,...) { density(x,adjust) %>% plot(.,...)}
 
@@ -113,7 +122,7 @@ title(xlab=mydata$mon.names[2],ylab=mydata$mon.names[3],main='predictive distrib
 points(Sample0$Summary2[8,'Mean'],Sample0$Summary2[9,'Mean'],
        col='black',pch=4)
 for(i in 1:length(datat[,1])){
-points(datat[i,1],datat[i,2], col='gray',pch=5)
+points(datat[i,1],datat[i,2], col='#BBBBBB',pch=18)
 }
 dev.off()
 
@@ -123,9 +132,9 @@ pnew.mean <- mean(Sample0$Monitor[,1])
 densplot(Sample0$Monitor[,1],
     adjust=0.0005,
     main='predictive probability for d_new + uncertainty',
-    xlab=paste0('P(d_new = (',signif(datanew[1],2),',',signif(datanew[2],2),') | data_training) = ',signif(pnew.mean,2),' (red = est., blue = exact)'),
+    xlab=paste0('P(d_new = (',signif(datanew[1],2),',',signif(datanew[2],2),') | data_training) = ',signif(pnew.mean,2)),
     ylab='p(P)')
-abline(v=pnew.mean,col='red')
+abline(v=pnew.mean,col=myred)
 dev.off()
 
 
