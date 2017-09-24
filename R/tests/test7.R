@@ -202,7 +202,7 @@ title(xlab=mydata$mon.names[2],ylab=mydata$mon.names[3],main='Monte Carlo')
 ##polygon(ellipse(cov.rob(tsample$Posterior2)$cov,centre=tsample$Summary2[,'Mean'],
 ##               level=c(pnorm(1)-pnorm(-1))), col=hsv(v=0,alpha=0.2),border=NA)
 ##points(mymu,mysigma,col='blue',pch=4)
-points(tsample$Summary2[8,'Median'],tsample$Summary2[9,'Median'],
+points(tsample$Summary2[8,'Mean'],tsample$Summary2[9,'Mean'],
        col='black',pch=4)
 dev.off()
 
