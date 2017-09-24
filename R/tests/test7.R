@@ -15,11 +15,11 @@ set.seed(666)
 
 ## parameters to generate normal training data
 d <- 2
-mud <- c(10,20)
-sigmad <- matrix(c(20,10,10,40), 2)
+mud <- c(1,2)
+sigmad <- matrix(c(3,2,2,5), 2)
 
 ## training data with means and scatter matrix
-nt <- 3
+nt <- 10
 datat <- rmvnorm(nt,mud,sigmad)
 meant <- colMeans(datat)
 hmeant <- sweep(datat,2,meant,'-')
@@ -28,7 +28,7 @@ scattermt <- t(hmeant) %*% hmeant
 ## reference-prior parameters (mean and variance matrix)
 n0 <- 4
 mean0 <- c(0,0)
-scatterm0 <- diag(c(5,5))
+scatterm0 <- diag(c(1,1))
 
 ## combination of training data and reference parameters
 
@@ -74,8 +74,8 @@ hyperprior <- function(parm,data){
 
 hyperprior0 <- function(parm,data){
     mu <- parm[1:2]
-    parm[3] <- interval(parm[3],0,Inf)
-    parm[5] <- interval(parm[5],0,Inf)
+    parm[3] <- interval(parm[3],1e-6,1e6)
+    parm[5] <- interval(parm[5],1e-6,1e6)
     parm[4] <- interval(parm[4]/sqrt(parm[3]*parm[5]),-1,1)*sqrt(parm[3]*parm[5])
     sigma <- matrix(c(parm[c(3,4,4,5)]), 2)
     sigma.prior <- dinvwishart(sigma,nt,scattermt*nt, log=T)
@@ -86,7 +86,8 @@ hyperprior0 <- function(parm,data){
                   yhat=rmvnorm(1,mean=mu,sigma=sigma),parm=parm)
 }
 
-Initial.Values <- c(0,0,3,0,3)
+Initial.Values <- c(0,0,1,0,1)
+
 Sample <- LaplacesDemon(hyperprior, mydata, Initial.Values,
                         Covar=NULL,
                         Thinning=10,
@@ -99,8 +100,8 @@ Sample0 <- LaplacesDemon(hyperprior0, mydata, Initial.Values,
                         Covar=NULL,
                         Thinning=10,
                         Iterations=10000, Status=1000,
-                        Algorithm="AFSS",
-                        Specs=list(A=1000, B=NULL, m=100, n=0, w=1)
+##                        Algorithm="NUTS", Specs=list(A=1000, delta=0.6, epsilon=1, Lmax=5)
+                        Algorithm="AFSS", Specs=list(A=1000, B=NULL, m=100, n=0, w=1)
                         )
 
 ## plot(Sample,BurnIn=500,mydata,PDF=TRUE,Parms=NULL)
@@ -167,29 +168,59 @@ plot(Sample0,BurnIn=500,mydata0,PDF=TRUE,Parms=NULL)
 stop()
 
 
-#### garbage ####
+#### garbage & temp scripts ####
 
+
+
+tsample <- Sample0
 for(i in 1:4){
     for(j in (i+1):5){
-png(paste0('testplottrajectory',i,j,'.png'))
-magplot(Sample$Posterior2[seq(1,10000,length.out=500),c(i,j)],type='l',col=hsv(alpha=0.3),xlab=mydata$parm.names[i],ylab=mydata$parm.names[j])
+png(paste0('testplottrajectory_af_',i,j,'.png'))
+magplot(tsample$Posterior1[seq(1,dim(tsample$Posterior1)[1],length.out=200),c(i,j)],type='l',col=hsv(alpha=0.3),xlab=mydata$parm.names[i],ylab=mydata$parm.names[j])
 dev.off()
     }}
 
 for(i in 1:4){
     for(j in (i+1):5){
 png(paste0('testplotdens',i,j,'.png'))
-magcon(Sample$Posterior2[1000:10000,i],Sample$Posterior2[1000:10000,j],
+magcon(tsample$Posterior2[1000:10000,i],tsample$Posterior2[1000:10000,j],
        conlevels=c(0.5,0.68,0.95), lty=c(2,1,3), imcol=brewer.pal(n=9,name='Blues'))
 title(xlab=mydata$parm.names[i],ylab=mydata$parm.names[j])
-##polygon(ellipse(cov.rob(Sample$Posterior2)$cov,centre=Sample$Summary2[,'Mean'],
+##polygon(ellipse(cov.rob(tsample$Posterior2)$cov,centre=tsample$Summary2[,'Mean'],
 ##               level=c(pnorm(1)-pnorm(-1))), col=hsv(v=0,alpha=0.2),border=NA)
 ##points(mymu,mysigma,col='blue',pch=4)
-points(Sample$Summary2[i,'Median'],Sample$Summary2[j,'Median'],
+points(tsample$Summary2[i,'Median'],tsample$Summary2[j,'Median'],
        col='black',pch=4)
 dev.off()
     }}
 
+tsample <- Sample0
+png(paste0('testplotdensposterior.png'))
+magcon(tsample$Monitor[,2],tsample$Monitor[,3], xlim=c(-20,20), ylim=c(-40,40),
+       conlevels=c(0.5,0.68,0.95), lty=c(2,1,3), imcol=brewer.pal(n=9,name='Blues'))
+title(xlab=mydata$mon.names[2],ylab=mydata$mon.names[3],main='Monte Carlo')
+##polygon(ellipse(cov.rob(tsample$Posterior2)$cov,centre=tsample$Summary2[,'Mean'],
+##               level=c(pnorm(1)-pnorm(-1))), col=hsv(v=0,alpha=0.2),border=NA)
+##points(mymu,mysigma,col='blue',pch=4)
+points(tsample$Summary2[8,'Median'],tsample$Summary2[9,'Median'],
+       col='black',pch=4)
+dev.off()
+
+
+
+
+samplest <- mvtnorm::rmvt(5000, delta=meant, sigma=scattermt*(nt+1)/(nt-d+1), df=nt-d+1, type='shifted')
+
+tsample <- Sample0
+png(paste0('testplotdensposterior_exact.png'))
+magcon(samplest[,1],samplest[,2], xlim=c(-20,20), ylim=c(-40,40),
+       conlevels=c(0.5,0.68,0.95), lty=c(2,1,3), imcol=brewer.pal(n=9,name='Blues'))
+title(xlab=mydata$mon.names[2],ylab=mydata$mon.names[3], main='exact')
+##polygon(ellipse(cov.rob(tsample$Posterior2)$cov,centre=tsample$Summary2[,'Mean'],
+##               level=c(pnorm(1)-pnorm(-1))), col=hsv(v=0,alpha=0.2),border=NA)
+##points(mymu,mysigma,col='blue',pch=4)
+points(meant[1],meant[2], col='black',pch=4)
+dev.off()
 
 
 xgrid <- seq(meant0[1]-1*scattermt0[1,1],meant0[1]+1*scattermt0[1,1],length.out=20)
