@@ -21,7 +21,7 @@ sigmad <- matrix(c(3,2,2,5), 2)
 
 ## training data with means and scatter matrix
 nt <- 10
-datat <- rmvnorm(nt,mud,sigmad)
+datat <- signif(rmvnorm(nt,mud,sigmad),2)
 meant <- colMeans(datat)
 hmeant <- sweep(datat,2,meant,'-')
 scattermt <- t(hmeant) %*% hmeant
@@ -39,24 +39,119 @@ scattermt0 <- (nt*scattermt + n0*scatterm0)/nt0 +
     nt*n0*((meant-mean0) %*% t(meant-mean0))/nt0^2
 
 ## extra datum
-datanew <- rmvnorm(1,mud,sigmad)
+datanew <- signif(rmvnorm(1,mud,sigmad),2)
 
 ## exact results:
 
 ## P(datanew | datat, prior) is t-student
-pnew.exact <- mvtnorm::dmvt(datanew, delta=meant0, sigma=scattermt0*(nt0+1)/(nt0-d+1), df=nt0-d+1, type='shifted',log=F)
-
 pnew.exact0 <- mvtnorm::dmvt(datanew, delta=meant, sigma=scattermt*(nt+1)/(nt-d+1), df=nt-d+1, type='shifted',log=F)
 
+## function to generate initial values (don't know how it works)
 PGF <- function(data){
     sigma <- rinvwishart(n0,scatterm0*n0)
     mu <- rmvnorm(1,mean=mean0,sigma=sigma/n0)
     return(c(mu,c(sigma)[c(1,2,4)]))
 }
 
-mydata <- list(data=datat, predict=datanew, PGF=PGF, mon.names=c('P(D_0)','D0[1]','D0[2]'), parm.names=c('mu[1]','mu[2]','sigma[1,1]','sigma[1,2]','sigma[2,2]'),N=nt, y=meant)
+## model data - barely used
+mydata <- list(data=datat, predict=datanew, PGF=PGF,
+               mon.names=c('P(d_new)','d_new[1]','d_new[2]'),
+               parm.names=c('mu[1]','mu[2]','sigma[1,1]','sigma[1,2]','sigma[2,2]'),
+               N=nt, y=meant)
 
-mydata0 <- list(data=datat, predict=datanew, PGF=PGF, mon.names=c('P(D)'), parm.names=c('mu[1]','mu[2]','sigma[1,1]','sigma[1,2]','sigma[2,1]','sigma[2,2]'),N=nt, y=meant)
+
+## model
+hyperprior0 <- function(parm,data){
+    mu <- parm[1:2]
+    ## ensure that variance matrix is positive-definite
+    parm[3] <- interval(parm[3],1e-6,1e6)
+    parm[5] <- interval(parm[5],1e-6,1e6)
+    parm[4] <- interval(parm[4]/sqrt(parm[3]*parm[5]),-1,1)*sqrt(parm[3]*parm[5])
+    sigma <- matrix(c(parm[c(3,4,4,5)]), 2)
+    ## prior for variance is inverse Wishart
+    sigma.prior <- dinvwishart(sigma,nt,scattermt*nt, log=T)
+    ## prior for mean is normal
+    mu.prior <- dmvnorm(mu,mean=meant,sigma=sigma/nt, log=T)
+    LP <- mu.prior + sigma.prior
+    return <- list(LP=LP, Dev=-2*LP,
+                   ## sample also: p(d=datanew|mu,sigma), and p(d|mu,sigma)
+                   Monitor=c(dmvnorm(datanew,mean=mu,sigma=sigma),rmvnorm(1,mean=mu,sigma=sigma)),
+                  yhat=rmvnorm(1,mean=mu,sigma=sigma),parm=parm)
+}
+
+## Monte Carlo sampling
+Initial.Values <- c(0,0,1,0,1)
+Sample0 <- LaplacesDemon(hyperprior0, mydata, Initial.Values,
+                        Covar=NULL,
+                        Thinning=10,
+                        Iterations=10000, Status=1000,
+##                        Algorithm="NUTS", Specs=list(A=1000, delta=0.6, epsilon=1, Lmax=5)
+                        Algorithm="AFSS", Specs=list(A=1000, B=NULL, m=100, n=0, w=1)
+                        )
+
+### plots:
+
+## predictive distribution as scatter + marginals
+png('predictive_distr_grid.png')
+mcmc_pairs(Sample0$Monitor[,2:3])
+dev.off()
+
+## predictive distribution as density
+png('predictive_distr_dens.png')
+magcon(Sample0$Monitor[,2],Sample0$Monitor[,3], xlim=c(-20,20), ylim=c(-40,40),
+       conlevels=c(0.05,0.5,0.95), lty=c(2,1,3),
+       imcol=brewer.pal(n=9,name='Blues'))
+title(xlab=mydata$mon.names[2],ylab=mydata$mon.names[3],main='predictive distribution (Monte Carlo)')
+points(Sample0$Summary2[8,'Mean'],Sample0$Summary2[9,'Mean'],
+       col='black',pch=4)
+for(i in 1:length(datat[,1])){
+points(datat[i,1],datat[i,2], col='gray',pch=5)
+}
+dev.off()
+
+## probability for datanew + 'uncertainty'
+png('prob_datanew.png')
+pnew.mean <- mean(Sample0$Monitor[,1])
+densplot(Sample0$Monitor[,1],
+    adjust=0.0001,
+    main='predictive probability for d_new + uncertainty',
+    xlab=paste0('P(d_new = (',signif(datanew[1],2),',',signif(datanew[2],2),') | data_training) = ',signif(pnew.mean,2),' (red = est., blue = exact)'),
+    ylab='p(P)')
+abline(v=pnew.mean,col='red')
+abline(v=pnew.exact0,col='blue', lty=2)
+dev.off()
+
+
+## posterior for the parameters
+png('posterior_parameters.png')
+mcmc_pairs(Sample0$Posterior2,pch=4)
+dev.off()
+
+
+## exact predictive distribution as density
+sampleexact <- mvtnorm::rmvt(100000, delta=meant, sigma=scattermt*(nt+1)/(nt-d+1), df=nt-d+1, type='shifted')
+png(paste0('predictive_distr_dens_exact.png'))
+magcon(sampleexact[,1],sampleexact[,2], xlim=c(-20,20), ylim=c(-40,40),
+       conlevels=c(0.05,0.5,0.95), lty=c(2,1,3),
+       imcol=brewer.pal(n=9,name='Blues'))
+title(xlab=mydata$mon.names[2],ylab=mydata$mon.names[3], main='predictive distribution (exact)')
+points(meant[1],meant[2], col='black',pch=4)
+for(i in 1:length(datat[,1])){
+points(datat[i,1],datat[i,2], col='gray',pch=5)
+}
+dev.off()
+
+
+stop()
+
+
+
+
+
+##### garbage and test scripts #####
+
+
+pnew.exact <- mvtnorm::dmvt(datanew, delta=meant0, sigma=scattermt0*(nt0+1)/(nt0-d+1), df=nt0-d+1, type='shifted',log=F)
 
 hyperprior <- function(parm,data){
     mu <- parm[1:2]
@@ -73,22 +168,6 @@ hyperprior <- function(parm,data){
                   yhat=rmvnorm(1,mean=mu,sigma=sigma),parm=parm)
 }
 
-hyperprior0 <- function(parm,data){
-    mu <- parm[1:2]
-    parm[3] <- interval(parm[3],1e-6,1e6)
-    parm[5] <- interval(parm[5],1e-6,1e6)
-    parm[4] <- interval(parm[4]/sqrt(parm[3]*parm[5]),-1,1)*sqrt(parm[3]*parm[5])
-    sigma <- matrix(c(parm[c(3,4,4,5)]), 2)
-    sigma.prior <- dinvwishart(sigma,nt,scattermt*nt, log=T)
-    mu.prior <- dmvnorm(mu,mean=meant,sigma=sigma/nt, log=T)
-    LP <- mu.prior + sigma.prior
-    return <- list(LP=LP, Dev=-2*LP,
-                   Monitor=c(dmvnorm(data$predict,mean=mu,sigma=sigma),rmvnorm(1,mean=mu,sigma=sigma)),
-                  yhat=rmvnorm(1,mean=mu,sigma=sigma),parm=parm)
-}
-
-Initial.Values <- c(0,0,1,0,1)
-
 Sample <- LaplacesDemon(hyperprior, mydata, Initial.Values,
                         Covar=NULL,
                         Thinning=10,
@@ -97,13 +176,6 @@ Sample <- LaplacesDemon(hyperprior, mydata, Initial.Values,
                         Specs=list(A=1000, B=NULL, m=100, n=0, w=1)
                         )
 
-Sample0 <- LaplacesDemon(hyperprior0, mydata, Initial.Values,
-                        Covar=NULL,
-                        Thinning=10,
-                        Iterations=10000, Status=1000,
-##                        Algorithm="NUTS", Specs=list(A=1000, delta=0.6, epsilon=1, Lmax=5)
-                        Algorithm="AFSS", Specs=list(A=1000, B=NULL, m=100, n=0, w=1)
-                        )
 
 ## plot(Sample,BurnIn=500,mydata,PDF=TRUE,Parms=NULL)
 
@@ -170,7 +242,6 @@ stop()
 
 #### garbage & temp scripts ####
 
-mean(dmvnorm(data$predict,mean=mu,sigma=sigma)
 
 tsample <- Sample0
 for(i in 1:4){
@@ -209,16 +280,6 @@ dev.off()
 
 
 
-samplest <- mvtnorm::rmvt(100000, delta=meant, sigma=scattermt*(nt+1)/(nt-d+1), df=nt-d+1, type='shifted')
-png(paste0('testplotdensposterior_exact.png'))
-magcon(samplest[,1],samplest[,2], xlim=c(-20,20), ylim=c(-40,40),
-       conlevels=c(0.5,0.68,0.95), lty=c(2,1,3), imcol=brewer.pal(n=9,name='Blues'))
-title(xlab=mydata$mon.names[2],ylab=mydata$mon.names[3], main='exact')
-##polygon(ellipse(cov.rob(tsample$Posterior2)$cov,centre=tsample$Summary2[,'Mean'],
-##               level=c(pnorm(1)-pnorm(-1))), col=hsv(v=0,alpha=0.2),border=NA)
-##points(mymu,mysigma,col='blue',pch=4)
-points(meant[1],meant[2], col='black',pch=4)
-dev.off()
 
 
 xgrid <- seq(meant0[1]-1*scattermt0[1,1],meant0[1]+1*scattermt0[1,1],length.out=20)
