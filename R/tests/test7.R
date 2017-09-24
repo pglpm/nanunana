@@ -15,8 +15,8 @@ set.seed(666)
 
 ## parameters to generate normal training data
 d <- 2
-mud <- c(1,2)
-sigmad <- matrix(c(2,1,1,4), 2)
+mud <- c(10,20)
+sigmad <- matrix(c(20,10,10,40), 2)
 
 ## training data with means and scatter matrix
 nt <- 3
@@ -26,9 +26,9 @@ hmeant <- sweep(datat,2,meant,'-')
 scattermt <- t(hmeant) %*% hmeant
 
 ## reference-prior parameters (mean and variance matrix)
-n0 <- 5
+n0 <- 4
 mean0 <- c(0,0)
-scatterm0 <- diag(c(1,1))
+scatterm0 <- diag(c(5,5))
 
 ## combination of training data and reference parameters
 
@@ -45,6 +45,8 @@ datanew <- rmvnorm(1,mud,sigmad)
 ## P(datanew | datat, prior) is t-student
 pnew.exact <- mvtnorm::dmvt(datanew, delta=meant0, sigma=scattermt0*(nt0+1)/(nt0-d+1), df=nt0-d+1, type='shifted',log=F)
 
+pnew.exact0 <- mvtnorm::dmvt(datanew, delta=meant, sigma=scattermt*(nt+1)/(nt-d+1), df=nt-d+1, type='shifted',log=F)
+
 PGF <- function(data){
     sigma <- rinvwishart(n0,scatterm0*n0)
     mu <- rmvnorm(1,mean=mean0,sigma=sigma/n0)
@@ -57,8 +59,8 @@ mydata0 <- list(data=datat, predict=datanew, PGF=PGF, mon.names=c('P(D)'), parm.
 
 hyperprior <- function(parm,data){
     mu <- parm[1:2]
-    parm[3] <- interval(parm[3],1e-6,Inf)
-    parm[5] <- interval(parm[5],1e-6,Inf)
+    parm[3] <- interval(parm[3],0,Inf)
+    parm[5] <- interval(parm[5],0,Inf)
     parm[4] <- interval(parm[4]/sqrt(parm[3]*parm[5]),-1,1)*sqrt(parm[3]*parm[5])
     sigma <- matrix(c(parm[c(3,4,4,5)]), 2)
     sigma.prior <- dinvwishart(sigma,n0,scatterm0*n0, log=T)
@@ -71,17 +73,20 @@ hyperprior <- function(parm,data){
 }
 
 hyperprior0 <- function(parm,data){
-    parm.prior <- dnormv(parm,mu0,sigma0, log=T)
-    LP <- parm.prior
-    return <- list(LP=LP, Dev=-2*LP, Monitor=exp(sum(dnormv(data$data,parm,sigma,log=T))) ,yhat=rnormv(1,parm,sigma),parm=parm)
+    mu <- parm[1:2]
+    parm[3] <- interval(parm[3],0,Inf)
+    parm[5] <- interval(parm[5],0,Inf)
+    parm[4] <- interval(parm[4]/sqrt(parm[3]*parm[5]),-1,1)*sqrt(parm[3]*parm[5])
+    sigma <- matrix(c(parm[c(3,4,4,5)]), 2)
+    sigma.prior <- dinvwishart(sigma,nt,scattermt*nt, log=T)
+    mu.prior <- dmvnorm(mu,mean=meant,sigma=sigma/nt, log=T)
+    LP <- mu.prior + sigma.prior
+    return <- list(LP=LP, Dev=-2*LP,
+                   Monitor=c(dmvnorm(data$predict,mean=mu,sigma=sigma),rmvnorm(1,mean=mu,sigma=sigma)),
+                  yhat=rmvnorm(1,mean=mu,sigma=sigma),parm=parm)
 }
 
-posterior <- function(parm,data){
-    LP <- 1
-    return <- list(LP=LP,Dev=1,Monitor=1,yhat=rnormv(1,parm,sigma),parm=parm)
-}
-
-Initial.Values <- c(0,0,1,0,1)
+Initial.Values <- c(0,0,3,0,3)
 Sample <- LaplacesDemon(hyperprior, mydata, Initial.Values,
                         Covar=NULL,
                         Thinning=10,
@@ -90,7 +95,15 @@ Sample <- LaplacesDemon(hyperprior, mydata, Initial.Values,
                         Specs=list(A=1000, B=NULL, m=100, n=0, w=1)
                         )
 
-plot(Sample,BurnIn=500,mydata,PDF=TRUE,Parms=NULL)
+Sample0 <- LaplacesDemon(hyperprior0, mydata, Initial.Values,
+                        Covar=NULL,
+                        Thinning=10,
+                        Iterations=10000, Status=1000,
+                        Algorithm="AFSS",
+                        Specs=list(A=1000, B=NULL, m=100, n=0, w=1)
+                        )
+
+## plot(Sample,BurnIn=500,mydata,PDF=TRUE,Parms=NULL)
 
 stop()
 #postpredictive <- predict(Sample,posterior,mydata,CPUs=2)
@@ -155,6 +168,28 @@ stop()
 
 
 #### garbage ####
+
+for(i in 1:4){
+    for(j in (i+1):5){
+png(paste0('testplottrajectory',i,j,'.png'))
+magplot(Sample$Posterior2[seq(1,10000,length.out=500),c(i,j)],type='l',col=hsv(alpha=0.3),xlab=mydata$parm.names[i],ylab=mydata$parm.names[j])
+dev.off()
+    }}
+
+for(i in 1:4){
+    for(j in (i+1):5){
+png(paste0('testplotdens',i,j,'.png'))
+magcon(Sample$Posterior2[1000:10000,i],Sample$Posterior2[1000:10000,j],
+       conlevels=c(0.5,0.68,0.95), lty=c(2,1,3), imcol=brewer.pal(n=9,name='Blues'))
+title(xlab=mydata$parm.names[i],ylab=mydata$parm.names[j])
+##polygon(ellipse(cov.rob(Sample$Posterior2)$cov,centre=Sample$Summary2[,'Mean'],
+##               level=c(pnorm(1)-pnorm(-1))), col=hsv(v=0,alpha=0.2),border=NA)
+##points(mymu,mysigma,col='blue',pch=4)
+points(Sample$Summary2[i,'Median'],Sample$Summary2[j,'Median'],
+       col='black',pch=4)
+dev.off()
+    }}
+
 
 
 xgrid <- seq(meant0[1]-1*scattermt0[1,1],meant0[1]+1*scattermt0[1,1],length.out=20)
