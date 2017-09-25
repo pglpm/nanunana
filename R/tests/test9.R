@@ -1,16 +1,20 @@
-## test script for normal model with Jeffreys prior for variances and unif. for correlation
-library('pacman')
+## test script for normal model with Jeffreys prior for variances and unif.
+## for correlation - t-walk Monte Carlo
+library('Matrix')
 library('magicaxis')
 library('ellipse')
 library('MCMCpack')
 library('LaplacesDemon')
 library('RColorBrewer')
 library('mvtnorm')
+library('tmvtnorm')
 library('magrittr')
 library('bayesplot')
+library('R2Cuba')
+library('ggplot2')
+library('lavaan')
 
-filename <- 'test8b'
-
+## colourblind-friendly palette
 mypurpleblue <- '#4477AA'
 myblue <- '#66CCEE'
 mygreen <- '#228833'
@@ -21,109 +25,126 @@ mygrey <- '#BBBBBB'
 palette(c(myblue, myred, mygreen, myyellow, myredpurple, mypurpleblue, mygrey, 'black'))
 dev.off()
 
+## string for plots
+fname <- 'test10'
+
 ## density-plot function
 densplot <- function (x,adjust=1,...) { density(x,adjust) %>% plot(.,...)}
 
 set.seed(666)
 
 ## parameters to generate normal training data
-d <- 2
-mud <- c(1,2)
-sigmad <- matrix(c(3,2,2,5), 2)
-truevalues <- c(mud,log(diag(sigmad)),sigmad[1,2]/sqrt(prod(diag(sigmad))))
+d <- 3 # num graph quantities
+## all graph quantities are in [0,1]
+lowb <- rep(0,d)
+uppb <- rep(1,d)
+mud <- c(0.2,0.3,0.2)
+sigmad <- matrix(c(1,2,3,0,0.5,1,0,0,0.1), d)
+sigmad <- t(sigmad)+sigmad # symmetrize
 
 ## training data with means and scatter matrix
-nt <- 10
-datat <- signif(rmvnorm(nt,mud,sigmad),2)
+nt <- 10 # num. training data
+datat <- signif(rtmvnorm(nt,mud,sigmad,lowb,uppb),2)
 meant <- colMeans(datat)
-scattermt <- cov(datat)*(nt-1)/nt
+covt <- cov(datat)*(nt-1)/nt
 
-## reference-prior parameters (mean and variance matrix)
-n0 <- 4
-mean0 <- 0
-sigma0 <- 10000
-sigmav <- log(1e6)
-scatterm0 <- diag(c(1,1))
+## new datum
+datanew <- signif(rtmvnorm(1,mud,sigmad,lowb,uppb),2)
 
-## combination of training data and reference parameters
+## the parameters are:
+## means (d) - uniform distribution (broad normal: curvature helps Monte Carlo)
+mean0 <- 0.5
+sigma0 <- 10
+meanv <- 0
+sigmav <- log(1e3)
+## variances (d) - uniform in logarithm = Jeffreys dv/v
+## correlations (d(d-1)/2) - uniform in [-1,1]
+nr <- d*(d-1)/2 # num. correlations
+np <- 2*d + nr # tot num. params
+parm.names <- c( as.parm.names(list(mu=rep(0,d),logvar=rep(0,d))),
+    as.parm.names(list(rho=diag(d)))[upper.tri(diag(d))] )
 
-nt0 <- nt + n0
-meant0 <- (nt*meant + n0*mean0)/nt0
-scattermt0 <- (nt*scattermt + n0*scatterm0)/nt0 +
-    nt*n0*((meant-mean0) %*% t(meant-mean0))/nt0^2
-
-## extra datum
-datanew <- signif(rmvnorm(1,mud,sigmad),2)
-
-## exact results: no analytic solution exists
-
-## function to generate initial values (don't know how it works)
+## function to generate initial values
 PGF <- function(data){
-    mu <- rnorm(2,mean0,sigma0)
-    logvar <- rnorm(2,0,sigmav)
-    rho <- runif(1,-1,1)
+    mu <- rnorm(3,mean0,sigma0)
+    logvar <- rnorm(3,meanv,sigmav)
+    rho <- runif(nr,-1,1)
     return(c(mu,logvar,rho))
 }
 
-## model data - barely used
-parm.lnames=c('mu[1]','mu[2]','logvar[1]','logvar[2]','rho')
+## model data (barely used)
 mydata <- list(data=datat, predict=datanew, PGF=PGF,
-               mon.names=c('P(d_new)','d_new[1]','d_new[2]'),
-               parm.names=c('mu[1]','mu[2]','logvar[1]','logvar[2]','rho'),
+               mon.names=c('P(d_new)','d_new[1]','d_new[2]','d_new[3]'),
+               parm.names=parm.names,
                N=nt, y=meant)
 
 
 ## model
 hyperprior0 <- function(parm,data){
-    mu <- parm[1:2]
-    ## ensure that correlation is between -1 and 1
-    rho <- interval(parm[5],-1,1)
-    parm[5] <- rho
-    ## prior for mean is normal
-    mu.prior <- sum(dnorm(mu,mean0,sigma0, log=T))
-    ## prior for variances is Jeffreys = uniform in log
-    logvar.prior <- sum(dnorm(parm[3:4],0,sigmav,log=T))
+    mu <- interval(parm[1:d],-2,3)
+    parm[1:d] <- mu
+    logvar <- interval(parm[(d+1):(2*d)],-10,10)
+    parm[(d+1):(2*d)] <- logvar
+    ## ensure that correlations are between -1 and 1
+    rho <- interval(parm[(2*d+1):np],-1,1)
+    parm[(2*d+1):np] <- rho
+    print(paste(signif(c(mu,logvar,rho),2)))
+    ## priors 
+    mu.prior <- sum(dnorm(mu,mean0,sigma0,log=T))
+    logvar.prior <- sum(dnorm(logvar,meanv,sigmav,log=T))
     ## prior for corr. is uniform
-    rho.prior <- dunif(rho,-1,1,log=T)
+    rho.prior <- sum(dnorm(rho,meanv,sigmav*3,log=T)) # dunif(rho,-1,1,log=T)
     ## data likelihood
-    var <- exp(parm[3:4])
-    cov <- rho*sqrt(prod(var))
-    varm <- matrix(c(var[1],cov,cov,var[2]),2)
-    LL <- sum(dmvnorm(data$data, mu, varm, log=T))
+    cov <- nearPD(getCov(rho, sds=sqrt(exp(logvar)), diagonal=F))$mat
+    LL <- sum(dtmvnorm(data$data, mu, cov, lowb,uppb, log=T))
     LP <- LL + mu.prior + logvar.prior + rho.prior
     return <- list(LP=LP, Dev=-2*LL,
                    ## sample also: p(d=datanew|mu,sigma), and p(d|mu,sigma)
-                   Monitor=c(dmvnorm(data$predict,mean=mu,sigma=varm),rmvnorm(1,mean=mu,sigma=varm)),
+                   Monitor=c(dtmvnorm(data$predict,mu,cov,lowb,uppb),rtmvnorm(1,mu,cov,lowb,uppb,algorithm='gibbs')),
                   yhat=1,parm=parm)
 }
 
+
 ## Monte Carlo sampling
-Initial.Values <- c(0,0,0,0,0)
-Sampleinitial <- LaplacesDemon(hyperprior0, mydata, Initial.Values,
+initval <- c(rep(mean0,d),rep(meanv,d),rep(meanv,nr))
+Sampleinitial <- LaplacesDemon(hyperprior0, mydata, initval,
                         Covar=NULL,
                         Thinning=2,
-                        Iterations=2000, Status=1000,
+                        Iterations=50, Status=10,
 ##                        Algorithm="NUTS", Specs=list(A=1000, delta=0.6, epsilon=1, Lmax=5)
-                        Algorithm="AFSS", Specs=list(A=1000, B=NULL, m=100, n=0, w=1)
+##                        Algorithm="AFSS", Specs=list(A=1000, B=NULL, m=100, n=0, w=1)
+                        Algorithm="AFSS", Specs=list(A=100, B=NULL, m=100, n=0, w=1)
+##                        Algorithm="twalk", Specs=list(SIV=NULL, n1=4, at=6, aw=1.5)
                         )
 
+stop()
+
 Sample0 <- LaplacesDemon(hyperprior0, mydata, as.initial.values(Sampleinitial),
-                        Covar=Sampleinitial$Covar,
-                        Thinning=4,
-                        Iterations=20000, Status=1000,
-##                        Algorithm="NUTS", Specs=list(A=1000, delta=0.6, epsilon=1, Lmax=5)
+                        Covar=NULL,
+                        Iterations=20000, Status=10000, Thinning=4,
                         Algorithm="AFSS", Specs=list(A=0, B=NULL, m=100, n=0, w=1)
+##                        Algorithm="NUTS", Specs=list(A=1000, delta=0.6, epsilon=1, Lmax=5)
+##                        Algorithm="twalk", Specs=list(SIV=NULL, n1=4, at=6, aw=1.5)
                         )
 
 ### plots:
 
+nsamples <- dim(Sample0$Posterior1)[1]
+postdist <- rep(0,nsamples)
+for(i in 1:nsamples){
+    cov <- getCov(Sample0$Posterior1[i,(2*d+1):np], sds=sqrt(exp(Sample0$Posterior1[i,(d+1):(2*d)])), diagonal=F)
+    postdist[i] <- rtmvnorm(1,Sample0$Posterior1[i,1:d],cov,lowb,uppb)
+}
+
+
+
 ## predictive distribution as scatter + marginals
-png(paste0('predictive_distr_grid_',filename,'.png'))
-mcmc_pairs(Sample0$Monitor[,2:3])
+png(paste0('predictive_distr_grid_',fname,'.png'))
+mcmc_pairs(Sampleinitial$Posterior1)
 dev.off()
 
 ## predictive distribution as density
-png(paste0('predictive_distr_dens_',filename,'.png'))
+png(paste0('predictive_distr_dens_',fname,'.png'))
 magcon(Sample0$Monitor[,2],Sample0$Monitor[,3],# xlim=c(-20,20), ylim=c(-40,40),
        conlevels=c(0.05,0.5,0.95), lty=c(2,1,3),
        imcol=brewer.pal(n=9,name='Blues'))
@@ -136,7 +157,7 @@ points(datat[i,1],datat[i,2], col='#BBBBBB',pch=18)
 dev.off()
 
 ## probability for datanew + 'uncertainty'
-png(paste0('prob_datanew_',filename,'.png'))
+png(paste0('prob_datanew_',fname,'.png'))
 pnew.mean <- mean(Sample0$Monitor[,1])
 densplot(Sample0$Monitor[,1],
     adjust=0.0005,
@@ -148,22 +169,60 @@ dev.off()
 
 
 ## posterior for the parameters
-png(paste0('posterior_parameters_',filename,'.png'))
+png(paste0('posterior_parameters_',fname,'.png'))
 mcmc_pairs(Sample0$Posterior2)
 dev.off()
 
-save.image(file=paste0(filename,'.RData'))
+save.image(file=paste0('normalnormaljeffreys_',fname,'.RData'))
 
 stop()
 
 
+## value of P(d_new | d_training) via quadrature
+
+hyperpriorc <- function(parm,weight){
+    var1 <- exp(parm[3])
+    var2 <- exp(parm[4])
+    cov <- parm[5]*sqrt(var1*var2)
+    varm <- matrix(c(var1,cov,cov,var2),2)
+    return(exp(sum(dmvnorm(datat,mean=parm[1:2],sigma=varm, log=T))
+               ## + dmvnorm(parm[1:2],mean=mean0,sigma=sigma0, log=T)+
+               ## dnorm(parm[3],0,log(1e6),log=T)+
+               ## dnorm(parm[4],0,log(1e6),log=T)
+               ))
+}
+
+normf <- vegas(5,1,hyperpriorc,
+      lower=c(-1e6,-1e6,-1e4,-1e4,-1), upper=c(1e6,1e6,1e4,1e4,1),
+      rel.tol= 1e-2, abs.tol= 1e-40, max.eval=1000000,
+      flags= list(verbose=1, final=0))
+
+hyperpriorcd <- function(parm,weight){
+    var1 <- exp(parm[3])
+    var2 <- exp(parm[4])
+    cov <- parm[5]*sqrt(var1*var2)
+    varm <- matrix(c(var1,cov,cov,var2),2)
+    return(exp(dmvnorm(datanew,mean=parm[1:2],sigma=varm,log=T)
+               + sum(dmvnorm(datat,mean=parm[1:2],sigma=varm, log=T))
+               ## + dmvnorm(parm[1:2],mean=mean0,sigma=sigma0, log=T)+
+               ## dnorm(parm[3],0,log(1e6),log=T)+
+               ## dnorm(parm[4],0,log(1e6),log=T)
+               ))
+}
+
+normfd <- cuhre(5,1,hyperpriorcd,
+      lower=c(-1e6,-1e6,-1e6,-1e6,-1), upper=c(1e6,1e6,1e6,1e6,1),
+      rel.tol= 1e-2, abs.tol= 1e-40, max.eval=1000000,
+      flags= list(verbose=1, final=0))
+
+pnew.quad <- normfd$value/normf$value
 
 
 
 ##### garbage and test scripts #####
 
 
-pnew.exact <- mvtnorm::dmvt(datanew, delta=meant0, sigma=scattermt0*(nt0+1)/(nt0-d+1), df=nt0-d+1, type='shifted',log=F)
+pnew.exact <- mvtnorm::dmvt(datanew, delta=meant0, sigma=covt0*(nt0+1)/(nt0-d+1), df=nt0-d+1, type='shifted',log=F)
 
 hyperprior <- function(parm,data){
     mu <- parm[1:2]
@@ -294,10 +353,10 @@ dev.off()
 
 
 
-xgrid <- seq(meant0[1]-1*scattermt0[1,1],meant0[1]+1*scattermt0[1,1],length.out=20)
-ygrid <- seq(meant0[2]-1*scattermt0[2,2],meant0[2]+1*scattermt0[2,2],length.out=20)
+xgrid <- seq(meant0[1]-1*covt0[1,1],meant0[1]+1*covt0[1,1],length.out=20)
+ygrid <- seq(meant0[2]-1*covt0[2,2],meant0[2]+1*covt0[2,2],length.out=20)
 tgrid <- expand.grid(x=xgrid,y=ygrid)
-values <- mvtnorm::dmvt(as.matrix(tgrid),delta=(meant0),sigma=scattermt0*(nt0+1)/(nt0-d+1), df=nt0-d+1, type='shifted',log=F)
+values <- mvtnorm::dmvt(as.matrix(tgrid),delta=(meant0),sigma=covt0*(nt0+1)/(nt0-d+1), df=nt0-d+1, type='shifted',log=F)
 png('contour.png')
 contour(x = xgrid, y = ygrid, z = matrix(values, nrow=20, ncol=20),nlevels=50)
 dev.off()
@@ -355,4 +414,36 @@ stop()
 ## png('testplottrajectory2.png')
 ## magplot(Fit$Posterior1,type='l',col=hsv(alpha=0.3),xlab='mu',ylab='sigma')
 ## dev.off()
+
+testPGF <- function(data){ return(interval(rnorm(1,2,1),0,1)) }
+
+testdata <- list(data=0, PGF=testPGF, mon.names=c(' '), parm.names=c('theta'), N=1)
+
+testdistr <- function(parm,data){
+   parm <- interval(parm,0,1)
+#    LP <- if(parm >0 & parm <1){(dnorm(parm,2,1,log=T))} else {1e-6*dnorm(parm,0.5,10000,log=T)}
+    LP <- dnorm(parm,2,1,log=T)
+    return <- list(LP=LP, Dev=-2*LP, Monitor=c(1), yhat=1, parm=parm)
+}
+
+
+Initial.Values <- c(0.5)
+time2 <- system.time(
+    testsample <- LaplacesDemon(testdistr, testdata, Initial.Values,
+                                Covar=NULL,
+                                Thinning=4,
+                                Iterations=10000, Status=5000,
+                                Algorithm="AFSS", Specs=list(A=0, B=NULL, m=100, n=0, w=1)
+                                )
+)
+
+## probability for datanew + 'uncertainty'
+testexact <- rtnorm(100000,2,1,0,1)
+xx=seq(0,1, length.out=101)
+testexact2 <- dtnorm(xx,2,1,0,1)
+dat <- data.frame(dens=c(testsample$Posterior2,testsample2$Posterior2,testexact), lines=c(rep('MC',length(testsample$Posterior2)),rep('MC2',length(testsample2$Posterior2)), rep('exact',length(testexact))))
+dat2 <- data.frame(yv=testexact2, xv=xx)
+png('testdistr.png')
+ggplot() + geom_line(data=dat2, aes(x=xv,y=yv)) + geom_density(data=dat, aes(x = dens, fill = lines, alpha =0.5), adjust=1)
+dev.off()
 

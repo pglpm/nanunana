@@ -9,7 +9,7 @@ library('mvtnorm')
 library('magrittr')
 library('bayesplot')
 
-filename <- 'test8b'
+filename <- 'test8c'
 
 mypurpleblue <- '#4477AA'
 myblue <- '#66CCEE'
@@ -30,7 +30,7 @@ set.seed(666)
 d <- 2
 mud <- c(1,2)
 sigmad <- matrix(c(3,2,2,5), 2)
-truevalues <- c(mud,log(diag(sigmad)),sigmad[1,2]/sqrt(prod(diag(sigmad))))
+truevalues <- c(mud,diag(sigmad),sigmad[1,2]/sqrt(prod(diag(sigmad))))
 
 ## training data with means and scatter matrix
 nt <- 10
@@ -60,16 +60,16 @@ datanew <- signif(rmvnorm(1,mud,sigmad),2)
 ## function to generate initial values (don't know how it works)
 PGF <- function(data){
     mu <- rnorm(2,mean0,sigma0)
-    logvar <- rnorm(2,0,sigmav)
+    var <- exp(rnorm(2,0,sigmav))
     rho <- runif(1,-1,1)
-    return(c(mu,logvar,rho))
+    return(c(mu,var,rho))
 }
 
 ## model data - barely used
-parm.lnames=c('mu[1]','mu[2]','logvar[1]','logvar[2]','rho')
+parm.lnames=c('mu[1]','mu[2]','var[1]','var[2]','rho')
 mydata <- list(data=datat, predict=datanew, PGF=PGF,
                mon.names=c('P(d_new)','d_new[1]','d_new[2]'),
-               parm.names=c('mu[1]','mu[2]','logvar[1]','logvar[2]','rho'),
+               parm.names=c('mu[1]','mu[2]','var[1]','var[2]','rho'),
                N=nt, y=meant)
 
 
@@ -79,14 +79,15 @@ hyperprior0 <- function(parm,data){
     ## ensure that correlation is between -1 and 1
     rho <- interval(parm[5],-1,1)
     parm[5] <- rho
+    var <- interval(parm[3:4],1e-6,Inf)
+    parm[3:4] <- var
     ## prior for mean is normal
     mu.prior <- sum(dnorm(mu,mean0,sigma0, log=T))
     ## prior for variances is Jeffreys = uniform in log
-    logvar.prior <- sum(dnorm(parm[3:4],0,sigmav,log=T))
+    logvar.prior <- sum(dnorm(log(var),0,sigmav,log=T))
     ## prior for corr. is uniform
     rho.prior <- dunif(rho,-1,1,log=T)
     ## data likelihood
-    var <- exp(parm[3:4])
     cov <- rho*sqrt(prod(var))
     varm <- matrix(c(var[1],cov,cov,var[2]),2)
     LL <- sum(dmvnorm(data$data, mu, varm, log=T))
@@ -98,7 +99,7 @@ hyperprior0 <- function(parm,data){
 }
 
 ## Monte Carlo sampling
-Initial.Values <- c(0,0,0,0,0)
+Initial.Values <- c(0,0,1,1,0)
 Sampleinitial <- LaplacesDemon(hyperprior0, mydata, Initial.Values,
                         Covar=NULL,
                         Thinning=2,
