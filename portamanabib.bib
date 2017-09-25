@@ -6,7 +6,7 @@
 %% Home page: http://magnaspesmeretrix.org/
 %% Email (remove ZZ): pglpm0ZZ[at]gmail.com
 %% Created: 2000-08-23T16:53:30+0200
-%% Last-Updated: 2017-09-20T13:45:54+0200
+%% Last-Updated: 2017-09-22T10:45:37+0200
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % NB: This database contains also items whose content's validity I
@@ -742,6 +742,7 @@
 @String{pm = {Phil.\ Mag.}}
 @String{pmd = {Publ.\ Math.\ Debrecen}}
 @String{pmihes = {Publications Math{\'e}matiques de l'IH{\'E}S}}
+@String{pmlr = {Proc.\ Mach.\ Learn.\ Res.}}
 @String{pn = {\langlatin{Philosophia Naturalis}}}
 @String{pnasusa = {Proc.\ Natl.\ Acad.\ Sci.\ (USA)}}
 @String{pnbr = {Psychonomic Bull.\ Rev.}}
@@ -40566,11 +40567,22 @@ pages =	       {867--873},
 keywords =     {convex geometry}
 }
 
+@Article{galetal2016,
+author =       {Yarin Gal and Zoubin Ghahramani},
+title =	       {Dropout as a {Bayesian} Approximation: Representing Model Uncertainty in Deep Learning},
+journal =      pmlr,
+year =	       {2016},
+volume =       {48},
+pages =	       {1050--1059},
+keywords =     {machine learning, Bayesian probability theory},
+note =	       {\arxiveprint{1506.02142}}
+}
+
 @Booklet{galilei1623,
 author =       {Galilei, Galileo},
 title =	       {Il Saggiatore},
 year =	       {1623},
-note = {\url{http://www.liberliber.it/biblioteca/g/galilei/il_saggiatore/html/index.htm}; parts transl.\ in \citebi{seeger1966}},
+note =	       {\url{http://www.liberliber.it/biblioteca/g/galilei/il_saggiatore/html/index.htm}; parts transl.\ in \citebi{seeger1966}},
 mynote =       {(Nel quale con bilancia esquisita e giusta si ponderano le cose contenute nella libra astronomica e filosofica di {Lotario} {Sarsi} sigensano) ``La filosofia {\`e} scritta in questo grandissimo libro che continuamente ci sta aperto innanzi a gli occhi (io dico l'universo), ma non si pu{\`o} intendere se prima non s'impara a intender la lingua, e conoscer i caratteri, ne' quali {\`e} scritto. Egli {\`e} scritto in lingua matematica, e i caratteri son triangoli, cerchi, ed altre figure geometriche, senza i quali mezi {\`e} impossibile a intenderne umanamente parola; senza questi {\`e} un aggirarsi vanamente per un oscuro laberinto.''}
 }
 
@@ -53829,17 +53841,14 @@ pages =	       {260},
 note =	       {See \citebi{hobson2007} and also \citebi{hobson2007b}}
 }
 
-@InProceedings{hugginsetal2015,
+@Article{hugginsetal2015,
 author =       {Jonathan H. Huggins and Joshua B. Tenenbaum},
 title =	       {Risk and Regret of Hierarchical {Bayesian} Learners},
-booktitle =    {Proceedings of the 32nd Annual International Conference on Machine Learning (ICML-15)},
+journal =      pmlr,
 year =	       {2015},
-editor =       {David Blei and Francis Bach},
-series =       {ICML},
+volume =       {37},
 pages =	       {1442--1451},
-address =      {Montr{\'e}al},
-publisher =    {Omnipress},
-note =	       {Updated version at \arxiveprint{1505.04984}}
+note =	       {\arxiveprint{1505.04984}}
 }
 
 @InCollection{hughes1969,
@@ -54238,7 +54247,7 @@ pages =	       {210--217},
 editor =       {Carla E. Brodley and Andrea Pohoreckyj Danyluk},
 booktitle =    {Proceedings of the Eighteenth International Conference on Machine Learning (ICML 2001)},
 publisher =    {Kaufmann},
-series =       {{ICML}},
+series =       {ICML},
 year =	       {2001},
 address =      {San Francisco},
 note =	       {\arxiveprint{cs.AI/0101019}}
