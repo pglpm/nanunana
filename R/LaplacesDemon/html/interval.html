@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Constrain to Interval</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for interval {LaplacesDemon}"><tr><td>interval {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Constrain to Interval</h2>
+
+<h3>Description</h3>
+
+
+<p>This function constrains the value(s) of a scalar, vector, matrix, or
+array to a specified interval, <i>[a,b]</i>. In Bayesian inference, it
+is often useful to truncate a prior distribution to an interval, such
+as <i>p(theta) in [a,b]</i>. The <code>interval</code>
+function is often used in conjunction with the <code><a href="../../LaplacesDemon/html/dtrunc.html">dtrunc</a></code> 
+function to truncate a probability distribution. While
+<code><a href="../../LaplacesDemon/html/dtrunc.html">dtrunc</a></code> prevents assigning density outside of its
+interval and re-estimates density within the interval, the
+<code>interval</code> function is used to prevent the parameter from moving
+outside of the interval in the first place.
+</p>
+<p>After the parameter is constrained to an interval in
+<code><a href="../../LaplacesDemon/html/LaplaceApproximation.html">LaplaceApproximation</a></code>, <code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code>, or
+<code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code>, the constrained parameter should be updated back
+into the <code>parm</code> vector, so the algorithm knows it has been
+constrained.
+</p>
+<p>This is unrelated to the probability interval (see
+<code><a href="../../LaplacesDemon/html/p.interval.html">p.interval</a></code> and <code><a href="../../LaplacesDemon/html/LPL.interval.html">LPL.interval</a></code>).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+interval(x, a=-Inf, b=Inf, reflect=TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>This is a scalar, vector, matrix or array, and its elements
+will be constrained to the interval [<code>a</code>,<code>b</code>].</p>
+</td></tr>
+<tr valign="top"><td><code>a</code></td>
+<td>
+<p>This optional argument allows the specification of the lower
+bound of the interval, and defaults to <code>-Inf</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>b</code></td>
+<td>
+<p>This optional argument allows the specification of the upper
+bound of the interval, and defaults to <code>Inf</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>reflect</code></td>
+<td>
+<p>Logical. When <code>TRUE</code>, a value outside of the
+constrained interval is reflected or bounced back into the
+interval. When <code>FALSE</code>, a value outside of the interval is
+assigned the nearest boundary of the interval. This argument defaults
+to <code>TRUE</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+
+<p>The <code>interval</code> function returns a scalar, vector, matrix, or
+array in accord with its argument, <code>x</code>. Each element is
+constrained to the interval [<code>a</code>,<code>b</code>].
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Byron Hall <a href="mailto:statisticat@gmail.com">statisticat@gmail.com</a></p>
+
+
+<h3>References</h3>
+
+<p><a href="http://www.statisticat.com/laplacesdemon.html">http://www.statisticat.com/laplacesdemon.html</a></p>
+
+
+<h3>See Also</h3>
+
+
+<p><code><a href="../../LaplacesDemon/html/dtrunc.html">dtrunc</a></code>,
+<code><a href="../../LaplacesDemon/html/LaplaceApproximation.html">LaplaceApproximation</a></code>,
+<code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code>,
+<code><a href="../../LaplacesDemon/html/LPL.interval.html">LPL.interval</a></code>,
+<code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code>, and
+<code><a href="../../LaplacesDemon/html/p.interval.html">p.interval</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+#See the Examples vignette for numerous examples.
+library(LaplacesDemon)
+x &lt;- 2
+interval(x,0,1)
+X &lt;- matrix(runif(25,-2,2),5,5)
+interval(X,-1,1)
+</pre>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Consort with Laplace's Demon</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for Consort {LaplacesDemon}"><tr><td>Consort {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Consort with Laplace's Demon</h2>
+
+<h3>Description</h3>
+
+
+<p>This may be used to consort with Laplace's Demon regarding an object
+of class <code>demonoid</code>. Laplace's Demon will offer suggestions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>Consort(object)</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>This required argument is an object of class
+<code>demonoid</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+<p>First, <code>Consort</code> calls <code>print.demonoid</code>, which prints most
+of the components to the screen from the supplied object of class
+<code>demonoid</code>.
+</p>
+<p>Second, Laplace's Demon considers a combination of five conditions
+when making the largest part of its suggestion. These conditions are:
+the algorithm, acceptance rate, MCSE, ESS, and stationarity. Other
+things are considered as well, such as the recommended thinning value
+is used to suggest a new number of iterations, how fast the algorithm
+is expected to be, and if the condition of diminishing adaptation was
+met (for an adaptive algorithm). Diminishing adaptation occurs only
+when the absolute value of the proposed variances trends downward
+(toward zero) over the course of all adaptations. When an algorithm is
+adaptive and it does not have diminishing adaptations, the
+<code>Consort</code> function will suggest a different adaptive algorithm.
+The <code>Periodicity</code> argument is suggested to be set equal to the
+value of <code>Rec.Thinning</code>.
+</p>
+<p>Appeasement Conditions
+</p>
+
+<ul>
+<li><p> Algorithm: The final algorithm must be non-adaptive, so that the
+Markov property holds.
+</p>
+</li>
+<li><p> Acceptance Rate: The acceptance rate is considered satisfactory
+if it is within the interval [15%,50%].
+</p>
+</li>
+<li><p> MCSE: The Monte Carlo Standard Error (MCSE) is considered
+satisfactory for each target distribution if it is less than 6.27%
+of the standard deviation of the target distribution. This allows
+the true mean to be within 5% of the area under a Gaussian
+distribution around the estimated mean. The <code><a href="../../LaplacesDemon/html/MCSE.html">MCSE</a></code>
+function is used. The criterion of 6.27% for this stopping rule is
+arbitary, and may be too lenient or strict, depending on the needs of
+the user. Nonetheless, it has performed well, and this type of
+stopping rule has been observed to perform better than MCMC
+convergence diagnostics (Flegal et al., 2008).
+</p>
+</li>
+<li><p> ESS: The effective sample size (ESS) is considered satisfactory
+for each target distribution if it is at least 100, which is usually
+enough to describe 95% probability intervals (see
+<code><a href="../../LaplacesDemon/html/p.interval.html">p.interval</a></code> and <code><a href="../../LaplacesDemon/html/LPL.interval.html">LPL.interval</a></code> for more
+information). The <code><a href="../../LaplacesDemon/html/ESS.html">ESS</a></code> function is used.
+</p>
+</li>
+<li><p> Stationarity: Each target distribution is considered
+satisfactory if it is estimated to be stationary with the
+<code><a href="../../LaplacesDemon/html/Geweke.Diagnostic.html">Geweke.Diagnostic</a></code> function.
+</p>
+</li></ul>
+
+<p>Bear in mind that the MCSE, ESS, and Stationarity criteria are all
+univariate measures applied to each marginal posterior
+distribution. Multivariate forms are not included. By chance alone due
+to multiple independent tests, 5% of these diagnostics should
+indicate non-convergence when 'convergence' exists. In contrast, even
+one non-convergent nuisance parameter is associated with
+non-convergence in all other parameters. Assessing convergence is
+difficult.
+</p>
+<p>If all five conditions are satisfactory, then Laplace's Demon is
+appeased. Otherwise, Laplace's Demon will suggest and supply R
+code that is ready to be copy/pasted and executed.
+</p>
+<p>To visualize the MCSE-based stopping rule, run the following code:
+</p>
+<p><code>x &lt;- seq(from=-3, to=3, by=0.1);</code>
+<code>plot(x, dnorm(x,0,1), type="l");</code>
+<code>abline(v=-0.0627); abline(v=0.0627);</code>
+<code>abline(v=2*-0.0627, col="red"); abline(v=2*0.0627, col="red")</code>
+</p>
+<p>The black vertical lines show the standard error, and the red vertical
+lines show the 95% interval.
+</p>
+<p>If the user has an object of class <code>demonoid.hpc</code>, the
+<code>Consort</code> function may be still be applied, but a particular
+chain in the object must be specified as a component in a list. For
+example, with an object called <code>Fit</code> and a goal of consorting
+over the second chain, the code would be: <code>Consort(Fit[[2]])</code>.
+</p>
+<p>The Demonic Suggestion is usually very helpful, but should not be
+followed blindly. Do not let it replace critical thinking. For
+example, <code>Consort</code> may find that diminishing adaptation is unmet,
+and recommend a different algorithm. However, the user may be
+convinced that the current algorithm is best, and believe instead that
+MCMC found a local solution, and is leaving it to find the global
+solution, in which case adaptations may increase again. If this is
+true, then it may be best to ignore the newly suggested algorithm, and
+continue with the current algorithm. The suggested code may be
+helpful, but it is merely a suggestion.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Byron Hall <a href="mailto:statisticat@gmail.com">statisticat@gmail.com</a></p>
+
+
+<h3>References</h3>
+
+
+<p>Flegal, J.M., Haran, M., and Jones, G.L. (2008). &quot;Markov chain Monte
+Carlo: Can We Trust the Third Significant Figure?&quot;. Statistical
+Science, 23, p. 250&ndash;260.
+</p>
+<p>Hall, B. (2012). &quot;Laplace's Demon&quot;, STATISTICAT, LLC.
+URL=<a href="http://www.statisticat.com/laplacesdemon.html">http://www.statisticat.com/laplacesdemon.html</a>
+</p>
+
+
+<h3>See Also</h3>
+
+
+<p><code><a href="../../LaplacesDemon/html/ESS.html">ESS</a></code>,
+<code><a href="../../LaplacesDemon/html/Geweke.Diagnostic.html">Geweke.Diagnostic</a></code>,
+<code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code>,
+<code><a href="../../LaplacesDemon/html/LaplacesDemon.hpc.html">LaplacesDemon.hpc</a></code>,
+<code><a href="../../LaplacesDemon/html/LPL.interval.html">LPL.interval</a></code>,
+<code><a href="../../LaplacesDemon/html/MCSE.html">MCSE</a></code>, and
+<code><a href="../../LaplacesDemon/html/p.interval.html">p.interval</a></code>.
+</p>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>

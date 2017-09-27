@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Kullback-Leibler Divergence (KLD)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for KLD {LaplacesDemon}"><tr><td>KLD {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Kullback-Leibler Divergence (KLD)</h2>
+
+<h3>Description</h3>
+
+
+<p>This function calculates the Kullback-Leibler divergence (KLD) between
+two probability distributions, and has many uses, such as in lowest
+posterior loss probability intervals, posterior predictive checks,
+prior elicitation, and reference priors.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+KLD(px, py, base)
+</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>px</code></td>
+<td>
+<p>This is a required vector of probability densities,
+considered as <i>p(x)</i>. Log-densities are also
+accepted, in which case both <code>px</code> and <code>py</code> must be
+log-densities.</p>
+</td></tr>
+<tr valign="top"><td><code>py</code></td>
+<td>
+<p>This is a required vector of probability densities,
+considered as <i>p(y)</i>. Log-densities are also
+accepted, in which case both <code>px</code> and <code>py</code> must be
+log-densities.</p>
+</td></tr>
+<tr valign="top"><td><code>base</code></td>
+<td>
+<p>This optional argument specifies the logarithmic base,
+which defaults to <code>base=exp(1)</code> (or <i>e</i>) and represents
+information in natural units (nats), where <code>base=2</code> represents
+information in binary units (bits).</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+<p>The Kullback-Leibler divergence (KLD) is known by many names, some of
+which are Kullback-Leibler distance, K-L, and logarithmic divergence.
+KLD is an asymmetric measure of the difference, distance, or direct
+divergence between two probability distributions
+<i>p(y)</i> and <i>p(x)</i> (Kullback and
+Leibler, 1951). Mathematically, however, KLD is not a distance,
+because of its asymmetry.
+</p>
+<p>Here, <i>p(y)</i> represents the
+&ldquo;true&rdquo; distribution of data, observations, or theoretical
+distribution, and <i>p(x)</i> represents a theory,
+model, or approximation of <i>p(y)</i>.
+</p>
+<p>For probability distributions <i>p(y)</i> and
+<i>p(x)</i> that are discrete (whether the underlying
+distribution is continuous or discrete, the observations themselves
+are always discrete, such as from <i>i=1,...,N</i>),
+</p>
+<p align="center"><i>KLD[p(y)||p(x)] = sum of
+  p(y[i]) log(p(y[i]) / p(x[i]))</i></p>
+
+<p>In Bayesian inference, KLD can be used as a measure of the information
+gain in moving from a prior distribution, <i>p(theta)</i>,
+to a posterior distribution, <i>p(theta |
+  y)</i>. As such, KLD is the basis of reference priors and lowest
+posterior loss intervals (<code><a href="../../LaplacesDemon/html/LPL.interval.html">LPL.interval</a></code>), such as in
+Berger, Bernardo, and Sun (2009) and Bernardo (2005). The intrinsic
+discrepancy was introduced by Bernardo and Rueda (2002). For more
+information on the intrinsic discrepancy, see
+<code><a href="../../LaplacesDemon/html/LPL.interval.html">LPL.interval</a></code>.
+</p>
+
+
+<h3>Value</h3>
+
+
+<p><code>KLD</code> returns a list with the following components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>KLD.px.py</code></td>
+<td>
+<p>This is <i>KLD[i](p(x[i]) || p(y[i]))</i>.</p>
+</td></tr>
+<tr valign="top"><td><code>KLD.py.px</code></td>
+<td>
+<p>This is <i>KLD[i](p(y[i]) || p(x[i]))</i>.</p>
+</td></tr>
+<tr valign="top"><td><code>mean.KLD</code></td>
+<td>
+<p>This is the mean of the two components above. This is
+the expected posterior loss in <code><a href="../../LaplacesDemon/html/LPL.interval.html">LPL.interval</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>sum.KLD.px.py</code></td>
+<td>
+<p>This is <i>KLD(p(x) || p(y))</i>. This is a directed
+divergence.</p>
+</td></tr>
+<tr valign="top"><td><code>sum.KLD.py.px</code></td>
+<td>
+<p>This is <i>KLD(p(y) || p(x))</i>. This is a directed divergence.</p>
+</td></tr>
+<tr valign="top"><td><code>mean.sum.KLD</code></td>
+<td>
+<p>This is the mean of the two components above.</p>
+</td></tr>
+<tr valign="top"><td><code>intrinsic.discrepancy</code></td>
+<td>
+<p>This is minimum of the two directed
+divergences.</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Byron Hall <a href="mailto:statisticat@gmail.com">statisticat@gmail.com</a></p>
+
+
+<h3>References</h3>
+
+
+<p>Berger, J.O., Bernardo, J.M., and Sun, D. (2009). &quot;The Formal
+Definition of Reference Priors&quot;. The Annals of Statistics, 37(2),
+p. 905&ndash;938.
+</p>
+<p>Bernardo, J.M. and Rueda, R. (2002). &quot;Bayesian Hypothesis Testing: A
+Reference Approach&quot;. International Statistical Review, 70,
+p. 351&ndash;372.
+</p>
+<p>Bernardo, J.M. (2005). &quot;Intrinsic Credible Regions: An Objective
+Bayesian Approach to Interval Estimation&quot;. Sociedad de Estadistica e
+Investigacion Operativa, 14, 2, p. 317&ndash;384.
+</p>
+<p>Hall, B. (2012). &quot;Bayesian Inference&quot;, STATISTICAT, LLC.
+URL=<a href="http://www.statisticat.com/laplacesdemon.html">http://www.statisticat.com/laplacesdemon.html</a>
+</p>
+<p>Kullback, S. and Leibler, R.A. (1951). &quot;On Information and
+Sufficiency&quot;. The Annals of Mathematical Statistics, 22(1), p. 79&ndash;86.
+</p>
+
+
+<h3>See Also</h3>
+
+
+<p><code><a href="../../LaplacesDemon/html/LPL.interval.html">LPL.interval</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+px &lt;- dnorm(runif(100),0,1)
+py &lt;- dnorm(runif(100),0.1,0.9)
+KLD(px,py)
+</pre>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>

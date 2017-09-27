@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Pareto Distribution</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for dist.Pareto {LaplacesDemon}"><tr><td>dist.Pareto {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Pareto Distribution</h2>
+
+<h3>Description</h3>
+
+
+<p>These functions provide the density, distribution function, quantile
+function, and random generation for the pareto distribution.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+dpareto(x, alpha, log=FALSE)
+ppareto(q, alpha)
+qpareto(p, alpha)
+rpareto(n, alpha)
+</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x,q</code></td>
+<td>
+<p>These are each a vector of quantiles.</p>
+</td></tr>
+<tr valign="top"><td><code>p</code></td>
+<td>
+<p>This is a vector of probabilities.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>This is the number of observations, which must be a positive
+integer that has length 1.</p>
+</td></tr>
+<tr valign="top"><td><code>alpha</code></td>
+<td>
+<p>This is the shape parameter <i>alpha</i>, which
+must be positive.</p>
+</td></tr>
+<tr valign="top"><td><code>log</code></td>
+<td>
+<p>Logical. If <code>log=TRUE</code>, then the logarithm of the
+density or result is returned.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+
+<ul>
+<li><p> Application: Continuous Univariate
+</p>
+</li>
+<li><p> Density: <i>p(theta) = alpha /
+    theta^(alpha + 1), theta &gt;= 1</i>
+</p>
+</li>
+<li><p> Inventor: Vilfredo Pareto (1848-1923)
+</p>
+</li>
+<li><p> Notation 1: <i>theta ~ PA(alpha)</i>
+</p>
+</li>
+<li><p> Notation 2: <i>p(theta) = PA(theta | alpha)</i>
+</p>
+</li>
+<li><p> Parameter 1: shape parameter <i>alpha &gt; 0</i>
+</p>
+</li>
+<li><p> Mean: <i>E(theta) =
+    alpha / (alpha - 1)</i>
+</p>
+</li>
+<li><p> Variance: <i>var(theta) =
+    alpha / (alpha - 1)^2 (alpha - 2), alpha &gt; 2</i>
+</p>
+</li>
+<li><p> Mode: <i>mode(theta) = 1</i>
+</p>
+</li></ul>
+
+<p>The Pareto distribution, sometimes called the Bradford distribution, is
+related to the exponential distribution. The gamma distribution is the
+conjugate prior distribution for the shape parameter <i>alpha</i>
+in the Pareto distribution. The Pareto distribution is the conjugate
+prior distribution for the range parameters of a uniform
+distribution. An extension, elsewhere, is the symmetric Pareto
+distribution.
+</p>
+
+
+<h3>Value</h3>
+
+
+<p><code>dpareto</code> gives the density,
+<code>ppareto</code> gives the distribution function,
+<code>qpareto</code> gives the quantile function, and
+<code>rpareto</code> generates random deviates.
+</p>
+
+
+<h3>See Also</h3>
+
+
+<p><code><a href="../../LaplacesDemon/html/dexp.html">dexp</a></code>,
+<code><a href="../../LaplacesDemon/html/dlnorm.html">dlnorm</a></code>,
+<code><a href="../../LaplacesDemon/html/dlnormp.html">dlnormp</a></code>,
+<code><a href="../../LaplacesDemon/html/dnorm.html">dnorm</a></code>,
+<code><a href="../../LaplacesDemon/html/dnormp.html">dnormp</a></code>,
+<code><a href="../../LaplacesDemon/html/dnormv.html">dnormv</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(LaplacesDemon)
+x &lt;- dpareto(1,1)
+x &lt;- ppareto(0.5,1)
+x &lt;- qpareto(0.5,1)
+x &lt;- rpareto(10,1)
+
+#Plot Probability Functions
+x &lt;- seq(from=1, to=5, by=0.01)
+plot(x, dpareto(x,0.1), ylim=c(0,1), type="l", main="Probability Function",
+     ylab="density", col="red")
+lines(x, dpareto(x,0.5), type="l", col="green")
+lines(x, dpareto(x,1), type="l", col="blue")
+legend(2, 0.9, expression(alpha==0.1, alpha==0.5, alpha==1),
+     lty=c(1,1,1), col=c("red","green","blue"))
+</pre>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>

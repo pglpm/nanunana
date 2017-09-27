@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: is.model</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for is.model {LaplacesDemon}"><tr><td>is.model {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>is.model</h2>
+
+<h3>Description</h3>
+
+
+<p>This function provides a logical test of whether or not a <code>Model</code>
+specification function meets mininum requirements to be considered as
+such.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+is.model(Model, Initial.Values, Data)
+</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>Model</code></td>
+<td>
+<p>This is a model specification function. For more
+information, see the <code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code> function.</p>
+</td></tr>
+<tr valign="top"><td><code>Initial.Values</code></td>
+<td>
+<p>This is a vector of initial values, or current
+parameter values. For more information, see the
+<code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code> function.</p>
+</td></tr>
+<tr valign="top"><td><code>Data</code></td>
+<td>
+<p>This is a list of data. For more information, see the
+<code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code> function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+<p>This function tests for minimum criteria for <code>Model</code> to be
+considered a model specification function. Specifically, it tests:
+</p>
+
+<ul>
+<li> <p><code>Model</code> must be a function
+</p>
+</li>
+<li> <p><code>Model</code> must execute without errors
+</p>
+</li>
+<li> <p><code>Model</code> must return a list
+</p>
+</li>
+<li> <p><code>Model</code> must have five components in the list
+</p>
+</li>
+<li><p> The first component must be named LP and have length 1
+</p>
+</li>
+<li><p> The second component must be named Dev and have length 1
+</p>
+</li>
+<li><p> The third component must be named Monitor
+</p>
+</li>
+<li><p> The lengths of Monitor and mon.names must be equal
+</p>
+</li>
+<li><p> The fourth component must be named yhat
+</p>
+</li>
+<li><p> The fifth component must be named parm
+</p>
+</li>
+<li><p> The lengths of parm and parm.names must be equal
+</p>
+</li></ul>
+
+<p>This function is not extensive, and checks only for these minimum
+criteria. Additional checks are conducted in
+<code><a href="../../LaplacesDemon/html/LaplaceApproximation.html">LaplaceApproximation</a></code> and <code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code>.
+</p>
+
+
+<h3>Value</h3>
+
+
+<p>The <code>is.model</code> function returns a logical value of <code>TRUE</code>
+when <code>Model</code> meets minimum criteria of a model specification
+function, and <code>FALSE</code> otherwise.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Byron Hall <a href="mailto:statisticat@gmail.com">statisticat@gmail.com</a></p>
+
+
+<h3>References</h3>
+
+<p><a href="http://www.statisticat.com/laplacesdemon.html">http://www.statisticat.com/laplacesdemon.html</a></p>
+
+
+<h3>See Also</h3>
+
+
+<p><code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code>.
+</p>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>

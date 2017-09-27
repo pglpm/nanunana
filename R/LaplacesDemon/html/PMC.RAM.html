@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: PMC RAM Estimate</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for PMC.RAM {LaplacesDemon}"><tr><td>PMC.RAM {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>PMC RAM Estimate</h2>
+
+<h3>Description</h3>
+
+
+<p>This function estimates the random-access memory (RAM) required to
+update a given model and data with <code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code>.
+</p>
+<p><EM>Warning:</EM> Unwise use of this function may crash a computer, so
+please read the details below.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+PMC.RAM(Model, Data, Iterations, Thinning, M, N)
+</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>Model</code></td>
+<td>
+<p>This is a model specification function. For more
+information, see <code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>Data</code></td>
+<td>
+<p>This is a list of Data. For more information, see
+<code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>Iterations</code></td>
+<td>
+<p>This is the number of iterations for which
+<code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code> would update. For more information,
+see <code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>Thinning</code></td>
+<td>
+<p>This is the amount of thinning applied to the samples
+in <code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code>.For more information, see <code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>M</code></td>
+<td>
+<p>This is the number of mixture components in
+<code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>N</code></td>
+<td>
+<p>This is the number of samples in <code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+<p>The <code>PMC.RAM</code> function uses the
+<code><a href="../../LaplacesDemon/html/object.size.html">object.size</a></code> function to estimate the size in MB of RAM
+required to update in <code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code> for a given model and data,
+and for a number of iterations and specified thinning. When RAM is
+exceeded, the computer will crash. This function can be useful when
+trying to estimate how many samples and iterations to update a
+model without crashing the computer. However, when estimating the
+required RAM, <code>PMC.RAM</code> actually creates several large
+objects, such as <code>post</code> (see below). If too many iterations are
+given as an argument to <code>PMC.RAM</code>, for example, then it
+will crash the computer while trying to estimate the required RAM.
+</p>
+<p>The best way to use this function is as follows. First, prepare the
+model specification and list of data. Second, observe how much RAM the
+computer is using at the moment, as well as the maximum available
+RAM. The majority of the difference of these two is the amount of RAM
+the computer may dedicate to updating the model. Next, use this
+function with a small number of iterations. Note the estimated
+RAM. Increase the number of iterations, and again note the
+RAM. Continue to increase the number of iterations until, say,
+arbitrarily within 90% of the above-mentioned difference in RAM.
+</p>
+<p>The computer operating system uses RAM, as does any other software
+running at the moment. R is currently using RAM, and other functions
+in the <code>LaplacesDemon</code> package, and any other package that is
+currently activated, are using RAM. There are numerous small objects
+that are not included in the returned list, that use RAM. For example,
+perplexity is a small vector, etc.
+</p>
+<p>A potentially large objects that is not included is a matrix used for
+estimating <code><a href="../../LaplacesDemon/html/LML.html">LML</a></code>.
+</p>
+
+
+<h3>Value</h3>
+
+
+<p><code>PMC.RAM</code> returns a list with several components. Each component
+is an estimate in MB for an object. The list has the following
+components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>alpha</code></td>
+<td>
+<p>This is the estimated size in MB of RAM required for the
+matrix of mixture probabilities by iteration.</p>
+</td></tr>
+<tr valign="top"><td><code>Covar</code></td>
+<td>
+<p>This is the estimated size in MB of RAM required for the
+covariance matrix or matrices.</p>
+</td></tr>
+<tr valign="top"><td><code>Data</code></td>
+<td>
+<p>This is the estimated size in MB of RAM required for the
+list of data.</p>
+</td></tr>
+<tr valign="top"><td><code>Deviance</code></td>
+<td>
+<p>This is the estimated size in MB of RAM required for
+the deviance vector before thinning.</p>
+</td></tr>
+<tr valign="top"><td><code>Initial.Values</code></td>
+<td>
+<p>This is the estimated size in MB of RAM required
+for the matrix or vector of initial values.</p>
+</td></tr>
+<tr valign="top"><td><code>LH</code></td>
+<td>
+<p>This is the estimated size in MB of RAM required for the
+<i>N x T x M</i> array <code>LH</code>, where <i>N</i>
+is the number of samples, <i>T</i> is the number of iterations, and
+<i>M</i> is the number of mixture components. The <code>LH</code> array is
+not returned by <code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>LP</code></td>
+<td>
+<p>This is the estimated size in MB of RAM required for the
+<i>N x T x M</i> array <code>LP</code>, where <i>N</i>
+is the number of samples, <i>T</i> is the number of iterations, and
+<i>M</i> is the number of mixture components. The <code>LP</code> array is
+not returned by <code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>Model</code></td>
+<td>
+<p>This is the estimated size in MB of RAM required for the
+model specification function.</p>
+</td></tr>
+<tr valign="top"><td><code>Monitor</code></td>
+<td>
+<p>This is the estimated size in MB of RAM required for
+the <i>N x J</i> matrix <code>Monitor</code>, where <i>N</i> is
+the number of unthinned samples and J is the number of monitored
+variables. Although it is thinned later in the algorithm, the full
+matrix is created.</p>
+</td></tr>
+<tr valign="top"><td><code>Posterior1</code></td>
+<td>
+<p>This is the estimated size in MB of RAM required for
+the <i>N x J x T x M</i> array
+<code>Posterior1</code>, where <i>N</i> is the number of samples, <i>J</i>
+is the number of parameters, <i>T</i> is the number of iterations,
+and <i>M</i> is the number of mixture components.</p>
+</td></tr>
+<tr valign="top"><td><code>Posterior2</code></td>
+<td>
+<p>This is the estimated size in MB of RAM required for
+the <i>N x J</i> matrix <code>Posterior2</code>, where <i>N</i>
+is the number of samples and <i>J</i> is the number of initial values
+or parameters. Although this is thinned later, at one point it is
+un-thinned.</p>
+</td></tr>
+<tr valign="top"><td><code>Summary</code></td>
+<td>
+<p>This is the estimated size in MB of RAM required for
+the summary table.</p>
+</td></tr>
+<tr valign="top"><td><code>W</code></td>
+<td>
+<p>This is the estimated size in MB of RAM required for the
+matrix of importance weights.</p>
+</td></tr>
+<tr valign="top"><td><code>Total</code></td>
+<td>
+<p>This is the estimated size in MB of RAM required in total
+to update with <code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code> for a given model and data, and for
+a number of iterations, specified thinning, mixture components, and
+number of samples.</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Byron Hall <a href="mailto:statisticat@gmail.com">statisticat@gmail.com</a></p>
+
+
+<h3>References</h3>
+
+
+<p>Hall, B. (2012). &quot;Laplace's Demon&quot;, STATISTICAT, LLC.
+URL=<a href="http://www.statisticat.com/laplacesdemon.html">http://www.statisticat.com/laplacesdemon.html</a>
+</p>
+
+
+<h3>See Also</h3>
+
+
+<p><code><a href="../../LaplacesDemon/html/LML.html">LML</a></code>,
+<code><a href="../../LaplacesDemon/html/object.size.html">object.size</a></code>, and
+<code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code>.
+</p>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>

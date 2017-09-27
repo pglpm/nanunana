@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: The log-log and complementary log-log functions</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for log-log {LaplacesDemon}"><tr><td>log-log {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>The log-log and complementary log-log functions</h2>
+
+<h3>Description</h3>
+
+
+<p>The log-log and complementary log-log functions, as well as the
+inverse functions, are provided.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+cloglog(p)
+invcloglog(x)
+invloglog(x)
+loglog(p)
+</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>This is a vector of real values that will be transformed to
+the interval [0,1].</p>
+</td></tr>
+<tr valign="top"><td><code>p</code></td>
+<td>
+<p>This is a vector of probabilities p in the interval [0,1]
+that will be transformed to the real line.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+<p>The logit and probit links are symmetric, because the probabilities
+approach zero or one at the same rate. The log-log and complementary
+log-log links are asymmetric. Complementary log-log links approach
+zero slowly and one quickly. Log-log links approach zero quickly and
+one slowly. Either the log-log or complementary log-log link will tend
+to fit better than logistic and probit, and are frequently used when
+the probability of an event is small or large. A mixture of the two
+links, the log-log and complementary log-log is often used, where each
+link is weighted. The reason that logit is so prevalent is because
+logistic parameters can be interpreted as odds ratios.
+</p>
+
+
+<h3>Value</h3>
+
+
+<p><code>cloglog</code> returns <code>x</code>,
+<code>invcloglog</code> and <code>invloglog</code> return probability <code>p</code>,
+and <code>loglog</code> returns <code>x</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Byron Hall <a href="mailto:statisticat@gmail.com">statisticat@gmail.com</a></p>
+
+
+<h3>References</h3>
+
+<p><a href="http://www.statisticat.com/laplacesdemon.html">http://www.statisticat.com/laplacesdemon.html</a></p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre>
+x &lt;- -5:5
+p &lt;- invloglog(x)
+x &lt;- loglog(p)
+</pre>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>

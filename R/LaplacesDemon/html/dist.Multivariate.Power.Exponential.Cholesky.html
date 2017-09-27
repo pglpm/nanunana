@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Multivariate Power Exponential Distribution: Cholesky...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for dist.Multivariate.Power.Exponential.Cholesky {LaplacesDemon}"><tr><td>dist.Multivariate.Power.Exponential.Cholesky {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Multivariate Power Exponential Distribution: Cholesky Parameterization</h2>
+
+<h3>Description</h3>
+
+
+<p>These functions provide the density and random number generation for
+the multivariate power exponential distribution, given the Cholesky
+parameterization.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+dmvpec(x=c(0,0), mu=c(0,0), U, kappa=1, log=FALSE)
+rmvpec(n, mu=c(0,0), U, kappa=1)
+</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>This is data or parameters in the form of a vector of length
+<i>k</i> or a matrix with <i>k</i> columns.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>This is the number of random draws.</p>
+</td></tr>
+<tr valign="top"><td><code>mu</code></td>
+<td>
+<p>This is mean vector <i>mu</i> with length <i>k</i> or
+matrix with <i>k</i> columns.</p>
+</td></tr>
+<tr valign="top"><td><code>U</code></td>
+<td>
+<p>This is the <i>k x k</i> upper-triangular matrix
+that is Cholesky factor <i>U</i> of covariance matrix
+<i>Sigma</i>.</p>
+</td></tr>
+<tr valign="top"><td><code>kappa</code></td>
+<td>
+<p>This is the kurtosis parameter, <i>kappa</i>, and
+must be positive.</p>
+</td></tr>
+<tr valign="top"><td><code>log</code></td>
+<td>
+<p>Logical. If <code>log=TRUE</code>, then the logarithm of the
+density is returned.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+
+<ul>
+<li><p> Application: Continuous Multivariate
+</p>
+</li>
+<li><p> Density: </p>
+<p align="center"><i>p(theta) = ((k*Gamma(k/2)) / (pi^(k/2) * 
+    sqrt(|Sigma|) * Gamma(1 + k/(2*kappa)) * 2^(1 + k/(2*kappa)))) *
+          exp(-(1/2)*(theta-mu)^T Sigma (theta-mu))^kappa</i></p>
+
+</li>
+<li><p> Inventor: Gomez, Gomez-Villegas, and Marin (1998)
+</p>
+</li>
+<li><p> Notation 1: <i>theta ~ MPE(mu, Sigma, kappa)</i>
+</p>
+</li>
+<li><p> Notation 2: <i>theta ~ PE[k](mu, Sigma, kappa)</i>
+</p>
+</li>
+<li><p> Notation 3: <i>p(theta) = MPE(theta | mu, Sigma, kappa)</i>
+</p>
+</li>
+<li><p> Notation 4: <i>p(theta) = PE[k](theta | mu, Sigma, kappa)</i>
+</p>
+</li>
+<li><p> Parameter 1: location vector <i>mu</i>
+</p>
+</li>
+<li><p> Parameter 2: positive-definite <i>k x k</i>
+covariance matrix <i>Sigma</i>
+</p>
+</li>
+<li><p> Parameter 3: kurtosis parameter <i>kappa</i>
+</p>
+</li>
+<li><p> Mean: <i>E(theta) = </i>
+</p>
+</li>
+<li><p> Variance: <i>var(theta) = </i>
+</p>
+</li>
+<li><p> Mode: <i>mode(theta) = </i>
+</p>
+</li></ul>
+
+<p>The multivariate power exponential distribution, or multivariate
+exponential power distribution, is a multidimensional extension of
+the one-dimensional or univariate power exponential distribution.
+Gomez-Villegas (1998) and Sanchez-Manzano et al. (2002) proposed
+multivariate and matrix generalizations of the PE family of
+distributions and studied their properties in relation to multivariate
+Elliptically Contoured (EC) distributions.
+</p>
+<p>The multivariate power exponential distribution includes the
+multivariate normal distribution (<i>kappa = 1</i>) and
+multivariate Laplace distribution (<i>kappa = 0.5</i>) as
+special cases, depending on the kurtosis or <i>kappa</i>
+parameter. A multivariate uniform occurs as
+<i>kappa -&gt; infinity</i>.
+</p>
+<p>In practice, <i>U</i> is fully unconstrained for proposals
+when its diagonal is log-transformed. The diagonal is exponentiated
+after a proposal and before other calculations. The Cholesky
+parameterization is faster than the traditional parameterization.
+</p>
+<p>The <code>rmvpec</code> function is a modified form of the rmvpowerexp function
+in the MNM package.
+</p>
+
+
+<h3>Value</h3>
+
+
+<p><code>dmvpec</code> gives the density and
+<code>rmvpec</code> generates random deviates.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Byron Hall <a href="mailto:statisticat@gmail.com">statisticat@gmail.com</a></p>
+
+
+<h3>References</h3>
+
+
+<p>Gomez, E., Gomez-Villegas, M.A., and Marin, J.M. (1998). &quot;A
+Multivariate Generalization of the Power Exponential Family of
+Distributions&quot;. Communications in Statistics-Theory and Methods, 27(3),
+p. 589&ndash;600.
+</p>
+<p>Sanchez-Manzano, E.G., Gomez-Villegas, M.A., and Marn-Diazaraque,
+J.M. (2002). &quot;A Matrix Variate Generalization of the Power Exponential
+Family of Distributions&quot;. Communications in Statistics, Part A - Theory
+and Methods [Split from: J(CommStat)], 31(12), p. 2167&ndash;2182.
+</p>
+
+
+<h3>See Also</h3>
+
+
+<p><code><a href="../../LaplacesDemon/html/chol.html">chol</a></code>,
+<code><a href="../../LaplacesDemon/html/dlaplace.html">dlaplace</a></code>,
+<code><a href="../../LaplacesDemon/html/dmvlc.html">dmvlc</a></code>,
+<code><a href="../../LaplacesDemon/html/dmvnc.html">dmvnc</a></code>,
+<code><a href="../../LaplacesDemon/html/dmvnpc.html">dmvnpc</a></code>,
+<code><a href="../../LaplacesDemon/html/dnorm.html">dnorm</a></code>,
+<code><a href="../../LaplacesDemon/html/dnormp.html">dnormp</a></code>,
+<code><a href="../../LaplacesDemon/html/dnormv.html">dnormv</a></code>, and
+<code><a href="../../LaplacesDemon/html/dpe.html">dpe</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(LaplacesDemon)
+n &lt;- 100
+k &lt;- 3
+x &lt;- matrix(runif(n*k),n,k)
+mu &lt;- matrix(runif(n*k),n,k)
+Sigma &lt;- diag(k)
+U &lt;- chol(Sigma)
+dmvpec(x, mu, U, kappa=1)
+X &lt;- rmvpec(n, mu, U, kappa=1)
+joint.density.plot(X[,1], X[,2], color=TRUE)
+</pre>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>

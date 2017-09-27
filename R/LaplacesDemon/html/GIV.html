@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Generate Initial Values</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for GIV {LaplacesDemon}"><tr><td>GIV {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Generate Initial Values</h2>
+
+<h3>Description</h3>
+
+
+<p>The <code>GIV</code> function generates initial values for use with the
+<code><a href="../../LaplacesDemon/html/LaplaceApproximation.html">LaplaceApproximation</a></code>, <code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code>, and
+<code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code> functions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+GIV(Model, Data, n=1000, PGF=FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>Model</code></td>
+<td>
+<p>This required argument is a model specification
+function. For more information, see <code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>Data</code></td>
+<td>
+<p>This required argument is a list of data. For more
+information, see <code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>This is the number of attempts to generate acceptable
+initial values.</p>
+</td></tr>
+<tr valign="top"><td><code>PGF</code></td>
+<td>
+<p>Logical. When <code>TRUE</code>, a Parameter-Generating Function
+(PGF) is required to be in <code>Data</code>, and <code>GIV</code> will generate
+initial values according to the user-specified PGF. This argument
+defaults to <code>FALSE</code>, in which case initial values are generated
+randomly without respect to a user-specified function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+<p>Initial values are required for optimization algorithms. A user may
+specify initial values, or use the <code>GIV</code> function for random
+generation. Initial values determined by the user may fail to produce
+a finite posterior in complicated models, and the <code>GIV</code> function
+is here to help.
+</p>
+<p><code>GIV</code> has several uses. First, the
+<code><a href="../../LaplacesDemon/html/LaplaceApproximation.html">LaplaceApproximation</a></code> and <code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code>
+functions use <code>GIV</code> internally if unacceptable initial values are
+discovered. Second, the user may use <code>GIV</code> when developing their
+model specification function, <code>Model</code>, to check for potential
+problems. Third, the user may prefer to randomly generate acceptable
+initial values. Lastly, <code>GIV</code> is recommended when running
+multiple chains (such as for later use with the
+<code>Gelman.Diagnostic</code>) for dispersed starting locations.
+</p>
+<p>It is strongly recommended that the user specifies a
+Parameter-Generating Function (PGF), and includes this function in the
+list of data. Although the PGF may be specified according to the prior
+distributions (possibly considered as a Prior-Generating Function), it
+is often specified with a more restricted range. For example, if a
+user has a model with the following prior distributions
+</p>
+<p align="center"><i>beta_j ~ N(0,
+    1000), j=1,&hellip;,5</i></p>
+
+<p align="center"><i>sigma ~ HC(25)</i></p>
+
+<p>then the PGF, given the prior distributions, is
+</p>
+<p><code>PGF &lt;- function(Data) return(c(rnormv(5,0,1000),rhalfcauchy(1,25)))</code>
+</p>
+<p>However, the user may not want to begin with initial values that could
+be so far from zero (as determined by the variance of 1000), and may
+instead prefer
+</p>
+<p><code>PGF &lt;- function(Data) return(c(rnormv(5,0,10),rhalfcauchy(1,25)))</code>
+</p>
+<p>When <code>PGF=FALSE</code>, initial values are attempted to be constrained
+to the interval <i>[-100,100]</i>. This is done to prevent numeric
+overflows with parameters that are exponentiated within the model
+specification function. First, <code>GIV</code> passes the upper and lower
+bounds of this interval to the model, and any changed parameters are
+noted.
+</p>
+<p>At this point, it is hoped that a non-finite posterior is not
+found. If found, then the remainder of the process is random and
+without the previous bounds. This can be particularly problematic in
+the case of, say, initial values that are the elements of a matrix
+that must be positive-definite, especially with large matrices. If a
+random solution is not found, then <code>GIV</code> will fail.
+</p>
+<p>If the posterior is finite and <code>PGF=FALSE</code>, then initial values
+are randomly generated with a normal proposal and a small variance at
+the center of the returned range of each parameter. As <code>GIV</code>
+fails to find acceptable initial values, the algorithm iterates toward
+its maximum number of iterations, <code>n</code>. In each iteration, the
+variance increases for the proposal.
+</p>
+<p>Initial values are considered acceptable only when the first two
+returned components of <code>Model</code> (which are <code>LP</code> and
+<code>Dev</code>) are finite, and when initial values do not change through
+constraints, as returned in the fifth component of the list:
+<code>parm</code>.
+</p>
+<p>If <code>GIV</code> fails to return acceptable initial values, then it is
+best to study the model specification function. When the model is
+complicated, here is a suggestion. Remove the log-likelihood,
+<code>LL</code>, from the equation that calculates the logarithm of the
+unnormalized joint posterior density, <code>LP</code>. For example, convert
+<code>LP &lt;- LL + beta.prior</code> to <code>LP &lt;- beta.prior</code>. Now, maximize
+<code>LP</code>, which is merely the set of prior densities, with any
+optimization algorithm. Replace <code>LL</code>, and run the model with
+initial values that are in regions of high prior density (preferably
+with <code>PGF=TRUE</code>. If this fails, then the model specification
+should be studied closely, because a non-finite posterior should
+(especially) never be associated with regions of high prior density.
+</p>
+
+
+<h3>Value</h3>
+
+
+<p>The <code>GIV</code> function returns a vector equal in length to the
+number of parameters, and each element is an initial value for the
+associated parameter in <code>Data$parm.names</code>. When <code>GIV</code> fails
+to find acceptable initial values, each returned element is <code>NA</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Byron Hall <a href="mailto:statisticat@gmail.com">statisticat@gmail.com</a></p>
+
+
+<h3>References</h3>
+
+
+<p>Hall, B. (2012). &quot;Laplace's Demon&quot;, STATISTICAT, LLC.
+URL=<a href="http://www.statisticat.com/laplacesdemon.html">http://www.statisticat.com/laplacesdemon.html</a>
+</p>
+
+
+<h3>See Also</h3>
+
+
+<p><code><a href="../../LaplacesDemon/html/as.initial.values.html">as.initial.values</a></code>,
+<code><a href="../../LaplacesDemon/html/Gelman.Diagnostic.html">Gelman.Diagnostic</a></code>,
+<code><a href="../../LaplacesDemon/html/LaplaceApproximation.html">LaplaceApproximation</a></code>,
+<code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code>, and
+<code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(LaplacesDemon)
+
+##############################  Demon Data  ###############################
+data(demonsnacks)
+y &lt;- log(demonsnacks$Calories)
+X &lt;- cbind(1, as.matrix(demonsnacks[,c(7,8,10)]))
+J &lt;- ncol(X)
+for (j in 2:J) {X[,j] &lt;- CenterScale(X[,j])}
+mon.names &lt;- c("LP","sigma")
+parm.names &lt;- as.parm.names(list(beta=rep(0,J), log.sigma=0))
+PGF &lt;- function(Data) return(c(rnormv(Data$J,0,1000), rhalfcauchy(1,25)))
+MyData &lt;- list(J=J, PGF=PGF, X=X, mon.names=mon.names,
+     parm.names=parm.names, y=y)
+
+##########################  Model Specification  ##########################
+Model &lt;- function(parm, Data)
+     {
+     ### Parameters
+     beta &lt;- parm[1:Data$J]
+     sigma &lt;- exp(parm[Data$J+1])
+     ### Log of Prior Densities
+     beta.prior &lt;- sum(dnormv(beta, 0, 1000, log=TRUE))
+     sigma.prior &lt;- dhalfcauchy(sigma, 25, log=TRUE)
+     ### Log-Likelihood
+     mu &lt;- tcrossprod(Data$X, t(beta))
+     LL &lt;- sum(dnorm(Data$y, mu, sigma, log=TRUE))
+     ### Log-Posterior
+     LP &lt;- LL + beta.prior + sigma.prior
+     Modelout &lt;- list(LP=LP, Dev=-2*LL, Monitor=c(LP,sigma),
+          yhat=rnorm(length(mu), mu, sigma), parm=parm)
+     return(Modelout)
+     }
+
+########################  Generate Initial Values  ########################
+Initial.Values &lt;- GIV(Model, MyData, PGF=TRUE)
+</pre>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>

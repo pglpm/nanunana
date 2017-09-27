@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: The Wishart Distribution</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for dist.Wishart {LaplacesDemon}"><tr><td>dist.Wishart {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>The Wishart Distribution</h2>
+
+<h3>Description</h3>
+
+
+<p>These functions provide the density and random number generation
+for the Wishart distribution.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+   dwishart(Omega, nu, S, log=FALSE)
+   rwishart(nu, S)
+</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>Omega</code></td>
+<td>
+<p>This is the symmetric, positive-definite <i>k x k</i> matrix <i>Omega</i>.</p>
+</td></tr>
+<tr valign="top"><td><code>nu</code></td>
+<td>
+<p>This is the scalar degrees of freedom <i>nu</i>.</p>
+</td></tr>
+<tr valign="top"><td><code>S</code></td>
+<td>
+<p>This is the symmetric, positive-semidefinite, <i>k x k</i> scale matrix <i>S</i>.</p>
+</td></tr>
+<tr valign="top"><td><code>log</code></td>
+<td>
+<p>Logical. If <code>log=TRUE</code>, then the logarithm of the
+density is returned.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+
+<ul>
+<li><p> Application: Continuous Multivariate
+</p>
+</li>
+<li><p> Density: <i>p(theta) = (2^(nu*k/2) * pi^(k(k-1)/4) *
+      [Gamma((nu+1-i)/2) * ... * Gamma((nu+1-k)/2)])^(-1) * |S|^(-nu/2)
+      * |Omega|^((nu-k-1)/2) * exp(-(1/2) * tr(S^(-1) Omega))</i>
+</p>
+</li>
+<li><p> Inventor: John Wishart (1928)
+</p>
+</li>
+<li><p> Notation 1: <i>Omega ~ W[nu](S)</i>
+</p>
+</li>
+<li><p> Notation 2: <i>p(Omega) = W[nu](Omega | S)</i>
+</p>
+</li>
+<li><p> Parameter 1: degrees of freedom <i>nu &gt;= k</i>
+</p>
+</li>
+<li><p> Parameter 2: symmetric, positive-semidefinite
+<i>k x k</i> scale matrix <i>S</i>
+</p>
+</li>
+<li><p> Mean: <i>E(Omega) = nuS</i>
+</p>
+</li>
+<li><p> Variance: <i>var(Omega) = nu(S[i,j]^2 +
+      S[i,i]S[j,j])</i>
+</p>
+</li>
+<li><p> Mode: <i>mode(Omega) = (nu-k-1)S</i>, for <i>nu
+      &gt;= k + 1</i>
+</p>
+</li></ul>
+
+<p>The Wishart distribution is a generalization to multiple dimensions of
+the chi-square distribution, or, in the case of non-integer degrees of
+freedom, of the gamma distribution. However, the Wishart distribution is
+not called the multivariate chi-squared distribution because the
+marginal distribution of the off-diagonal elements is not chi-squared.
+</p>
+<p>The Wishart is the conjugate prior distribution for the precision matrix
+<i>Omega</i>, the inverse of which (covariance matrix
+<i>Sigma</i>) is used in a multivariate normal distribution.
+</p>
+<p>The integral is finite when <i>nu &gt;= k</i>, where
+<i>nu</i> is the scalar degrees of freedom parameter, and <i>k</i> is
+the dimension of scale matrix <i>S</i>. The density is finite
+is finite when <i>nu &gt;= k + 1</i>, which is recommended.
+</p>
+<p>The degrees of freedom, <i>nu</i>, is equivalent to specifying a
+prior sample size, indicating the confidence in <i>S</i>,
+where <i>S</i> is a prior guess at the order of covariance
+matrix <i>Sigma</i>. A flat prior distribution is
+obtained as <i>nu -&gt; 0</i>.
+</p>
+<p>When applicable, the alternative Cholesky parameterization should be
+preferred. For more information, see <code><a href="../../LaplacesDemon/html/dwishartc.html">dwishartc</a></code>.
+</p>
+<p>The Wishart prior lacks flexibility, having only one parameter,
+<i>nu</i>, to control the variability for all <i>k(k + 1)/2</i>
+elements. Popular choices for the scale matrix <i>S</i>
+include an identity matrix or sample covariance matrix. When the model
+sample size is small, the specification of the scale matrix can be
+influential.
+</p>
+<p>One of many alternatives is to use hierarchical priors,
+in which the main diagonal of the (identity) scale matrix and the
+degrees of freedom are treated as unknowns (Bouriga and Feron, 2011;
+Daniels and Kass, 1999). A hierarchical Wishart prior provides
+shrinkage toward diagonality. Another alternative is to abandon the
+Wishart distribution altogether for the more flexible method of Barnard
+et al. (2000).
+</p>
+<p>These functions are parameterized as per Gelman et al. (2004).
+</p>
+
+
+<h3>Value</h3>
+
+
+<p><code>dwishart</code> gives the density and
+<code>rwishart</code> generates random deviates.
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Barnard, J., McCulloch, R., and Meng, X. (2000). &quot;Modeling Covariance
+Matrices in Terms of Standard Deviations and Correlations, with
+Application to Shrinkage&quot;. Statistica Sinica, 10, p. 1281&ndash;1311.
+</p>
+<p>Bouriga, M. and Feron, O. (2011). &quot;Estimation of Covariance Matrices
+Based on Hierarchical Inverse-Wishart Priors&quot;. URL:
+http://www.citebase.org/abstract?id=oai:arXiv.org:1106.3203.
+</p>
+<p>Daniels, M., and Kass, R. (1999). &quot;Nonconjugate Bayesian Estimation of
+Covariance Matrices and its use in Hierarchical Models&quot;. Journal of the
+American Statistical Association, 94 (448), p. 1254&ndash;1263.
+</p>
+<p>Gelman, A., Carlin, J., Stern, H., and Rubin, D. (2004). &quot;Bayesian
+Data Analysis, Texts in Statistical Science, 2nd ed.&quot;. Chapman and
+Hall, London.
+</p>
+<p>Wishart, J. (1928). &quot;The Generalised Product Moment Distribution in
+Samples from a Normal Multivariate Population&quot;. Biometrika, 20A (1-2),
+p. 32&ndash;52.
+</p>
+
+
+<h3>See Also</h3>
+
+
+<p><code><a href="../../LaplacesDemon/html/dchisq.html">dchisq</a></code>,
+<code><a href="../../LaplacesDemon/html/dinvwishart.html">dinvwishart</a></code>,
+<code><a href="../../LaplacesDemon/html/dgamma.html">dgamma</a></code>,
+<code><a href="../../LaplacesDemon/html/dmvn.html">dmvn</a></code>,
+<code><a href="../../LaplacesDemon/html/dwishartc.html">dwishartc</a></code>, and
+<code><a href="../../LaplacesDemon/html/Prec2Cov.html">Prec2Cov</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(LaplacesDemon)
+x &lt;- dwishart(matrix(c(2,-.3,-.3,4),2,2), 3, matrix(c(1,.1,.1,1),2,2))
+x &lt;- rwishart(3, matrix(c(1,.1,.1,1),2,2))
+</pre>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>

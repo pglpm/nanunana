@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Integrated Autocorrelation Time</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for IAT {LaplacesDemon}"><tr><td>IAT {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Integrated Autocorrelation Time</h2>
+
+<h3>Description</h3>
+
+
+<p>The <code>IAT</code> function estimates integrated autocorrelation time,
+which is the computational inefficiency of a chain or MCMC
+sampler. IAT is also called the IACT, ACT, autocorrelation time,
+autocovariance time, correlation time, or inefficiency factor. A lower
+value of <code>IAT</code> is better. <code>IAT</code> is a MCMC diagnostic that is
+an estimate of the number of iterations, on average, for an
+independent sample to be drawn, given a chain or Markov chain. Put
+another way, <code>IAT</code> is the number of correlated samples with the
+same variance-reducing power as one independent sample.
+</p>
+<p>IAT is a univariate function. A multivariate form is not included.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+IAT(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>This requried argument is a vector of samples from a chain.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+<p><code>IAT</code> is a MCMC diagnostic that is often used to compare chains
+of MCMC samplers for computational inefficiency, where the sampler
+with the lowest <code>IAT</code>s is the most efficient sampler. Otherwise,
+chains may be compared within a model, such as with the output of
+<code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code> to learn about the inefficiency of the
+chain. For more information on comparing MCMC algorithmic
+inefficiency, see the <code><a href="../../LaplacesDemon/html/Compare.html">Compare</a></code> function.
+</p>
+<p><code>IAT</code> is also estimated in the <code><a href="../../LaplacesDemon/html/PosteriorChecks.html">PosteriorChecks</a></code>
+function. <code>IAT</code> is usually applied to a stationary chain after
+discarding burn-in iterations (see <code><a href="../../LaplacesDemon/html/burnin.html">burnin</a></code> for more
+information). The <code>IAT</code> of a chain correlates with the
+variability of the mean of the chain, and relates to Effective Sample
+Size (<code><a href="../../LaplacesDemon/html/ESS.html">ESS</a></code>) and Monte Carlo Standard Error
+(<code><a href="../../LaplacesDemon/html/MCSE.html">MCSE</a></code>).
+</p>
+<p><code>IAT</code> and <code><a href="../../LaplacesDemon/html/ESS.html">ESS</a></code> are inversely related, though not
+perfectly, because each is estimated a little differently. Given
+<i>N</i> samples and taking autocorrelation into account,
+<code><a href="../../LaplacesDemon/html/ESS.html">ESS</a></code> estimates a reduced number of <i>M</i> samples.
+Conversely, <code>IAT</code> estimates the number of autocorrelated samples,
+on average, required to produce one independently drawn sample.
+</p>
+<p>The <code>IAT</code> function is similar to the <code>IAT</code> function in the
+<code>Rtwalk</code> package of Christen and Fox (2010), which is currently
+unavailabe on CRAN.
+</p>
+
+
+<h3>Value</h3>
+
+
+<p>The <code>IAT</code> function returns the integrated autocorrelation time of
+a chain.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Byron Hall <a href="mailto:statisticat@gmail.com">statisticat@gmail.com</a></p>
+
+
+<h3>References</h3>
+
+
+<p>Christen, J.A. and Fox, C. (2010). &quot;A General Purpose Sampling
+Algorithm for Continuous Distributions (the t-walk)&quot;. Bayesian
+Analysis, 5(2), p. 263&ndash;282.
+</p>
+<p>Hall, B. (2012). &quot;Laplace's Demon&quot;, STATISTICAT, LLC.
+URL=<a href="http://www.statisticat.com/laplacesdemon.html">http://www.statisticat.com/laplacesdemon.html</a>
+</p>
+
+
+<h3>See Also</h3>
+
+
+<p><code><a href="../../LaplacesDemon/html/burnin.html">burnin</a></code>,
+<code><a href="../../LaplacesDemon/html/Compare.html">Compare</a></code>,
+<code><a href="../../LaplacesDemon/html/ESS.html">ESS</a></code>,
+<code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code>,
+<code><a href="../../LaplacesDemon/html/MCSE.html">MCSE</a></code>, and
+<code><a href="../../LaplacesDemon/html/PosteriorChecks.html">PosteriorChecks</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+theta &lt;- rnorm(100)
+IAT(theta)
+</pre>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>

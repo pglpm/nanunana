@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Burn-in</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for burnin {LaplacesDemon}"><tr><td>burnin {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Burn-in</h2>
+
+<h3>Description</h3>
+
+
+<p>The <code>burnin</code> function estimates the duration of burn-in in
+iterations for one or more Markov chains. &ldquo;Burn-in&rdquo; refers to the
+initial portion of a Markov chain that is not stationary and is still
+affected by its initial value.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+burnin(x, method="Geweke")
+</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>This is a vector or matrix of posterior samples for which a
+the number of burn-in iterations will be estimated.</p>
+</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+<p>This argument defaults to <code>"Geweke"</code>, in which case
+stationarity is estimated with the <code><a href="../../LaplacesDemon/html/Geweke.Diagnostic.html">Geweke.Diagnostic</a></code>
+function. Alternatively, the <code><a href="../../LaplacesDemon/html/KS.Diagnostic.html">KS.Diagnostic</a></code> function
+may be used when <code>method="KS"</code> to estimate stationarity with
+the Kolmogorov-Smirnov test.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+<p>Burn-in is a colloquial term for the initial iterations in a Markov
+chain prior to its convergence to the target distribution. During
+burn-in, the chain is not considered to have &ldquo;forgotten&rdquo; its initial
+value.
+</p>
+<p>Burn-in is not a theoretical part of MCMC, but its use is the norm
+because of the need to limit the number of posterior samples due to
+computer memory. If burn-in were retained rather than discarded, then
+more posterior samples would have to be retained. If a Markov chain
+starts anywhere close to the center of its target distribution, then
+burn-in iterations do not need to be discarded.
+</p>
+<p>In the <code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code> function, stationarity is estimated
+with the <code><a href="../../LaplacesDemon/html/Geweke.Diagnostic.html">Geweke.Diagnostic</a></code> function on all thinned
+posterior samples of each chain, beginning at cumulative 10% intervals
+relative to the total number of samples, and the lowest number in
+which all chains are stationary is considered the burn-in.
+</p>
+<p>The term, &ldquo;burn-in&rdquo;, originated in electronics regarding the initial
+testing of component failure at the factory to eliminate initial
+failures (Geyer, 2011).
+</p>
+
+
+<h3>Value</h3>
+
+
+<p>The <code>burnin</code> fucntion returns a vector equal in length to the
+number of MCMC chains in <code>x</code>, and each element indicates the
+maximum iteration in burn-in.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Byron Hall <a href="mailto:statisticat@gmail.com">statisticat@gmail.com</a></p>
+
+
+<h3>References</h3>
+
+
+<p>Geyer, C.J. (2011). &quot;Introduction to Markov Chain Monte Carlo&quot;. In
+S Brooks, A Gelman, G Jones, and M Xiao-Li (eds.), &quot;Handbook of
+Markov Chain Monte Carlo&quot;, p. 3&ndash;48. Chapman \&amp; Hall, Boca Raton, FL.
+</p>
+<p>Hall, B. (2012). &quot;Laplace's Demon&quot;, STATISTICAT, LLC.
+URL=<a href="http://www.statisticat.com/laplacesdemon.html">http://www.statisticat.com/laplacesdemon.html</a>
+</p>
+
+
+<h3>See Also</h3>
+
+
+<p><code><a href="../../LaplacesDemon/html/Geweke.Diagnostic.html">Geweke.Diagnostic</a></code> and
+<code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(LaplacesDemon)
+x &lt;- rnorm(1000)
+burnin(x)
+</pre>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>

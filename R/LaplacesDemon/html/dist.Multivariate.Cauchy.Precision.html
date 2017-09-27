@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Multivariate Cauchy Distribution: Precision Parameterization</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for dist.Multivariate.Cauchy.Precision {LaplacesDemon}"><tr><td>dist.Multivariate.Cauchy.Precision {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Multivariate Cauchy Distribution: Precision Parameterization</h2>
+
+<h3>Description</h3>
+
+
+<p>These functions provide the density and random number generation for
+the multivariate Cauchy distribution. These functions use the
+precision parameterization.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+dmvcp(x, mu, Omega, log=FALSE)
+rmvcp(n=1, mu, Omega)
+</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>This is either a vector of length <i>k</i> or a matrix with 
+a number of columns, <i>k</i>, equal to the number of columns in
+precision matrix <i>Omega</i>.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>This is the number of random draws.</p>
+</td></tr>
+<tr valign="top"><td><code>mu</code></td>
+<td>
+<p>This is a numeric vector representing the location parameter,
+<i>mu</i> (the mean vector), of the multivariate
+distribution. It must be of length <i>k</i>, as defined above.</p>
+</td></tr>
+<tr valign="top"><td><code>Omega</code></td>
+<td>
+<p>This is a <i>k x k</i> positive-definite
+precision matrix <i>Omega</i>.</p>
+</td></tr>
+<tr valign="top"><td><code>log</code></td>
+<td>
+<p>Logical. If <code>log=TRUE</code>, then the logarithm of the
+density is returned.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+
+<ul>
+<li><p> Application: Continuous Multivariate
+</p>
+</li>
+<li><p> Density: </p>
+<p align="center"><i>p(theta) =
+    (Gamma((nu+k)/2) / (Gamma(1/2)*1^(k/2)*pi^(k/2))) * |Omega|^(1/2) *
+    (1 + (theta-mu)^T Omega (theta-mu))^(-(1+k)/2)</i></p>
+
+</li>
+<li><p> Inventor: Unknown (to me, anyway)
+</p>
+</li>
+<li><p> Notation 1: <i>theta ~ MC[k](mu, Omega^(-1))</i>
+</p>
+</li>
+<li><p> Notation 2: <i>p(theta) = MC[k](theta | mu, Omega^(-1))</i>
+</p>
+</li>
+<li><p> Parameter 1: location vector <i>mu</i>
+</p>
+</li>
+<li><p> Parameter 2: positive-definite <i>k x k</i> precision
+matrix <i>Omega</i>
+</p>
+</li>
+<li><p> Mean: <i>E(theta) = </i>
+</p>
+</li>
+<li><p> Variance: <i>var(theta) = </i>
+</p>
+</li>
+<li><p> Mode: <i>mode(theta) = </i>
+</p>
+</li></ul>
+
+<p>The multivariate Cauchy distribution is a multidimensional extension
+of the one-dimensional or univariate Cauchy distribution. A random
+vector is considered to be multivariate Cauchy-distributed if every
+linear combination of its components has a univariate Cauchy
+distribution. The multivariate Cauchy distribution is equivalent to a
+multivariate t distribution with 1 degree of freedom.
+</p>
+<p>It is usually parameterized with mean and a covariance matrix, or in
+Bayesian inference, with mean and a precision matrix, where the
+precision matrix is the matrix inverse of the covariance matrix. These
+functions provide the precision parameterization for convenience and
+familiarity. It is easier to calculate a multivariate Cauchy density
+with the precision parameterization, because a matrix inversion can be
+avoided.
+</p>
+<p>This distribution has a mean parameter vector <i>mu</i> of length
+<i>k</i>, and a <i>k x k</i> precision matrix <i>Omega</i>,
+which must be positive-definite.
+</p>
+
+
+<h3>Value</h3>
+
+
+<p><code>dmvcp</code> gives the density and 
+<code>rmvcp</code> generates random deviates.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Byron Hall <a href="mailto:statisticat@gmail.com">statisticat@gmail.com</a></p>
+
+
+<h3>References</h3>
+
+<p><a href="http://www.statisticat.com/laplacesdemon.html">http://www.statisticat.com/laplacesdemon.html</a></p>
+
+
+<h3>See Also</h3>
+
+
+<p><code><a href="../../LaplacesDemon/html/dcauchy.html">dcauchy</a></code>,
+<code><a href="../../LaplacesDemon/html/dmvc.html">dmvc</a></code>,
+<code><a href="../../LaplacesDemon/html/dmvt.html">dmvt</a></code>,
+<code><a href="../../LaplacesDemon/html/dmvtp.html">dmvtp</a></code>, and
+<code><a href="../../LaplacesDemon/html/dwishart.html">dwishart</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(LaplacesDemon)
+x &lt;- seq(-2,4,length=21)
+y &lt;- 2*x+10
+z &lt;- x+cos(y) 
+mu &lt;- c(1,12,2)
+Omega &lt;- matrix(c(1,2,0,2,5,0.5,0,0.5,3), 3, 3)
+f &lt;- dmvcp(cbind(x,y,z), mu, Omega)
+
+X &lt;- rmvcp(1000, rep(0,2), diag(2))
+X &lt;- X[rowSums((X &gt;= quantile(X, probs=0.025)) &amp;
+     (X &lt;= quantile(X, probs=0.975)))==2,]
+joint.density.plot(X[,1], X[,2], color=TRUE)
+</pre>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>

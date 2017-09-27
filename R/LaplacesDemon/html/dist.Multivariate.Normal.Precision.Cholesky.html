@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Multivariate Normal Distribution: Precision-Cholesky...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for dist.Multivariate.Normal.Precision.Cholesky {LaplacesDemon}"><tr><td>dist.Multivariate.Normal.Precision.Cholesky {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Multivariate Normal Distribution: Precision-Cholesky Parameterization</h2>
+
+<h3>Description</h3>
+
+
+<p>These functions provide the density and random number generation for
+the multivariate normal distribution, given the precision-Cholesky
+parameterization.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+dmvnpc(x, mu, U, log=FALSE) 
+rmvnpc(n=1, mu, U)
+</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>This is data or parameters in the form of a vector of length
+<i>k</i> or a matrix with <i>k</i> columns.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>This is the number of random draws.</p>
+</td></tr>
+<tr valign="top"><td><code>mu</code></td>
+<td>
+<p>This is mean vector <i>mu</i> with length <i>k</i> or
+matrix with <i>k</i> columns.</p>
+</td></tr>
+<tr valign="top"><td><code>U</code></td>
+<td>
+<p>This is the <i>k x k</i> upper-triangular of the
+precision matrix that is Cholesky factor <i>U</i> of
+precision matrix <i>Omega</i>.</p>
+</td></tr>
+<tr valign="top"><td><code>log</code></td>
+<td>
+<p>Logical. If <code>log=TRUE</code>, then the logarithm of the
+density is returned.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+
+<ul>
+<li><p> Application: Continuous Multivariate
+</p>
+</li>
+<li><p> Density: <i>p(theta) = (2*pi)^(-p/2) * |Omega|^(1/2) * exp(-(1/2)*(theta-mu)^t Omega (theta-mu))</i>
+</p>
+</li>
+<li><p> Inventor: Unknown (to me, anyway)
+</p>
+</li>
+<li><p> Notation 1: <i>theta ~ MVN(mu, Omega^(-1))</i>
+</p>
+</li>
+<li><p> Notation 2: <i>theta ~ N[k](mu, Omega^(-1))</i>
+</p>
+</li>
+<li><p> Notation 3: <i>p(theta) = MVN(theta | mu, Omega^(-1))</i>
+</p>
+</li>
+<li><p> Notation 4: <i>p(theta) = N[k](theta | mu, Omega^(-1))</i>
+</p>
+</li>
+<li><p> Parameter 1: location vector <i>mu</i>
+</p>
+</li>
+<li><p> Parameter 2: positive-definite <i>k x k</i> precision matrix <i>Omega</i>
+</p>
+</li>
+<li><p> Mean: <i>E(theta) = mu</i>
+</p>
+</li>
+<li><p> Variance: <i>var(theta) = Omega^(-1)</i>
+</p>
+</li>
+<li><p> Mode: <i>mode(theta) = mu</i>
+</p>
+</li></ul>
+
+<p>The multivariate normal distribution, or multivariate Gaussian
+distribution, is a multidimensional extension of the one-dimensional
+or univariate normal (or Gaussian) distribution. It is usually
+parameterized with mean and a covariance matrix, or in Bayesian
+inference, with mean and a precision matrix, where the precision matrix
+is the matrix inverse of the covariance matrix. These functions
+provide the precision-Cholesky parameterization for convenience and
+familiarity. It is easier to calculate a multivariate normal density
+with the precision parameterization, because a matrix inversion can be
+avoided. The precision matrix is replaced with an upper-triangular
+<i>k x k</i> matrix that is Cholesky factor
+<i>U</i>, as per the <code><a href="../../LaplacesDemon/html/chol.html">chol</a></code> function for Cholesky
+decomposition.
+</p>
+<p>A random vector is considered to be multivariate normally distributed
+if every linear combination of its components has a univariate normal
+distribution. This distribution has a mean parameter vector
+<i>mu</i> of length <i>k</i> and a <i>k x k</i>
+precision matrix <i>Omega</i>, which must be positive-definite.
+</p>
+<p>In practice, <i>U</i> is fully unconstrained for proposals
+when its diagonal is log-transformed. The diagonal is exponentiated
+after a proposal and before other calculations. The Cholesky
+parameterization is faster than the traditional parameterization.
+</p>
+<p>For models where the dependent variable, Y, is specified to be
+distributed multivariate normal given the model, the Mardia test (see
+<code><a href="../../LaplacesDemon/html/plot.demonoid.ppc.html">plot.demonoid.ppc</a></code>, <code><a href="../../LaplacesDemon/html/plot.laplace.ppc.html">plot.laplace.ppc</a></code>, or
+<code><a href="../../LaplacesDemon/html/plot.pmc.ppc.html">plot.pmc.ppc</a></code>) may be used to test the residuals.
+</p>
+
+
+<h3>Value</h3>
+
+
+<p><code>dmvnpc</code> gives the density and 
+<code>rmvnpc</code> generates random deviates.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Byron Hall <a href="mailto:statisticat@gmail.com">statisticat@gmail.com</a></p>
+
+
+<h3>References</h3>
+
+<p><a href="http://www.statisticat.com/laplacesdemon.html">http://www.statisticat.com/laplacesdemon.html</a></p>
+
+
+<h3>See Also</h3>
+
+
+<p><code><a href="../../LaplacesDemon/html/chol.html">chol</a></code>,
+<code><a href="../../LaplacesDemon/html/dmvn.html">dmvn</a></code>,
+<code><a href="../../LaplacesDemon/html/dmvnc.html">dmvnc</a></code>,
+<code><a href="../../LaplacesDemon/html/dmvnp.html">dmvnp</a></code>,
+<code><a href="../../LaplacesDemon/html/dnorm.html">dnorm</a></code>,
+<code><a href="../../LaplacesDemon/html/dnormp.html">dnormp</a></code>,
+<code><a href="../../LaplacesDemon/html/dnormv.html">dnormv</a></code>,
+<code><a href="../../LaplacesDemon/html/dwishartc.html">dwishartc</a></code>,
+<code><a href="../../LaplacesDemon/html/plot.demonoid.ppc.html">plot.demonoid.ppc</a></code>,
+<code><a href="../../LaplacesDemon/html/plot.laplace.ppc.html">plot.laplace.ppc</a></code>, and
+<code><a href="../../LaplacesDemon/html/plot.pmc.ppc.html">plot.pmc.ppc</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(LaplacesDemon)
+Omega &lt;- diag(3)
+U &lt;- chol(Omega)
+x &lt;- dmvnpc(c(1,2,3), c(0,1,2), U)
+X &lt;- rmvnpc(1000, c(0,1,2), U)
+joint.density.plot(X[,1], X[,2], color=TRUE)
+</pre>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>

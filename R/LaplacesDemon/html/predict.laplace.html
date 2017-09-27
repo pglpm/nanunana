@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Posterior Predictive Checks</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for predict.laplace {LaplacesDemon}"><tr><td>predict.laplace {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Posterior Predictive Checks</h2>
+
+<h3>Description</h3>
+
+
+<p>This may be used to predict either new, unobserved instances of
+<i>y</i> (called <i>y[new]</i>) or
+replicates of <i>y</i> (called
+<i>y[rep]</i>), and then perform posterior
+predictive checks. Either <i>y[new]</i> or
+<i>y[rep]</i> is predicted given an object of
+class <code>laplace</code>, the model specification, and data. This function
+requires that posterior samples were produced with
+<code><a href="../../LaplacesDemon/html/LaplaceApproximation.html">LaplaceApproximation</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>## S3 method for class 'laplace'
+predict(object, Model, Data, ...)</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>An object of class <code>laplace</code> is required.</p>
+</td></tr>
+<tr valign="top"><td><code>Model</code></td>
+<td>
+<p>The model specification function is required.</p>
+</td></tr>
+<tr valign="top"><td><code>Data</code></td>
+<td>
+<p>A data set in a list is required. The dependent
+variable is required to be named either <code>y</code> or <code>Y</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Additional arguments are unused.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+<p>Since Laplace Approximation characterizes marginal posterior
+distributions with modes and variances, and posterior predictive
+checks involve samples, the <code>predict.laplace</code> function requires
+the use of independent samples of the marginal posterior
+distributions, provided by <code><a href="../../LaplacesDemon/html/LaplaceApproximation.html">LaplaceApproximation</a></code> when
+<code>sir=TRUE</code>.
+</p>
+<p>The samples of the marginal posterior distributions of the target
+distributions (the parameters) are passed along with the data to the
+<code>Model</code> specification and used to draw samples from the deviance
+and monitored variables. At the same time, the fourth component in the
+returned list, which is labeled <code>yhat</code>, is a vector of
+expectations of <i>y</i>, given the samples, model
+specification, and data. To predict <i>y[rep]</i>,
+simply supply the data set used to estimate the model. To predict
+<i>y[new]</i>, supply a new data set instead (though
+for some model specifications, this cannot be done, and
+<i>y[new]</i> must be specified in the <code>Model</code>
+function). If the new data set does not have <i>y</i>, then
+create <code>y</code> in the list and set it equal to something sensible,
+such as <code>mean(y)</code> from the original data set.
+</p>
+<p>The variable <code>y</code> must be a vector. If instead it is matrix
+<code>Y</code>, then it will be converted to vector <code>y</code>. The vectorized
+length of <code>y</code> or <code>Y</code> must be equal to the vectorized length
+of <code>yhat</code>, the fourth component of the returned list of the
+<code>Model</code> function.
+</p>
+
+
+<h3>Value</h3>
+
+
+<p>This function returns an object of class <code>laplace.ppc</code> (where
+&ldquo;ppc&rdquo; stands for posterior predictive checks). The returned object
+is a list with the following components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>y</code></td>
+<td>
+
+<p>This stores <i>y</i>, the dependent variable.</p>
+</td></tr>
+<tr valign="top"><td><code>yhat</code></td>
+<td>
+
+<p>This is a <i>N x S</i> matrix, where <i>N</i> is the
+number of records of <i>y</i> and <i>S</i> is the number of 
+posterior samples.</p>
+</td></tr>
+<tr valign="top"><td><code>Deviance</code></td>
+<td>
+
+<p>This is a vector of length <i>S</i>, where <i>S</i> is the number of
+independent posterior samples. Samples are obtained with the
+sampling importance resampling algorithm, <code><a href="../../LaplacesDemon/html/SIR.html">SIR</a></code>.</p>
+</td></tr>
+<tr valign="top"><td><code>monitor</code></td>
+<td>
+
+<p>This is a <i>N x S</i> matrix, where <i>N</i> is the
+number of monitored variables and <i>S</i> is the number of independent
+posterior samples. Samples are obtained with the sampling importance
+resampling algorithm, <code><a href="../../LaplacesDemon/html/SIR.html">SIR</a></code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Byron Hall <a href="mailto:statisticat@gmail.com">statisticat@gmail.com</a></p>
+
+
+<h3>References</h3>
+
+
+<p>Hall, B. (2012). &quot;Laplace's Demon&quot;, STATISTICAT, LLC.
+URL=<a href="http://www.statisticat.com/laplacesdemon.html">http://www.statisticat.com/laplacesdemon.html</a>
+</p>
+
+
+<h3>See Also</h3>
+
+
+<p><code><a href="../../LaplacesDemon/html/LaplaceApproximation.html">LaplaceApproximation</a></code>,
+<code><a href="../../LaplacesDemon/html/SIR.html">SIR</a></code>.
+</p>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>

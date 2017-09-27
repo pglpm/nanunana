@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Posterior Predictive Checks</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for predict.pmc {LaplacesDemon}"><tr><td>predict.pmc {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Posterior Predictive Checks</h2>
+
+<h3>Description</h3>
+
+
+<p>This may be used to predict either new, unobserved instances of
+<i>y</i> (called <i>y[new]</i>) or
+replicates of <i>y</i> (called
+<i>y[rep]</i>), and then perform posterior
+predictive checks. Either <i>y[new]</i> or
+<i>y[rep]</i> is predicted given an object of
+class <code>demonoid</code>, the model specification, and data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>## S3 method for class 'pmc'
+predict(object, Model, Data, ...)</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+<p>An object of class <code>pmc</code> is required.</p>
+</td></tr>
+<tr valign="top"><td><code>Model</code></td>
+<td>
+<p>The model specification function is required.</p>
+</td></tr>
+<tr valign="top"><td><code>Data</code></td>
+<td>
+<p>A data set in a list is required. The dependent variable
+is required to be named either <code>y</code> or <code>Y</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>Additional arguments are unused.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+<p>This function passes each iteration of marginal posterior samples
+along with data to <code>Model</code>, where the fourth component in the
+return list is labeled <code>yhat</code>, and is a vector of expectations of
+<i>y</i>, given the samples, model specification, and
+data. Stationary samples are used if detected, otherwise
+non-stationary samples will be used. To predict
+<i>y[rep]</i>, simply supply the data set used to
+estimate the model. To predict <i>y[new]</i>, supply
+a new data set instead (though for some model specifications, this
+cannot be done, and <i>y[new]</i> must be specified
+in the <code>Model</code> function). If the new data set does not have
+<i>y</i>, then create <code>y</code> in the list and set it
+equal to something sensible, such as <code>mean(y)</code> from the
+original data set.
+</p>
+<p>The variable <code>y</code> must be a vector. If instead it is matrix
+<code>Y</code>, then it will be converted to vector <code>y</code>. The vectorized
+length of <code>y</code> or <code>Y</code> must be equal to the vectorized length
+of <code>yhat</code>, the fourth component of the return list of the
+<code>Model</code> function.
+</p>
+
+
+<h3>Value</h3>
+
+
+<p>This function returns an object of class <code>pmc.ppc</code> (where
+ppc stands for posterior predictive checks). The returned object is
+a list with the following components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>This stores the vectorized form of <i>y</i>, the
+dependent variable.</p>
+</td></tr>
+<tr valign="top"><td><code>yhat</code></td>
+<td>
+<p>This is a <i>N x S</i> matrix, where <i>N</i> is
+the number of records of <i>y</i> and <i>S</i> is the
+number of posterior samples.</p>
+</td></tr>
+<tr valign="top"><td><code>Deviance</code></td>
+<td>
+<p>This is a vector of predictive deviance.</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Byron Hall <a href="mailto:statisticat@gmail.com">statisticat@gmail.com</a></p>
+
+
+<h3>References</h3>
+
+
+<p>Hall, B. (2012). &quot;Laplace's Demon&quot;, STATISTICAT, LLC.
+URL=<a href="http://www.statisticat.com/laplacesdemon.html">http://www.statisticat.com/laplacesdemon.html</a>
+</p>
+
+
+<h3>See Also</h3>
+
+
+<p><code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code>
+</p>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>

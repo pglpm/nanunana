@@ -9,7 +9,7 @@ library('mvtnorm')
 library('magrittr')
 library('bayesplot')
 
-filename <- 'test8b'
+filename <- 'test10'
 
 mypurpleblue <- '#4477AA'
 myblue <- '#66CCEE'
@@ -28,6 +28,8 @@ set.seed(666)
 
 ## parameters to generate normal training data
 d <- 2
+np <- d + d*(d+1)/2 # num. tot parm
+nr <- d*(d-1)/2 # num. correlations
 mud <- c(1,2)
 sigmad <- matrix(c(3,2,2,5), 2)
 truevalues <- c(mud,log(diag(sigmad)),sigmad[1,2]/sqrt(prod(diag(sigmad))))
@@ -42,7 +44,7 @@ scattermt <- cov(datat)*(nt-1)/nt
 n0 <- 4
 mean0 <- 0
 sigma0 <- 10000
-sigmav <- 10
+sigmav <- log(1e6)
 scatterm0 <- diag(c(1,1))
 
 ## combination of training data and reference parameters
@@ -57,6 +59,18 @@ datanew <- signif(rmvnorm(1,mud,sigmad),2)
 
 ## exact results: no analytic solution exists
 
+## parameters. diag(S)=log-variances, off-diag=correlations
+## this corresponds to the Cholesky decomposition of the covariance matrix,
+## + taking the log of the resulting triangular matrix. The resulting
+## triangular matrix is therefore completely unconstrained.
+parm.names <- as.parm.names(list(mu=rep(0,d), S=diag(d), uppertri=c(0,1)))
+pos.mu <- grep("mu",parm.names)
+pos.logvar <- grep("S\\[([[:digit:]]),\\1\\]",parm.names)
+pos.S <- grep("S",parm.names)
+
+## variables to monitor
+mon.names <- c('p(d_new)','d_new[1]','d_new[2]')
+
 ## function to generate initial values (don't know how it works)
 PGF <- function(data){
     mu <- rnorm(2,mean0,sigma0)
@@ -66,16 +80,17 @@ PGF <- function(data){
 }
 
 ## model data - barely used
-parm.lnames=c('mu[1]','mu[2]','logvar[1]','logvar[2]','rho')
-mydata <- list(data=datat, predict=datanew, PGF=PGF,
-               mon.names=c('P(d_new)','d_new[1]','d_new[2]'),
-               parm.names=c('mu[1]','mu[2]','logvar[1]','logvar[2]','rho'),
+mydata <- list(data=datat, predict=datanew, PGF=PGF, d=d,
+               mon.names=mon.names, parm.names=parm.names,
+               pos.mu=pos.mu, pos.S=pos.S, pos.logvar=pos.logvar,
                N=nt, y=meant)
 
 
 ## model
 hyperprior0 <- function(parm,data){
-    mu <- parm[1:2]
+    mu <- parm[data$pos.mu]
+    S <- as.parm.matrix(S,data$d, parm, data, chol=T)
+    logvar <- diag(S)
     ## ensure that correlation is between -1 and 1
     rho <- interval(parm[5],-1,1)
     parm[5] <- rho

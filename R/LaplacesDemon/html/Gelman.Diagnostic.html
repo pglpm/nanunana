@@ -1,0 +1,243 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Gelman and Rubin's MCMC Convergence Diagnostic</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for Gelman.Diagnostic {LaplacesDemon}"><tr><td>Gelman.Diagnostic {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Gelman and Rubin's MCMC Convergence Diagnostic</h2>
+
+<h3>Description</h3>
+
+
+<p>Gelman and Rubin (1992) proposed a general approach to monitoring
+convergence of MCMC output in which <i>m &gt; 1</i> parallel chains are
+updated with initial values that are overdispersed relative to each
+target distribution, which must be normally distributed. Convergence
+is diagnosed when the chains have &lsquo;forgotten&rsquo; their initial values,
+and the output from all chains is indistinguishable. The
+<code>Gelman.Diagnostic</code> function makes a comparison of within-chain
+and between-chain variances, and is similar to a classical analysis of
+variance. A large deviation between these two variances indicates
+non-convergence.
+</p>
+<p>This diagnostic is popular as a stopping rule, though it requires
+parallel chains. The <code><a href="../../LaplacesDemon/html/LaplacesDemon.hpc.html">LaplacesDemon.hpc</a></code> function is an
+extension of <code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code> to enable parallel chains.
+As an alternative, the popular single-chain stopping rule is based on
+<code><a href="../../LaplacesDemon/html/MCSE.html">MCSE</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>Gelman.Diagnostic(x, confidence=0.95, transform=FALSE)</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>This required argument accepts an object of class
+<code>demonoid.hpc</code>, or a list of multiple objects of class
+<code>demonoid</code>, where the number of components in the list 
+is the number of chains.</p>
+</td></tr>
+<tr valign="top"><td><code>confidence</code></td>
+<td>
+<p>This is the coverage probability of the confidence
+interval for the potential scale reduction factor (PSRF).</p>
+</td></tr>
+<tr valign="top"><td><code>transform</code></td>
+<td>
+<p>Logical. If <code>TRUE</code>, then marginal posterior
+distributions in <code>x</code> may be transformed to improve the
+normality of the distribution, which is assumed. A log-transform is
+applied to marginal posterior distributions in the interval <i>(0, Inf]</i>, or a logit-transform is applied to marginal
+posterior distributions in the interval <i>(0,1)</i>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+<p>To use the <code>Gelman.Diagnostic</code> function, the user must first have
+multiple MCMC chains for the same model, and three chains is usually
+sufficient. The easiest way to obtain multiple chains is with the
+<code><a href="../../LaplacesDemon/html/LaplacesDemon.hpc.html">LaplacesDemon.hpc</a></code> function.
+</p>
+<p>Although the <code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code> function does not
+simultaneously update multiple MCMC chains, it is easy enough to
+obtain multiple chains, and if the computer has multiple processors
+(which is common), then multiple chains may be obtained simultaneously
+as follows. The model file may be opened in separate, concurrent R
+sessions, and it is recommended that a maximum number of sessions is
+equal to the number of processors, minus one. Each session constitutes
+its own chain, and the code is identical, except the initial values
+should be randomized with the <code><a href="../../LaplacesDemon/html/GIV.html">GIV</a></code> function so the chains
+begin in different places. The resulting object of class
+<code>demonoid</code> for each chain is saved, all objects are read into one
+session, put into a list, and passed to the <code>Gelman.Diagnostic</code>
+function.
+</p>
+<p>Initial values must be overdispersed with respect to each target
+distribution, though these distributions are unknown in the
+beginning. Since the <code>Gelman.Diagnostic</code> function relies heavily
+on overdispersion with respect to the target distribution, the user
+should consider using MCMC twice, first to estimate the target
+distributions, and secondly to overdisperse initial values with
+respect to them. This may help identify multimodal target
+distributions. If multiple modes are found, it remain possible that
+more modes exist. When multiple modes are found, and if chains are
+combined with the <code><a href="../../LaplacesDemon/html/Combine.html">Combine</a></code> function, each mode is
+probably not represented in a proportion correct to the distribution.
+</p>
+<p>The &lsquo;potential scale reduction factor&rsquo; (PSRF) is an estimated factor
+by which the scale of the current distribution for the target
+distribution might be reduced if the simulations were continued for
+an infinite number of iterations. Each PSRF declines to 1 as the
+number of iterations approaches infinity. PSRF is also often
+represented as R-hat. PSRF is calculated for each marginal posterior
+distribution in <code>x</code>, together with upper and lower confidence
+limits. Approximate convergence is diagnosed when the upper limit is
+close to 1. The recommended proximity of each PSRF to 1 varies with
+each problem, but a general goal is to achieve PSRF &lt; 1.1. PSRF is an
+estimate of how much narrower the posterior might become with an
+infinite number of iterations. When PSRF = 1.1, for example, it may be
+interpreted as a potential reduction of 10% in posterior interval
+width, given infinite iterations. The multivariate form bounds above
+the potential scale reduction factor for any linear combination of the
+(possibly transformed) variables.
+</p>
+<p>The confidence limits are based on the assumption that the
+target distribution is stationary and normally distributed. The
+<code>transform</code> argument may be used to improve the normal
+approximation.
+</p>
+<p>A large PSRF indicates that the between-chain variance is
+substantially greater than the within-chain variance, so that longer
+simulation is needed. If a PSRF is close to 1, then the associated
+chains are likely to have converged to one target distribution. A
+large PSRF (perhaps generally when a PSRF &gt; 1.2) indicates convergence
+failure, and can indicate the presence of a multimodal marginal
+posterior distribution in which different chains may have converged
+to different local modes (see <code><a href="../../LaplacesDemon/html/is.multimodal.html">is.multimodal</a></code>), or the
+need to update the associated chains longer, because burn-in (see
+<code><a href="../../LaplacesDemon/html/burnin.html">burnin</a></code>) has yet to be completed.
+</p>
+<p>The <code>Gelman.Diagnostic</code> is essentially the same as the
+<code>gelman.diag</code> function in the <code>coda</code> package, but here it is 
+programmed to work with objects of class <code>demonoid</code>.
+</p>
+<p>There are two ways to estimate the variance of the stationary
+distribution: the mean of the empirical variance within each chain,
+<i>W</i>, and the empirical variance from all chains combined, which
+can be expressed as
+</p>
+<p align="center"><i>sigma.hat^2 = (n-1)W/n + B/n</i></p>
+ 
+<p>where <i>n</i> is the number of iterations and <i>B/n</i> is the
+empirical between-chain variance.
+</p>
+<p>If the chains have converged, then both estimates are
+unbiased. Otherwise the first method will <EM>underestimate</EM> the
+variance, since the individual chains have not had time to range all
+over the stationary distribution, and the second method will
+<EM>overestimate</EM> the variance, since the initial values were
+chosen to be overdispersed (and this assumes the target distribution
+is known, see above).
+</p>
+<p>This convergence diagnostic is based on the assumption that each
+target distribution is normal. A Bayesian probability interval (see
+<code><a href="../../LaplacesDemon/html/p.interval.html">p.interval</a></code>) can be constructed using a t-distribution
+with mean
+</p>
+<p align="center"><i>mu.hat
+    = Sample mean of all chains combined,</i></p>
+
+<p>variance
+</p>
+<p align="center"><i>V.hat =
+    sigma.hat2 + B/(mn),</i></p>
+
+<p>and degrees of freedom estimated by the method of moments
+</p>
+<p align="center"><i>d = 2*V.hat^2 /
+    Var(V.hat)</i></p>
+
+<p>Use of the t-distribution accounts for the fact that the mean and
+variance of the posterior distribution are estimated. The convergence
+diagnostic itself is
+</p>
+<p align="center"><i>R=sqrt((d+3) V.hat /((d+1)W)</i></p>
+
+<p>Values substantially above 1 indicate lack of convergence. If the
+chains have not converged, then Bayesian probability intervals based
+on the t-distribution are too wide, and have the potential to shrink
+by this factor if the MCMC run is continued.
+</p>
+<p>The multivariate version of Gelman and Rubin's diagnostic was proposed
+by Brooks and Gelman (1998). Unlike the univariate proportional scale
+reduction factor, the multivariate version does not include an
+adjustment for the estimated number of degrees of freedom.
+</p>
+
+
+<h3>Value</h3>
+
+
+<p>A list is returned with the following components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>PSRF</code></td>
+<td>
+<p>This is a list containing the point-estimates of the
+potential scale reduction factor (labelled <code>Point Est.</code>) and
+the associated upper confidence limits (labelled <code>Upper C.I.</code>).</p>
+</td></tr>
+<tr valign="top"><td><code>MPSRF</code></td>
+<td>
+<p>This is the point-estimate of the multivariate potential
+scale reduction factor.</p>
+</td></tr>
+</table>
+
+
+<h3>References</h3>
+
+
+<p>Brooks, S.P. and Gelman, A. (1998). &quot;General Methods for Monitoring
+Convergence of Iterative Simulations&quot;. Journal of Computational and
+Graphical Statistics, 7, p. 434&ndash;455.
+</p>
+<p>Gelman, A. and Rubin, D.B. (1992). &quot;Inference from Iterative Simulation
+using Multiple Sequences&quot;. Statistical Science, 7, p. 457&ndash;511.
+</p>
+
+
+<h3>See Also</h3>
+
+
+<p><code><a href="../../LaplacesDemon/html/Combine.html">Combine</a></code>,
+<code><a href="../../LaplacesDemon/html/GIV.html">GIV</a></code>,
+<code><a href="../../LaplacesDemon/html/is.multimodal.html">is.multimodal</a></code>,
+<code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code>,
+<code><a href="../../LaplacesDemon/html/LaplacesDemon.hpc.html">LaplacesDemon.hpc</a></code>,
+<code><a href="../../LaplacesDemon/html/MCSE.html">MCSE</a></code>, and
+<code><a href="../../LaplacesDemon/html/p.interval.html">p.interval</a></code>.</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+#Examples
+###After updating multiple chains with LaplacesDemon.hpc, do:
+#Gelman.Diagnostic(Fit)
+</pre>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>

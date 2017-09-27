@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Prior Elicitation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for Elicitation {LaplacesDemon}"><tr><td>Elicitation {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Prior Elicitation</h2>
+
+<h3>Description</h3>
+
+
+<p>Prior elicitation is the act of inducing personal opinion to be
+expressed by the probabilities the person associates with an event
+(Savage, 1971). The <code>elicit</code> function elicits personal opinion
+and the <code>delicit</code> function estimates probability density to be
+used with model specification in the
+<code><a href="../../LaplacesDemon/html/LaplaceApproximation.html">LaplaceApproximation</a></code> or <code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code>
+functions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+delicit(theta, x, a=-Inf, b=Inf, log=FALSE)
+elicit(n, cats, cat.names, show.plot=FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>theta</code></td>
+<td>
+<p>This is a scalar or vector of parameters for which the
+density is estimated with respect to the kernel density estimate of
+<code>x</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>This is the elicited vector.</p>
+</td></tr>
+<tr valign="top"><td><code>a</code></td>
+<td>
+<p>This is an optional lower bound for support.</p>
+</td></tr>
+<tr valign="top"><td><code>b</code></td>
+<td>
+<p>This is an optional upper bound for support.</p>
+</td></tr>
+<tr valign="top"><td><code>log</code></td>
+<td>
+<p>Logical. If <code>log=TRUE</code>, then the logarithm of the
+density is returned.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>This is the number of chips.</p>
+</td></tr>
+<tr valign="top"><td><code>cats</code></td>
+<td>
+<p>This is a vector of <i>k</i> categories, bins, or
+intervals. When the variable is continuous, the mid-point of each
+category is used. For example, if the continuous interval [0,1] has
+5 equal-sized categories, then <code>cats=c(0.1,0.3,0.5,0.7,0.9)</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>cat.names</code></td>
+<td>
+<p>This is a vector of category names. For example, if
+the continuous interval [0,1] has 5 equal-sized categories, then one
+way or naming the categories may be <code>cat.names=c("0:&lt;.2",
+      ".2:&lt;.4", ".4:&lt;.6", ".6:&lt;.8", ".8:1")</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>show.plot</code></td>
+<td>
+<p>Logical. If <code>show.plot=TRUE</code>, then a barplot is
+shown after each allocation of chips.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+<p>The <code>elicit</code> function elicits a univariate, discrete,
+non-conjugate, informative, prior probability distribution by
+offering a number of chips (specified as <code>n</code> by the statistician)
+for the user to allocate into categories specified by the
+statistician. The results of multiple elicitations (meaning, with
+multiple people), each the output of <code>elicit</code>, may be combined
+with the <code>c</code> function in base R.
+</p>
+<p>This discrete distribution is included with the data for
+a model and supplied to a model specification function, where in turn
+it is supplied to the <code>delicit</code> function, which estimates the
+density at the current value of the prior distribution,
+<i>p(theta)</i>. The prior distribution may be either
+continuous or discrete, will be proper, and may have bounded support
+(constrained to an interval).
+</p>
+<p>For a minimal example, a statistician elicits the prior probability
+distribution for a regression effect, <i>&beta;</i>. Non-statisticians
+would not be asked about expected parameters, but could be asked about
+how much <i>y</i> would be expected to change given a
+one-unit change in <i>x</i>. After consulting with others
+who have prior knowledge, the support does not need to be bounded,
+and their guesses at the range result in the statistician creating
+5 catgories from the interval [-1,4], where each interval has a width
+of one. The statistician schedules time with 3 people, and each person
+participates when the statistician runs the following R code:
+</p>
+<p><code>x &lt;- elicit(n=10, cats=c(-0.5, 0.5, 1.5, 2.5, 3.5),
+    cat.names=c("-1:&lt;0", "0:&lt;1", "1:&lt;2", "2:&lt;3", "3:4"), show.plot=TRUE)</code>
+</p>
+<p>Each of the 3 participants receives 10 chips to allocate among the
+5 categories according to personal beliefs in the probability of the
+regression effect. When the statistician and each participant accept
+their elicited distribution, all 3 vectors are combined into one
+vector. In the model form, the prior is expressed as
+</p>
+<p align="center"><i>p(beta) ~ EL</i></p>
+
+<p>and the code for the model specification is
+</p>
+<p><code>elicit.prior &lt;- delicit(beta, x, log=TRUE)</code>
+</p>
+<p>This method is easily extended to priors that are multivariate,
+correlated, or conditional.
+</p>
+<p>As an alternative, Hahn (2006) also used a categorical approach,
+eliciting judgements about the relative likelihood of each category,
+and then minimizes the KLD (for more information on KLD, see the
+<code><a href="../../LaplacesDemon/html/KLD.html">KLD</a></code>).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Byron Hall <a href="mailto:statisticat@gmail.com">statisticat@gmail.com</a></p>
+
+
+<h3>References</h3>
+
+
+<p>Hahn, E.D. (2006). &quot;Re-examining Informative Prior Elicitation Through
+the Lens of Markov chain Monte Carlo Methods&quot;. Journal of the Royal
+Statistical Society, A 169 (1), p. 37&ndash;48.
+</p>
+<p>Hall, B. (2012). &quot;Laplace's Demon&quot;, STATISTICAT, LLC.
+URL=<a href="http://www.statisticat.com/laplacesdemon.html">http://www.statisticat.com/laplacesdemon.html</a>
+</p>
+<p>Savage, L.J. (1971). &quot;Elicitation of Personal Probabilities and
+Expectations&quot;. Journal of the American Statistical Association,
+66(336), p. 783&ndash;801.
+</p>
+
+
+<h3>See Also</h3>
+
+
+<p><code><a href="../../LaplacesDemon/html/de.Finetti.Game.html">de.Finetti.Game</a></code>,
+<code><a href="../../LaplacesDemon/html/KLD.html">KLD</a></code>,
+<code><a href="../../LaplacesDemon/html/LaplaceApproximation.html">LaplaceApproximation</a></code>, and
+<code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(LaplacesDemon)
+x &lt;- c(1,2,2,3,3,3,4,7,8,8,9,10) #Elicited with elicit function
+theta &lt;- seq(from=-5,to=15,by=.1)
+plot(theta, delicit(theta,x), type="l", xlab=expression(theta),
+     ylab=expression("p(" * theta * ")"))
+</pre>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>

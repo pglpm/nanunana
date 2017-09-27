@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: is.data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for is.data {LaplacesDemon}"><tr><td>is.data {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>is.data</h2>
+
+<h3>Description</h3>
+
+
+<p>This function provides a logical test of whether or not a given list
+of data meets minimum criteria to be considered data for
+<code><a href="../../LaplacesDemon/html/LaplaceApproximation.html">LaplaceApproximation</a></code> or <code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+is.data(Data)
+</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>Data</code></td>
+<td>
+<p>This is a list of data. For more information, see the
+<code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code> function.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+<p>This function is useful for testing whether or not a list of data
+meets minimum criteria to be considered data in this package. The
+minimum requirements are that <code>Data</code> is a list, and it contains
+<code>mon.names</code> and <code>parm.names</code>.
+</p>
+<p>This function is not extensive. For example, it does not match the
+length of <code>parm.names</code> with the length of <code>Initial.Values</code>,
+or compare the length of <code>mon.names</code> to the number of monitored
+variables output from the <code>Model</code> specification
+function. Additional checks are conducted in
+<code><a href="../../LaplacesDemon/html/LaplaceApproximation.html">LaplaceApproximation</a></code> and <code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code>.
+</p>
+
+
+<h3>Value</h3>
+
+
+<p>The <code>is.data</code> function returns a logical value. It returns
+<code>TRUE</code> if <code>Data</code> meets minimum requirements to be considered
+data in this package, and <code>FALSE</code> otherwise.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Byron Hall <a href="mailto:statisticat@gmail.com">statisticat@gmail.com</a></p>
+
+
+<h3>References</h3>
+
+<p><a href="http://www.statisticat.com/laplacesdemon.html">http://www.statisticat.com/laplacesdemon.html</a></p>
+
+
+<h3>See Also</h3>
+
+
+<p><code><a href="../../LaplacesDemon/html/LaplaceApproximation.html">LaplaceApproximation</a></code> and
+<code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code>.
+</p>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>

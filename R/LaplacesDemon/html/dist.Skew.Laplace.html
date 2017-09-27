@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Skew-Laplace Distribution: Univariate</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for dist.Skew.Laplace {LaplacesDemon}"><tr><td>dist.Skew.Laplace {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Skew-Laplace Distribution: Univariate</h2>
+
+<h3>Description</h3>
+
+
+<p>These functions provide the density, distribution function, quantile
+function, and random generation for the univariate, skew-Laplace
+distribution with location parameter <i>mu</i>, and two mixture
+parameters: <i>alpha</i> and <i>beta</i>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+dslaplace(x, mu, alpha, beta, log=FALSE)
+pslaplace(q, mu, alpha, beta)
+qslaplace(p, mu, alpha, beta)
+rslaplace(n, mu, alpha, beta)
+</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x, q</code></td>
+<td>
+<p>These are each a vector of quantiles.</p>
+</td></tr>
+<tr valign="top"><td><code>p</code></td>
+<td>
+<p>This is a vector of probabilities.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>This is the number of observations, which must be a positive
+integer that has length 1.</p>
+</td></tr>
+<tr valign="top"><td><code>mu</code></td>
+<td>
+<p>This is the location parameter <i>mu</i>.</p>
+</td></tr>
+<tr valign="top"><td><code>alpha</code></td>
+<td>
+<p>This is a mixture parameter <i>alpha</i>, which
+must be positive.</p>
+</td></tr>
+<tr valign="top"><td><code>beta</code></td>
+<td>
+<p>This is a mixture parameter <i>beta</i>, which
+must be positive.</p>
+</td></tr>
+<tr valign="top"><td><code>log</code></td>
+<td>
+<p>Logical. If <code>log=TRUE</code>, then the logarithm of the
+density is returned.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+
+<ul>
+<li><p> Application: Continuous Univariate
+</p>
+</li>
+<li><p> Density 1: <i>p(theta) =
+    (1/(alpha+beta)) exp((theta-mu)/alpha), theta &lt;= mu</i>
+</p>
+</li>
+<li><p> Density 2: <i>p(theta) =
+    (1/(alpha+beta)) exp((mu-theta)/beta), theta &gt; mu</i>
+</p>
+</li>
+<li><p> Inventor: Fieller, et al. (1992)
+</p>
+</li>
+<li><p> Notation 1: <i>theta ~
+    SL(mu, alpha, beta)</i>
+</p>
+</li>
+<li><p> Notation 2: <i>p(theta) = SL(theta | mu, alpha, beta)</i>
+</p>
+</li>
+<li><p> Parameter 1: location parameter <i>mu</i>
+</p>
+</li>
+<li><p> Parameter 2: mixture parameter <i>alpha &gt; 0</i>
+</p>
+</li>
+<li><p> Parameter 3: mixture parameter <i>beta &gt; 0</i>
+</p>
+</li>
+<li><p> Mean: <i>E(theta) = mu +
+    beta - alpha</i>
+</p>
+</li>
+<li><p> Variance: <i>var(theta) =
+    alpha^2 + beta^2</i>
+</p>
+</li>
+<li><p> Mode: <i>mode(theta) = mu</i>
+</p>
+</li></ul>
+
+<p>This is the three-parameter general skew-Laplace distribution, which is
+an extension of the two-parameter central skew-Laplace distribution. The
+general form allows the mode to be shifted along the real line with
+parameter <i>mu</i>. In contrast, the central skew-Laplace has mode
+zero, and may be reproduced here by setting <i>mu=0</i>.
+</p>
+<p>The general skew-Laplace distribution is a mixture of a negative
+exponential distribution with mean <i>beta</i>, and the negative
+of an exponential distribution with mean <i>alpha</i>. The
+weights of the positive and negative components are proportional to
+their means. The distribution is symmetric when
+<i>alpha=beta</i>, in which case the mean is <i>mu</i>.
+</p>
+<p>These functions are similar to those in the <code>HyperbolicDist</code> package.
+</p>
+
+
+<h3>Value</h3>
+
+
+<p><code>dslaplace</code> gives the density,
+<code>pslaplace</code> gives the distribution function,
+<code>qslaplace</code> gives the quantile function, and
+<code>rslaplace</code> generates random deviates.
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Fieller, N.J., Flenley, E.C., and Olbricht, W. (1992). &quot;Statistics of
+Particle Size Data&quot;. Applied Statistics, 41, p. 127&ndash;146.
+</p>
+
+
+<h3>See Also</h3>
+
+
+<p><code><a href="../../LaplacesDemon/html/dalaplace.html">dalaplace</a></code>,
+<code><a href="../../LaplacesDemon/html/dexp.html">dexp</a></code>,
+<code><a href="../../LaplacesDemon/html/dlaplace.html">dlaplace</a></code>, 
+<code><a href="../../LaplacesDemon/html/dlaplacep.html">dlaplacep</a></code>, and
+<code><a href="../../LaplacesDemon/html/dsdlaplace.html">dsdlaplace</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(LaplacesDemon)
+x &lt;- dslaplace(1,0,1,1)
+x &lt;- pslaplace(1,0,1,1)
+x &lt;- qslaplace(0.5,0,1,1)
+x &lt;- rslaplace(100,0,1,1)
+
+#Plot Probability Functions
+x &lt;- seq(from=0.1, to=3, by=0.01)
+plot(x, dslaplace(x,0,1,1), ylim=c(0,1), type="l", main="Probability Function",
+     ylab="density", col="red")
+lines(x, dslaplace(x,0,0.5,2), type="l", col="green")
+lines(x, dslaplace(x,0,2,0.5), type="l", col="blue")
+legend(1.5, 0.9, expression(paste(mu==0, ", ", alpha==1, ", ", beta==1),
+     paste(mu==0, ", ", alpha==0.5, ", ", beta==2),
+     paste(mu==0, ", ", alpha==2, ", ", beta==0.5)),
+     lty=c(1,1,1), col=c("red","green","blue"))
+</pre>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>

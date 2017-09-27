@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Appeased</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for is.appeased {LaplacesDemon}"><tr><td>is.appeased {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Appeased</h2>
+
+<h3>Description</h3>
+
+
+<p>This function returns <code>TRUE</code> if Laplace's Demon is appeased by the
+object of class <code>demonoid</code>, and <code>FALSE</code> otherwise. If
+appeased, then the object passes several tests that indicate potential
+convergence of the Markov chains.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+is.appeased(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>This is an object of class <code>demonoid</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+<p>After updating a model with the <code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code> function,
+an output object is created. The output object is of class
+<code>demonoid</code>. The object may be passed to the <code><a href="../../LaplacesDemon/html/Consort.html">Consort</a></code>
+function, which will apply several criteria regarding the potential
+convergence of its Markov chains. If all criteria are met, then
+Laplace's Demon is appeased. Otherwise, Laplace's Demon suggests R
+code to be copy/pasted and executed. The <code><a href="../../LaplacesDemon/html/Consort.html">Consort</a></code>
+function prints a large amount of information to the screen. The
+<code>is.appeased</code> function may be applied as an alternative, though
+it only informs the user as to whether or not Laplace's Demon was
+appeased, as <code>TRUE</code> or <code>FALSE</code>.
+</p>
+
+
+<h3>Value</h3>
+
+
+<p>The <code>is.appeased</code> function returns a logical value indicating
+whether or not the supplied object passes several potential Markov
+chain convergence criteria. If the object passes all criteria, then
+Laplace's Demon is appeased, and the logical value returned is
+<code>TRUE</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Byron Hall <a href="mailto:statisticat@gmail.com">statisticat@gmail.com</a></p>
+
+
+<h3>References</h3>
+
+<p><a href="http://www.statisticat.com/laplacesdemon.html">http://www.statisticat.com/laplacesdemon.html</a></p>
+
+
+<h3>See Also</h3>
+
+
+<p><code><a href="../../LaplacesDemon/html/Consort.html">Consort</a></code> and
+<code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code>.
+</p>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>

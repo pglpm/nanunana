@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Initial Values</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for as.initial.values {LaplacesDemon}"><tr><td>as.initial.values {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Initial Values</h2>
+
+<h3>Description</h3>
+
+
+<p>This function returns the most recent posterior samples from an object
+of class <code>demonoid</code>, the most recent posterior samples from the
+chain with the lowest deviance in an object of class
+<code>demonoid.hpc</code>, the posterior modes of an object of class
+<code>laplace</code>, the posterior means of an object of class <code>pmc</code>
+with one mixture component, or the latest means of the importance
+sampling distribution of an object of class <code>pmc</code> with multiple
+mixture components. The returned values are intended to be the initial
+values for future updates.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+as.initial.values(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>This is an object of class <code>demonoid</code>,
+<code>demonoid.hpc</code>, <code>laplace</code>, or <code>pmc</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+<p>Unless it is known beforehand how many iterations are required for
+Laplace Approximation to converge, MCMC to appear converged, or the
+normalized perplexity to stabilize in PMC, multiple updates are
+necessary. An additional update, however, should not begin with the
+same initial values as the original update, because it will have to
+repeat the work already accomplished. For this reason, the
+<code>as.initial.values</code> function may be used at the end of an update
+to change the previous initial values to the latest values.
+</p>
+
+
+<h3>Value</h3>
+
+
+<p>The returned value is a vector (or matrix in the case of PMC with
+multiple mixture components) of the latest values, which may now be
+used as initial values for a future update.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Byron Hall <a href="mailto:statisticat@gmail.com">statisticat@gmail.com</a></p>
+
+
+<h3>References</h3>
+
+
+<p>Hall, B. (2012). &quot;Laplace's Demon&quot;, STATISTICAT, LLC.
+URL=<a href="http://www.statisticat.com/laplacesdemon.html">http://www.statisticat.com/laplacesdemon.html</a>
+</p>
+
+
+<h3>See Also</h3>
+
+
+<p><code><a href="../../LaplacesDemon/html/LaplaceApproximation.html">LaplaceApproximation</a></code>,
+<code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code>,
+<code><a href="../../LaplacesDemon/html/LaplacesDemon.hpc.html">LaplacesDemon.hpc</a></code>, and
+<code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code>.
+</p>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>

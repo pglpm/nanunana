@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Multivariate t Distribution</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for dist.Multivariate.t {LaplacesDemon}"><tr><td>dist.Multivariate.t {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Multivariate t Distribution</h2>
+
+<h3>Description</h3>
+
+
+<p>These functions provide the density and random number generation for
+the multivariate t distribution, otherwise called the multivariate
+Student distribution.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+dmvt(x, mu, S, df=Inf, log=FALSE)
+rmvt(n=1, mu, S, df=Inf)
+</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>This is either a vector of length <i>k</i> or a matrix with
+a number of columns, <i>k</i>, equal to the number of columns in
+scale matrix <i>S</i>.</p>
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+<p>This is the number of random draws.</p>
+</td></tr>
+<tr valign="top"><td><code>mu</code></td>
+<td>
+<p>This is a numeric vector or matrix representing the location
+parameter,<i>mu</i> (the mean vector), of the multivariate
+distribution (equal to the expected value when <code>df &gt; 1</code>,
+otherwise represented as <i>nu &gt; 1</i>). When a vector, it
+must be of length <i>k</i>, or must have <i>k</i> columns as a matrix,
+as defined above.</p>
+</td></tr>
+<tr valign="top"><td><code>S</code></td>
+<td>
+<p>This is a <i>k x k</i> positive-definite scale
+matrix <i>S</i>, such that <code>S*df/(df-2)</code> is the
+variance-covariance matrix when <code>df &gt; 2</code>. A vector of
+length 1 is also allowed (in this case, <i>k=1</i> is set).</p>
+</td></tr>
+<tr valign="top"><td><code>df</code></td>
+<td>
+<p>This is the degrees of freedom, and is often represented
+with <i>nu</i>.</p>
+</td></tr>
+<tr valign="top"><td><code>log</code></td>
+<td>
+<p>Logical. If <code>log=TRUE</code>, then the logarithm of the
+density is returned.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+
+<ul>
+<li><p> Application: Continuous Multivariate
+</p>
+</li>
+<li><p> Density: </p>
+<p align="center"><i>p(theta) = Gamma[(nu+k)/2] /
+    {Gamma(nu/2)nu^(k/2)pi^(k/2)|Sigma|^(1/2)[1 +
+      (1/nu)(theta-mu)^T*Sigma^(-1)(theta-mu)]^[(nu+k)/2]}</i></p>
+
+</li>
+<li><p> Inventor: Unknown (to me, anyway)
+</p>
+</li>
+<li><p> Notation 1: <i>theta ~ t[k](mu, Sigma, nu)</i>
+</p>
+</li>
+<li><p> Notation 2: <i>p(theta) = t[k](theta | mu, Sigma, nu)</i>
+</p>
+</li>
+<li><p> Parameter 1: location vector <i>mu</i>
+</p>
+</li>
+<li><p> Parameter 2: positive-definite <i>k x k</i> scale
+matrix <i>Sigma</i>
+</p>
+</li>
+<li><p> Parameter 3: degrees of freedom <i>nu &gt; 0</i> (df in the
+functions)
+</p>
+</li>
+<li><p> Mean: <i>E(theta) = mu</i>, for <i>nu
+    &gt; 1</i>, otherwise undefined
+</p>
+</li>
+<li><p> Variance: <i>var(theta) = (nu / (nu - 2))*Sigma</i>, for <i>nu &gt; 2</i>
+</p>
+</li>
+<li><p> Mode: <i>mode(theta) = mu</i>
+</p>
+</li></ul>
+
+<p>The multivariate t distribution, also called the multivariate Student or
+multivariate Student t distribution, is a multidimensional extension of the
+one-dimensional or univariate Student t distribution. A random vector is
+considered to be multivariate t-distributed if every linear
+combination of its components has a univariate Student t-distribution.
+This distribution has a mean parameter vector <i>mu</i> of length
+<i>k</i>, and a <i>k x k</i> scale matrix <i>S</i>,
+which must be positive-definite. When degrees of freedom
+<i>nu=1</i>, this is the multivariate Cauchy distribution.
+</p>
+
+
+<h3>Value</h3>
+
+
+<p><code>dmvt</code> gives the density and 
+<code>rmvt</code> generates random deviates.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Byron Hall <a href="mailto:statisticat@gmail.com">statisticat@gmail.com</a></p>
+
+
+<h3>References</h3>
+
+<p><a href="http://www.statisticat.com/laplacesdemon.html">http://www.statisticat.com/laplacesdemon.html</a></p>
+
+
+<h3>See Also</h3>
+
+
+<p><code><a href="../../LaplacesDemon/html/dinvwishart.html">dinvwishart</a></code>,
+<code><a href="../../LaplacesDemon/html/dmvc.html">dmvc</a></code>,
+<code><a href="../../LaplacesDemon/html/dmvcp.html">dmvcp</a></code>,
+<code><a href="../../LaplacesDemon/html/dmvtp.html">dmvtp</a></code>,
+<code><a href="../../LaplacesDemon/html/dst.html">dst</a></code>,
+<code><a href="../../LaplacesDemon/html/dstp.html">dstp</a></code>, and
+<code><a href="../../LaplacesDemon/html/dt.html">dt</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(LaplacesDemon)
+x &lt;- seq(-2,4,length=21)
+y &lt;- 2*x+10
+z &lt;- x+cos(y) 
+mu &lt;- c(1,12,2)
+S &lt;- matrix(c(1,2,0,2,5,0.5,0,0.5,3), 3, 3)
+df &lt;- 4
+f &lt;- dmvt(cbind(x,y,z), mu, S, df)
+X &lt;- rmvt(1000, c(0,1,2), S, 5)
+joint.density.plot(X[,1], X[,2], color=TRUE)
+</pre>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>

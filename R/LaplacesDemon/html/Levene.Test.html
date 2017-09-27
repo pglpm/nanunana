@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Levene's Test</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for Levene.Test {LaplacesDemon}"><tr><td>Levene.Test {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Levene's Test</h2>
+
+<h3>Description</h3>
+
+
+<p>The <code>Levene.Test</code> function is a Bayesian form of Levene's test
+(Levene, 1960) of equality of variances.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+Levene.Test(x, Method="U", G=NULL, Data=NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>This required argument must be an object of class
+<code>demonoid.ppc</code>, <code>laplace.ppc</code>, or <code>pmc.ppc</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>Method</code></td>
+<td>
+<p>The method defaults to <code>U</code> for a univariate
+dependent variable (DV), y. When the DV is multivariate,
+<code>Method="C"</code> applies Levene's test to each column associated
+in Y. When <code>Method="R"</code>, Levene's test is applied to each
+row associated in Y.</p>
+</td></tr>
+<tr valign="top"><td><code>G</code></td>
+<td>
+<p>This argument defaults to <code>NULL</code>, or is required to
+have the same dimensions as the DV. For example, if the DV is
+univariate, then G must have a length equal to y, which is usually
+represented with a length of N for the number of records or T for
+the number of time-periods. If the DV is multivariate, then
+<code>G</code> must be a matrix, like Y, and have the same number of
+rows and columns. The purpose of the <code>G</code> argument is to allow
+the user to specify each element of y or Y to be in a particular
+group, so the variance of the groups can be tested. As such, each
+element of <code>G</code> must consist of an integer from one to the
+number of groups desired to be tested. The reason this test allows
+this degree of specificity is so the user can specify groups, such
+as according to covariate levels. By default, 4 groups are
+specified, where the first quarter of the records are group 1 and
+the last quarter of the records are group 4.</p>
+</td></tr>
+<tr valign="top"><td><code>Data</code></td>
+<td>
+<p>This argument is required when the DV is multivariate,
+hence when <code>Method="C"</code> or <code>Method="R"</code>. The DV is
+required to be named Y.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+<p>This function is a Bayesian form of Levene's test. Levene's test is
+used to assess the probability of the equality of residual variances
+in different groups. When residual variance does not differ by group,
+it is often called homoscedastic (or homoskedastic) residual variance.
+Homoskedastic residual variance is a common assumption. An advantage
+of Levene's test to other tests of homoskedastic residual variance is
+that Levene's test does not require normality of the residuals.
+</p>
+<p>The <code>Levene.Test</code> function estimates the test statistic,
+<i>W</i>, as per Levene's test. This Bayesian form, however,
+estimates <i>W</i> from the observed residuals as
+<i>W.obs</i>, and <i>W</i> from residuals that are
+replicated from a homoskedastic process as <i>W.rep</i>.
+Further, <i>W.obs</i> and <i>W.rep</i> are
+estimated for each posterior sample. Finally, the probability that
+the distribution of <i>W.obs</i> is greater than the
+distribution of <i>W.rep</i> is reported (see below).
+</p>
+
+
+<h3>Value</h3>
+
+
+<p>The <code>Levene.Test</code> function returns a plot (or for multivariate Y,
+a series of plots), and a vector with a length equal to the number of
+Levene's tests conducted.
+</p>
+<p>One plot is produced per univariate application of Levene's test. Each
+plot shows the test statistic W, both from the observed process
+(W.obs as a black density) and the replicated process (W.rep as a red
+line). The mean of W.obs is reported, along with its 95% quantile-based
+probability interval (see <code><a href="../../LaplacesDemon/html/p.interval.html">p.interval</a></code>), the probability
+<i>p(W.obs &gt; W.rep)</i>, and the indicated
+results, either homoskedastic or heteroskedastic.
+</p>
+<p>Each element of the returned vector is the probability
+<i>p(W.obs &gt; W.rep)</i>. When the probability
+is <i>p &lt; 0.025</i> or <i>p &gt; 0.975</i>,
+heteroskedastic variance is indicated. Otherwise, the variances of
+the groups are assumed not to differ effectively.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Byron Hall <a href="mailto:statisticat@gmail.com">statisticat@gmail.com</a></p>
+
+
+<h3>References</h3>
+
+
+<p>Hall, B. (2012). &quot;Laplace's Demon&quot;, STATISTICAT, LLC.
+URL=<a href="http://www.statisticat.com/laplacesdemon.html">http://www.statisticat.com/laplacesdemon.html</a>
+</p>
+<p>Levene, H. (1960). &quot;Robust Tests for Equality of Variances&quot;. In
+I. Olkins, S. G. Ghurye, W. Hoeffding, W. G. Madow, &amp; H. B. Mann
+(Eds.), Contributions to Probability and Statistics, p. 278&ndash;292.
+Stanford, CA: Stanford University Press.
+</p>
+
+
+<h3>See Also</h3>
+
+
+<p><code><a href="../../LaplacesDemon/html/LaplaceApproximation.html">LaplaceApproximation</a></code>,
+<code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code>,
+<code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code>, and
+<code><a href="../../LaplacesDemon/html/p.interval.html">p.interval</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+#First, update the model with LaplaceApproximation, LaplacesDemon, or PMC.
+#Then, use the predict function, creating, say, object Pred.
+#Finally:
+#Levene.Test(Pred)
+</pre>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>

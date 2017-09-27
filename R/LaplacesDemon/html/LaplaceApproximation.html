@@ -1,0 +1,497 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Laplace Approximation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+
+<table width="100%" summary="page for LaplaceApproximation {LaplacesDemon}"><tr><td>LaplaceApproximation {LaplacesDemon}</td><td align="right">R Documentation</td></tr></table>
+
+<h2>Laplace Approximation</h2>
+
+<h3>Description</h3>
+
+
+<p>The <code>LaplaceApproximation</code> function deterministically maximizes
+the logarithm of the unnormalized joint posterior density with one of
+several optimization algorithms. The goal of Laplace Approximation is
+to estimate the posterior mode and variance of each parameter. This
+function is useful for optimizing initial values and estimating a
+covariance matrix to be input into the <code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code> or
+<code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code> function, or sometimes for model estimation in its
+own right.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+LaplaceApproximation(Model, parm, Data, Interval=1.0E-6,
+     Iterations=100, Method="LBFGS", Samples=1000, sir=TRUE,
+     Stop.Tolerance=1.0E-5)
+</pre>
+
+
+<h3>Arguments</h3>
+
+
+<table summary="R argblock">
+<tr valign="top"><td><code>Model</code></td>
+<td>
+<p>This required argument receives the model from a
+user-defined function. The user-defined function is where the model
+is specified. <code>LaplaceApproximation</code> passes two arguments to
+the model function, <code>parms</code> and <code>Data</code>. For more
+information, see the <code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code> function and
+&ldquo;LaplacesDemon Tutorial&rdquo; vignette.</p>
+</td></tr>
+<tr valign="top"><td><code>parm</code></td>
+<td>
+<p>This argument requires a vector of initial values equal in
+length to the number of parameters. <code>LaplaceApproximation</code> will
+attempt to optimize these initial values for the parameters, where
+the optimized values are the posterior modes, for later use with the
+<code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code> or <code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code> function. The
+<code><a href="../../LaplacesDemon/html/GIV.html">GIV</a></code> function may be used to randomly generate initial
+values.</p>
+</td></tr>
+<tr valign="top"><td><code>Data</code></td>
+<td>
+<p>This required argument accepts a list of data. The list of
+data must include <code>mon.names</code> which contains monitored variable
+names, and <code>parm.names</code> which contains parameter
+names. <code>LaplaceApproximation</code> must be able to determine the
+sample size of the data, and will look for a scalar sample size
+variable <code>n</code> or <code>N</code>. If not found, it will look for
+variable <code>y</code> or <code>Y</code>, and attempt to take its number of
+rows as sample size. <code>LaplaceApproximation</code> needs to determine
+sample size due to the asymptotic nature of this method.</p>
+</td></tr>
+<tr valign="top"><td><code>Interval</code></td>
+<td>
+<p>This argument receives an interval for estimating
+approximate gradients. The logarithm of the unnormalized joint
+posterior density of the Bayesian model is evaluated at +/- 1/2 of
+this interval. <code>Interval</code> defaults to 1.0E-6.</p>
+</td></tr>
+<tr valign="top"><td><code>Iterations</code></td>
+<td>
+<p>This argument accepts an integer that determines the
+number of iterations that <code>LaplaceApproximation</code> will attempt
+to maximize the logarithm of the unnormalized joint posterior
+density. <code>Iterations</code> defaults to 100.
+<code>LaplaceApproximation</code> will stop before this number of
+iterations if the tolerance is less than or equal to the
+<code>Stop.Tolerance</code> criterion. The required amount of computer
+memory increases with <code>Iterations</code>. If computer memory is
+exceeded, then all will be lost.</p>
+</td></tr>
+<tr valign="top"><td><code>Method</code></td>
+<td>
+<p>This optional argument specifies the method used for
+Laplace Approximation. The default method is <code>LBFGS</code>. Options
+include <code>AGA</code> for adaptive gradient ascent and <code>Rprop</code> for
+resilient backpropagation. The previous default, <code>CG</code>
+(conjugate gradient), has been deprecated.</p>
+</td></tr>
+<tr valign="top"><td><code>Samples</code></td>
+<td>
+<p>This argument indicates the number of posterior samples
+to be taken with sampling importance resampling via the
+<code><a href="../../LaplacesDemon/html/SIR.html">SIR</a></code> function, which occurs only when
+<code>sir=TRUE</code>. Note that the number of samples should increase
+with the number and intercorrelations of the parameters.</p>
+</td></tr>
+<tr valign="top"><td><code>sir</code></td>
+<td>
+<p>This logical argument indicates whether or not sampling
+importance resampling is conducted via the <code><a href="../../LaplacesDemon/html/SIR.html">SIR</a></code>
+function to draw independent posterior samples. This argument
+defaults to <code>TRUE</code>. Even when <code>TRUE</code>, posterior samples
+are drawn only when <code>LaplaceApproximation</code> has
+converged. Posterior samples are required for many other functions,
+including <code>plot.laplace</code> and <code>predict.laplace</code>. The only
+time that it is advantageous for <code>sir=FALSE</code> is when
+<code>LaplaceApproximation</code> is used to help the initial values for
+<code>LaplacesDemon</code> or <code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code>, and it is unnecessary for
+time to be spent on sampling.</p>
+</td></tr>
+<tr valign="top"><td><code>Stop.Tolerance</code></td>
+<td>
+<p>This argument accepts any positive number and
+defaults to 1.0E-5. At each iteration, the square root of the sum of
+the squared differences of the logarithm of the unnormalized joint
+posterior density is calculated. If this result is less than or
+equal to the value of <code>Stop.Tolerance</code>, then
+<code>LaplaceApproximation</code> has converged to the user-specified
+tolerance and will terminate at the end of the current iteration.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+
+<p>The Laplace Approximation or Laplace Method is a family of asymptotic
+techniques used to approximate integrals. Laplace's method seems to
+accurately approximate unimodal posterior moments and marginal
+posterior distributions in many cases. Since it is not applicable in
+all cases, it is recommended here that Laplace Approximation is used
+cautiously in its own right, or preferably, it is used before MCMC.
+</p>
+<p>After introducing the Laplace Approximation (Laplace, 1774,
+p. 366&ndash;367), a proof was published later (Laplace, 1814) as part of
+a mathematical system of inductive reasoning based on probability.
+Laplace used this method to approximate posterior moments.
+</p>
+<p>Since its introduction, the Laplace Approximation has been applied
+successfully in many disciplines. In the 1980s, the Laplace
+Approximation experienced renewed interest, especially in statistics,
+and some improvements in its implementation were introduced (Tierney
+et al., 1986; Tierney et al., 1989). Only since the 1980s has the
+Laplace Approximation been seriously considered by statisticians in
+practical applications.
+</p>
+<p>There are many variations of Laplace Approximation, with an effort
+toward replacing Markov chain Monte Carlo (MCMC) algorithms as the
+dominant form of numerical approximation in Bayesian inference. The
+run-time of Laplace Approximation is a little longer than Maximum
+Likelihood Estimation (MLE), and much shorter than MCMC (Azevedo and
+Shachter, 1994).
+</p>
+<p>The speed of Laplace Approximation depends on the optimization
+algorithm selected, and typically involves many evaluations of the
+objective function per iteration (where the AM MCMC algorithm
+evaluates once per iteration), making most of the MCMC algorithms
+faster per iteration. The attractiveness of Laplace Approximation is
+that it typically improves the objective function better than MCMC
+when the parameters are in low-probability regions (in which MCMC
+algorithms may suffer unreasonably low acceptance rates) until an
+adaptive MCMC has &ldquo;learned&rdquo; how to move better. Laplace
+Approximation is also typically faster because it is seeking
+point-estimates, rather than attempting to represent the target
+distribution with enough simulation draws. Laplace Approximation
+extends MLE, but shares similar limitations, such as its asymptotic
+nature with respect to sample size. Bernardo and Smith (2000) note
+that Laplace Approximation is an attractive numerical approximation
+algorithm, and will continue to develop.
+</p>
+<p><code>LaplaceApproximation</code> seeks a global maximum of the logarithm of
+the unnormalized joint posterior density. The approach differs by
+<code>Method</code>. The <code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code> function uses the
+<code>LaplaceApproximation</code> algorithm to optimize initial values,
+estimate covariance, and save time for the user.
+</p>
+<p>Most optimization algorithms assume that the logarithm of the
+unnormalized joint posterior density is defined and differentiable. An
+approximate gradient is taken for each initial value as the difference
+in the logarithm of the unnormalized joint posterior density due to a
+slight increase versus decrease in the parameter.
+</p>
+<p>When <code>Method="AGA"</code>, at 10 evenly-space times,
+<code>LaplaceApproximation</code> attempts several step sizes, which are
+also called rate parameters in other literature, and selects the best
+step size from a set of 10 fixed options. Thereafter, each iteration
+in which an improvement does not occur, the step size shrinks, being
+multiplied by 0.999.
+</p>
+<p>Gradient ascent is criticized for sometimes being relatively slow when
+close to the maximum, and its asymptotic rate of convergence is
+inferior to other methods. However, compared to other popular
+optimization algorithms such as Newton-Raphson, an advantage of the
+gradient ascent is that it works in infinite dimensions, requiring
+only sufficient computer memory. Although Newton-Raphson converges in
+fewer iterations, calculating the inverse of the negative Hessian
+matrix of second-derivatives is more computationally expensive and
+subject to singularities. Therefore, gradient ascent takes longer to
+converge, but is more generalizable.
+</p>
+<p>When <code>Method="LBFGS"</code>, the limited-memory BFGS
+(Broyden-Fletcher-Goldfarb-Shanno) algorithm is called in
+<code>optim</code>, once per iteration.
+</p>
+<p>When <code>Method="Rprop"</code>, the approximate gradient is taken for each
+parameter in each iteration, and its sign is compared to the
+approximate gradient in the previous iteration. A weight element in a
+weight vector is associated with each approximate gradient. A weight
+element is multiplied by 1.2 when the sign does not change, or by 0.5
+if the sign changes. The weight vector is the step size, and is
+constrained to the interval [0.001, 50], and initial weights are
+0.0125. This is the resilient backpropagation algorithm, which is
+often denoted as the &ldquo;Rprop-&rdquo; algorithm of Riedmiller (1994).
+</p>
+<p>After <code>LaplaceApproximation</code> finishes, due either to early
+convergence or completing the number of specified iterations, it
+approximates the Hessian matrix of second derivatives, and attempts to
+calculate the covariance matrix by taking the inverse of the negative
+of this matrix. If successful, then this covariance matrix may be
+passed to <code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code> or <code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code>, and the
+diagonal of this matrix is the variance of the parameters. If
+unsuccessful, then a scaled identity matrix is returned, and each
+parameter's variance will be 1.
+</p>
+
+
+<h3>Value</h3>
+
+
+<p><code>LaplaceApproximation</code> returns an object of class <code>laplace</code>
+that is a list with the following components:
+</p>
+<table summary="R valueblock">
+<tr valign="top"><td><code>Call</code></td>
+<td>
+<p>This is the matched call of <code>LaplaceApproximation</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>Converged</code></td>
+<td>
+<p>This is a logical indicator of whether or not
+<code>LaplaceApproximation</code> converged within the specified
+<code>Iterations</code> according to the supplied <code>Stop.Tolerance</code>
+criterion. Convergence does not indicate that the global maximum has
+been found, but only that the tolerance was less than or equal to
+the <code>Stop.Tolerance</code> criterion.</p>
+</td></tr>
+<tr valign="top"><td><code>Covar</code></td>
+<td>
+<p>This covariance matrix is the negative inverse of an
+approximate Hessian matrix. If an error is encountered in attempting
+to solve the matrix inversion, then an identity matrix is
+returned. The <code>Covar</code> matrix may be scaled and input into the
+<code>Covar</code> argument of the <code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code> or
+<code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code> function for further MCMC estimation, or the
+diagonal of this matrix may be used to represent the posterior
+variance of the parameters, provided the algorithm converged and
+matrix inversion was successful. To scale this matrix for use with
+Laplace's Demon or PMC, multiply it by <i>2.38^2/d</i>, where <i>d</i>
+is the number of initial values.</p>
+</td></tr>
+<tr valign="top"><td><code>Deviance</code></td>
+<td>
+<p>This is a vector of the iterative history of the
+deviance in the <code>LaplaceApproximation</code> function, as it sought
+convergence.</p>
+</td></tr>
+<tr valign="top"><td><code>History</code></td>
+<td>
+<p>This is a matrix of the iterative history of the
+parameters in the <code>LaplaceApproximation</code> function, as it sought
+convergence.</p>
+</td></tr>
+<tr valign="top"><td><code>Initial.Values</code></td>
+<td>
+<p>This is the vector of initial values that was
+originally given to <code>LaplaceApproximation</code> in the <code>parm</code>
+argument.</p>
+</td></tr>
+<tr valign="top"><td><code>LML</code></td>
+<td>
+<p>This is an approximation of the logarithm of the marginal
+likelihood of the data (see the <code><a href="../../LaplacesDemon/html/LML.html">LML</a></code> function for more
+information). When the model has converged and <code>sir=TRUE</code>, the
+NSIS method is used. When the model has converged and
+<code>sir=FALSE</code>, the LME2 (one of the Laplace-Metropolis Estimator
+functions in Laplace's Demon) method is used, which is the
+logarithmic form of equation 4 in Lewis and Raftery (1997). As a
+rough estimate of Kass and Raftery (1995), the LME-based LML is
+worrisome when the sample size of the data is less than five times
+the number of parameters, and <code>LML</code> should be adequate in most
+problems when the sample size of the data exceeds twenty times the
+number of parameters (p. 778). The LME is inappropriate with
+hierarchical models. However <code>LML</code> is estimated, it is useful
+for comparing multiple models with the <code>BayesFactor</code> function.</p>
+</td></tr>
+<tr valign="top"><td><code>LP.Final</code></td>
+<td>
+<p>This reports the final scalar value for the logarithm
+of the unnormalized joint posterior density.</p>
+</td></tr>
+<tr valign="top"><td><code>LP.Initial</code></td>
+<td>
+<p>This reports the initial scalar value for the
+logarithm of the unnormalized joint posterior density.</p>
+</td></tr>
+<tr valign="top"><td><code>Minutes</code></td>
+<td>
+<p>This is the number of minutes that
+<code>LaplaceApproximation</code> was running, and this includes the
+initial checks as well as drawing posterior samples and creating
+summaries.</p>
+</td></tr>
+<tr valign="top"><td><code>Monitor</code></td>
+<td>
+<p> When <code>sir=TRUE</code>, a number of independent
+posterior samples equal to <code>Samples</code> is taken, and the draws
+are stored here as a matrix. The rows of the matrix are the samples,
+and the columns are the monitored variables.</p>
+</td></tr>
+<tr valign="top"><td><code>Posterior</code></td>
+<td>
+<p>When <code>sir=TRUE</code>, a number of independent
+posterior samples equal to <code>Samples</code> is taken, and the draws
+are stored here as a matrix. The rows of the matrix are the samples,
+and the columns are the parameters.</p>
+</td></tr>
+<tr valign="top"><td><code>Step.Size.Final</code></td>
+<td>
+<p>This is the final, scalar <code>Step.Size</code>
+value at the end of the <code>LaplaceApproximation</code> algorithm.</p>
+</td></tr>
+<tr valign="top"><td><code>Step.Size.Initial</code></td>
+<td>
+<p>This is the initial, scalar <code>Step.Size</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>Summary</code></td>
+<td>
+<p>This is a summary matrix. Rows are parameters. The
+following columns are included: Mode, SD (Standard Deviation), LB
+(Lower Bound), and UB (Upper Bound). The bounds constitute a 95% probability
+interval.</p>
+</td></tr>
+<tr valign="top"><td><code>Tolerance.Final</code></td>
+<td>
+<p>This is the last <code>Tolerance</code> of the
+<code>LaplaceApproxiation</code> algorithm. It is calculated as the square
+root of the sum of the squared differences between a new and current
+vector of parameters.</p>
+</td></tr>
+<tr valign="top"><td><code>Tolerance.Stop</code></td>
+<td>
+<p>This is the <code>Stop.Tolerance</code> criterion.</p>
+</td></tr>
+</table>
+
+
+<h3>Author(s)</h3>
+
+<p>Byron Hall <a href="mailto:statisticat@gmail.com">statisticat@gmail.com</a></p>
+
+
+<h3>References</h3>
+
+
+<p>Azevedo-Filho, A. and Shachter, R. (1994). &quot;Laplace's Method
+Approximations for Probabilistic Inference in Belief Networks with
+Continuous Variables&quot;. In &quot;Uncertainty in Artificial Intelligence&quot;,
+Mantaras, R. and Poole, D., Morgan Kauffman, San Francisco, CA,
+p. 28&ndash;36.
+</p>
+<p>Bernardo, J.M. and Smith, A.F.M. (2000). &quot;Bayesian Theory&quot;. John
+Wiley \&amp; Sons: West Sussex, England.
+</p>
+<p>Hall, B. (2012). &quot;Laplace's Demon&quot;, STATISTICAT, LLC.
+URL=<a href="http://www.statisticat.com/laplacesdemon.html">http://www.statisticat.com/laplacesdemon.html</a>
+</p>
+<p>Kass, R.E. and Raftery, A.E. (1995). &quot;Bayes Factors&quot;. Journal of the
+American Statistical Association, 90(430), p. 773&ndash;795.
+</p>
+<p>Laplace, P. (1774). &quot;Memoire sur la Probabilite des Causes par les
+Evenements.&quot; l'Academie Royale des Sciences, 6, 621&ndash;656. English
+translation by S.M. Stigler in 1986 as &quot;Memoir on the Probability
+of the Causes of Events&quot; in Statistical Science, 1(3), 359&ndash;378.
+</p>
+<p>Laplace, P. (1814). &quot;Essai Philosophique sur les Probabilites.&quot;
+English translation in Truscott, F.W. and Emory, F.L. (2007) from
+(1902) as &quot;A Philosophical Essay on Probabilities&quot;. ISBN
+1602063281, translated from the French 6th ed. (1840).
+</p>
+<p>Lewis, S.M. and Raftery, A.E. (1997). &quot;Estimating Bayes Factors via
+Posterior Simulation with the Laplace-Metropolis
+Estimator&quot;. Journal of the American Statistical Association, 92,
+p. 648&ndash;655.
+</p>
+<p>Riedmiller, M. (1994). &quot;Advanced Supervised Learning in Multi-Layer
+Perceptrons - From Backpropagation to Adaptive Learning
+Algorithms&quot;. Computer Standards and Interfaces, 16, p. 265&ndash;278.
+</p>
+<p>Tierney, L. and Kadane, J.B. (1986). &quot;Accurate Approximations for
+Posterior Moments and Marginal Densities&quot;. Journal of the American
+Statistical Association, 81(393), p. 82&ndash;86.
+</p>
+<p>Tierney, L., Kass. R., and Kadane, J.B. (1989). &quot;Fully Exponential
+Laplace Approximations to Expectations and Variances of Nonpositive
+Functions&quot;. Journal of the American Statistical Association,
+84(407), p. 710&ndash;716.
+</p>
+
+
+<h3>See Also</h3>
+
+
+<p><code><a href="../../LaplacesDemon/html/BayesFactor.html">BayesFactor</a></code>,
+<code><a href="../../LaplacesDemon/html/LaplacesDemon.html">LaplacesDemon</a></code>,
+<code><a href="../../LaplacesDemon/html/GIV.html">GIV</a></code>,
+<code><a href="../../LaplacesDemon/html/LML.html">LML</a></code>,
+<code><a href="../../LaplacesDemon/html/optim.html">optim</a></code>,
+<code><a href="../../LaplacesDemon/html/PMC.html">PMC</a></code>, and
+<code><a href="../../LaplacesDemon/html/SIR.html">SIR</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# The accompanying Examples vignette is a compendium of examples.
+####################  Load the LaplacesDemon Library  #####################
+library(LaplacesDemon)
+
+##############################  Demon Data  ###############################
+data(demonsnacks)
+y &lt;- log(demonsnacks$Calories)
+X &lt;- cbind(1, as.matrix(demonsnacks[,c(7,8,10)]))
+J &lt;- ncol(X)
+for (j in 2:J) {X[,j] &lt;- CenterScale(X[,j])}
+mon.names &lt;- c("sigma","mu[1]")
+parm.names &lt;- as.parm.names(list(beta=rep(0,J), log.sigma=0))
+PGF &lt;- function(Data) return(c(rnormv(Data$J,0,1000),
+     log(rhalfcauchy(1,25))))
+MyData &lt;- list(J=J, PGF=PGF, X=X, mon.names=mon.names,
+     parm.names=parm.names, y=y)
+
+##########################  Model Specification  ##########################
+Model &lt;- function(parm, Data)
+     {
+     ### Parameters
+     beta &lt;- parm[1:Data$J]
+     sigma &lt;- exp(parm[Data$J+1])
+     ### Log of Prior Densities
+     beta.prior &lt;- sum(dnormv(beta, 0, 1000, log=TRUE))
+     sigma.prior &lt;- dhalfcauchy(sigma, 25, log=TRUE)
+     ### Log-Likelihood
+     mu &lt;- tcrossprod(Data$X, t(beta))
+     LL &lt;- sum(dnorm(Data$y, mu, sigma, log=TRUE))
+     ### Log-Posterior
+     LP &lt;- LL + beta.prior + sigma.prior
+     Modelout &lt;- list(LP=LP, Dev=-2*LL, Monitor=c(sigma,mu[1]),
+          yhat=rnorm(length(mu), mu, sigma), parm=parm)
+     return(Modelout)
+     }
+
+############################  Initial Values  #############################
+#Initial.Values &lt;- GIV(Model, MyData, PGF=TRUE)
+Initial.Values &lt;- rep(0,J+1)
+
+Fit &lt;- LaplaceApproximation(Model, Initial.Values, Data=MyData,
+     Iterations=10000, Method="AGA")
+Fit
+print(Fit)
+PosteriorChecks(Fit)
+caterpillar.plot(Fit, Parms="beta")
+#plot(Fit, MyData, PDF=FALSE)
+Pred &lt;- predict(Fit, Model, MyData)
+summary(Pred, Discrep="Chi-Square")
+plot(Pred, Style="Covariates", Data=MyData)
+plot(Pred, Style="Density", Rows=1:9)
+plot(Pred, Style="Fitted")
+plot(Pred, Style="Jarque-Bera")
+plot(Pred, Style="Predictive Quantiles")
+plot(Pred, Style="Residual Density")
+plot(Pred, Style="Residuals")
+Levene.Test(Pred)
+Importance(Fit, Model, MyData, Discrep="Chi-Square")
+#Fit$Covar is scaled (2.38^2/d) and submitted to LaplacesDemon as Covar.
+#Fit$Summary[,1] is submitted to LaplacesDemon as Initial.Values.
+#End
+</pre>
+
+<hr><div align="center">[Package <em>LaplacesDemon</em> version 12.08.06 <a href="00Index.html">Index</a>]</div>
+</body></html>
