@@ -9,7 +9,7 @@ library('mvtnorm')
 library('magrittr')
 library('bayesplot')
 
-filename <- 'test8b_plusconstant'
+filename <- 'test12'
 
 mypurpleblue <- '#4477AA'
 myblue <- '#66CCEE'
@@ -27,10 +27,14 @@ densplot <- function (x,adjust=1,...) { density(x,adjust) %>% plot(.,...)}
 set.seed(666)
 
 ## parameters to generate normal training data
-d <- 2
-mud <- c(1,2)
-sigmad <- matrix(c(3,2,2,5), 2)
-truevalues <- c(mud,log(diag(sigmad)),sigmad[1,2]/sqrt(prod(diag(sigmad))))
+d <- 3
+rstart <- rnormwishart(1,rep(0,d),d+2,diag(d),d+2)
+mud <- signif(rstart$mu,2)
+sigmad <- signif(rstart$Omega,2)
+truevalues <- c(mud,log(diag(sigmad)),logit((solve(diag(sqrt(diag(sigmad)))) %*% sigmad %*% solve(diag(sqrt(diag(sigmad))))+1)/2))
+dpos <- choose(1:d +1, 2) # (1:d)*((1:d)+1)/2  position of diagonal elements
+nr <- d*(d-1)/2 # num. correlations
+np <- 2*d + nr # num. parameters
 
 ## training data with means and scatter matrix
 nt <- 10
@@ -43,14 +47,6 @@ n0 <- 4
 mean0 <- 0
 sigma0 <- 10000
 sigmav <- 10
-scatterm0 <- diag(c(1,1))
-
-## combination of training data and reference parameters
-
-nt0 <- nt + n0
-meant0 <- (nt*meant + n0*mean0)/nt0
-scattermt0 <- (nt*scattermt + n0*scatterm0)/nt0 +
-    nt*n0*((meant-mean0) %*% t(meant-mean0))/nt0^2
 
 ## extra datum
 datanew <- signif(rmvnorm(1,mud,sigmad),2)
@@ -59,46 +55,62 @@ datanew <- signif(rmvnorm(1,mud,sigmad),2)
 
 ## function to generate initial values (don't know how it works)
 PGF <- function(data){
-    mu <- rnorm(2,mean0,sigma0)
-    logvar <- rnorm(2,0,sigmav)
-    rho <- runif(1,-1,1)
-    return(c(mu,logvar,rho))
+    mu <- rnorm(d,mean0,sigma0)
+    lrho <- logit((runif(nr,-1,1)+1)/2)
+    lvar <- rnorm(d,0,sigmav)
+    return(c(mu,lvar,lrho))
 }
 
+## parameters
+parm.names <- as.parm.names(list(mu=rep(0,d), lvar=rep(0,d), lrho=matrix(0,d,d)),uppertri=c(0,0,1))
+parm.names <- parm.names[-(dpos+2*d)]
+
+pos.mu <- grep("mu",parm.names)
+pos.lvar <- grep("lvar",parm.names)
+pos.lrho <- grep("lrho",parm.names)
+
+
 ## model data - barely used
-parm.lnames=c('mu[1]','mu[2]','logvar[1]','logvar[2]','rho')
-mydata <- list(data=datat, predict=datanew, PGF=PGF,
-               mon.names=c('P(d_new)','d_new[1]','d_new[2]'),
-               parm.names=c('mu[1]','mu[2]','logvar[1]','logvar[2]','rho'),
+mydata <- list(data=datat, predict=c(datanew), PGF=PGF,
+               mon.names=c('P(d_new)',as.parm.names(list(d_new=rep(0,d)))),
+               pos.mu=pos.mu, pos.lvar=pos.lvar,pos.lrho=pos.lrho,
+               parm.names=parm.names,
                N=nt, y=meant)
 
 
+
 ## model
+Initial.Values <- c(rep(0,d),rep(0,d),rep(0,nr))
 hyperprior0 <- function(parm,data){
-    mu <- parm[1:2]
-    ## ensure that correlation is between -1 and 1
-    rho <- interval(parm[5],-1,1)
-    parm[5] <- rho
     ## prior for mean is normal
+    mu <- parm[1:d]
     mu.prior <- sum(dnorm(mu,mean0,sigma0, log=T))
-    ## prior for variances is Jeffreys = uniform in log
-    logvar.prior <- sum(dnorm(parm[3:4],0,sigmav,log=T))
-    ## prior for corr. is uniform
-    rho.prior <- dunif(rho,-1,1,log=T)+100
-    ## data likelihood
-    var <- exp(parm[3:4])
-    cov <- rho*sqrt(prod(var))
-    varm <- matrix(c(var[1],cov,cov,var[2]),2)
-    LL <- sum(dmvnorm(data$data, mu, varm, log=T))
-    LP <- LL + mu.prior + logvar.prior + rho.prior
+    ## prior for variances is 1/var = uniform (broad normal) for log(var)
+    lvar <- parm[(d+1):(2*d)]
+    lvar.prior <- sum(dnorm(lvar,0,sigmav,log=T))
+    ## prior for corrs is uniform = logistic for 2*logit(corrs)+1
+    lrho <- parm[(2*d+1):np]
+    lrho.prior <- sum(dlogis(lrho,log=T))
+    ## construct covariance matrix for data log-likelihood
+    rhov <- 2*invlogit(lrho) - 1
+    rho <- matrix(1,d,d)
+    rho[lower.tri(rho)] <- rhov
+    rho[upper.tri(rho)] <- rhov
+    stds <- diag(sqrt(exp(lvar)),d,d)
+    covm <- as.positive.definite(stds %*% rho %*% stds)
+#    print(sum(c(covm-(stds %*% rho %*% stds))^2))
+    LL <- sum(dmvnorm(data$data, mu, covm, log=T))
+    ## log-posterior
+    LP <- LL + mu.prior + lvar.prior + lrho.prior
     return <- list(LP=LP, Dev=-2*LL,
                    ## sample also: p(d=datanew|mu,sigma), and p(d|mu,sigma)
-                   Monitor=c(dmvnorm(data$predict,mean=mu,sigma=varm),rmvnorm(1,mean=mu,sigma=varm)),
+                   Monitor=c(dmvnorm(data$predict,mean=mu,sigma=covm),rmvnorm(1,mean=mu,sigma=covm)),
                   yhat=1,parm=parm)
 }
 
+
 ## Monte Carlo sampling
-Initial.Values <- c(0,0,0,0,0)
+Initial.Values <- c(rep(0,d),rep(0,d),rep(0,nr))
 Sampleinitial <- LaplacesDemon(hyperprior0, mydata, Initial.Values,
                         Covar=NULL,
                         Thinning=2,
@@ -117,9 +129,15 @@ Sample0 <- LaplacesDemon(hyperprior0, mydata, as.initial.values(Sampleinitial),
 
 ### plots:
 
+
+## posterior for the parameters
+png(paste0('posterior_parameters_',filename,'.png'))
+mcmc_pairs(Sample0$Posterior2)
+dev.off()
+
 ## predictive distribution as scatter + marginals
 png(paste0('predictive_distr_grid_',filename,'.png'))
-mcmc_pairs(Sample0$Monitor[,2:3])
+mcmc_pairs(Sample0$Monitor[,-1])
 dev.off()
 
 ## predictive distribution as density
@@ -139,7 +157,7 @@ dev.off()
 png(paste0('prob_datanew_',filename,'.png'))
 pnew.mean <- mean(Sample0$Monitor[,1])
 densplot(Sample0$Monitor[,1],
-    adjust=0.0005,
+    adjust=0.0001,
     main='predictive probability for d_new + uncertainty',
     xlab=paste0('P(d_new = (',signif(datanew[1],2),',',signif(datanew[2],2),') | data_training) = ',signif(pnew.mean,2)),
     ylab='p(P)')
@@ -147,10 +165,6 @@ abline(v=pnew.mean,col=myred)
 dev.off()
 
 
-## posterior for the parameters
-png(paste0('posterior_parameters_',filename,'.png'))
-mcmc_pairs(Sample0$Posterior2)
-dev.off()
 
 save.image(file=paste0(filename,'.RData'))
 
@@ -356,3 +370,67 @@ stop()
 ## magplot(Fit$Posterior1,type='l',col=hsv(alpha=0.3),xlab='mu',ylab='sigma')
 ## dev.off()
 
+
+system.time(
+    for(i in 1:5e6){
+        cho <- totl
+        cho[dpos] <- exp(cho[dpos])
+        matr <- matrix(0,d,d)
+        matr[upper.tri(matr,diag=T)] <- cho
+    }
+)
+
+totl <- 1:10
+totd <- totl[dpos]
+toto <- totl[-dpos]
+
+system.time(
+    for(i in 1:5e6){
+        matr <- diag(exp(totl[dpos]))
+        matr[upper.tri(matr)] <- totl[-dpos]
+    }
+) #faster
+
+
+
+
+
+crv <- rlogis(6)
+rv <- 2*invlogit(crv)-1
+
+
+prior.lrho <- sum(dlogis(crv,log=T))
+rho <- diag(d)
+rho[lower.tri(rho)] <- rv
+
+rho <- as.symmetric.matrix(rho)
+
+system.time(for(i in 1:1e5){
+                test <- 1:10
+                rho <- as.symmetric.matrix(1:10)
+            })
+
+system.time(for(i in 1:1e5){
+rho <- diag(d)
+rho[lower.tri(rho)] <- rv
+rho[upper.tri(rho)] <- rv
+            })
+
+
+system.time(for(i in 1:1e5){
+rho <- rep(1,10)
+rho[c(2,3,6,4,7,9)] <- rv
+rho <- as.symmetric.matrix(rho)
+            })
+
+system.time(for(i in 1:1e5){
+rho <- diag(d)
+rho[lower.tri(rho)] <- rv
+rho[upper.tri(rho)] <- rv
+            })
+
+rho[lower.tri(rho),upper.tri(rho)] <- rv
+
+system.time(for(i in 1:1e3){tsum <- sum(dnorm(log(lvtest),0,10,log=T))})
+
+system.time(for(i in 1:1e3){tsum <- sum(dlnorm(lvtest,0,10,log=T))})

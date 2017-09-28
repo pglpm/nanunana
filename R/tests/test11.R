@@ -9,7 +9,7 @@ library('mvtnorm')
 library('magrittr')
 library('bayesplot')
 
-filename <- 'test8b_plusconstant'
+filename <- 'test11b'
 
 mypurpleblue <- '#4477AA'
 myblue <- '#66CCEE'
@@ -31,6 +31,9 @@ d <- 2
 mud <- c(1,2)
 sigmad <- matrix(c(3,2,2,5), 2)
 truevalues <- c(mud,log(diag(sigmad)),sigmad[1,2]/sqrt(prod(diag(sigmad))))
+dpos <- choose(1:d +1, 2) # (1:d)*((1:d)+1)/2  position of diagonal elements
+nr <- d*(d-1)/2 # num. correlations
+np <- 2*d + nr # num. parameters
 
 ## training data with means and scatter matrix
 nt <- 10
@@ -45,13 +48,6 @@ sigma0 <- 10000
 sigmav <- 10
 scatterm0 <- diag(c(1,1))
 
-## combination of training data and reference parameters
-
-nt0 <- nt + n0
-meant0 <- (nt*meant + n0*mean0)/nt0
-scattermt0 <- (nt*scattermt + n0*scatterm0)/nt0 +
-    nt*n0*((meant-mean0) %*% t(meant-mean0))/nt0^2
-
 ## extra datum
 datanew <- signif(rmvnorm(1,mud,sigmad),2)
 
@@ -59,46 +55,59 @@ datanew <- signif(rmvnorm(1,mud,sigmad),2)
 
 ## function to generate initial values (don't know how it works)
 PGF <- function(data){
-    mu <- rnorm(2,mean0,sigma0)
-    logvar <- rnorm(2,0,sigmav)
-    rho <- runif(1,-1,1)
-    return(c(mu,logvar,rho))
+    mu <- rnorm(d,mean0,sigma0)
+    rho <- as.symmetric.matrix(runif(nr+d,-1,1))
+    diag(rho) <- 1
+    variances <- exp(rnorm(d,0,sigmav))
+    var <- diag(sqrt(diag(variances))) %*% rho %*% diag(sqrt(diag(variances)))
+    var <- var[upper.tri(var, diag=T)]
+    return(c(mu,var))
 }
 
+## parameters
+parm.names=as.parm.names(list(mu=rep(0,d), var=diag(d)),uppertri=c(0,1))
+pos.mu <- grep("mu",parm.names)
+pos.var <- grep("var",parm.names)
+
+
 ## model data - barely used
-parm.lnames=c('mu[1]','mu[2]','logvar[1]','logvar[2]','rho')
 mydata <- list(data=datat, predict=datanew, PGF=PGF,
                mon.names=c('P(d_new)','d_new[1]','d_new[2]'),
-               parm.names=c('mu[1]','mu[2]','logvar[1]','logvar[2]','rho'),
+               pos.mu=pos.mu, pos.var=pos.var,
+               parm.names=parm.names,
                N=nt, y=meant)
 
 
 ## model
 hyperprior0 <- function(parm,data){
-    mu <- parm[1:2]
-    ## ensure that correlation is between -1 and 1
-    rho <- interval(parm[5],-1,1)
-    parm[5] <- rho
+    mu <- parm[1:d]
+    var <- as.parm.matrix(var,d,parm,## data)
+    ## if(!all(var[upper.tri(var,diag=T)] == parm[(d+1):np])){
+    ##     print('******************************************')
+    ##     print(parm[(d+1):np])
+    ##     print(var[upper.tri(var,diag=T)])
+    ##     print(LDEnv)
+    ##     print(LaplacesDemonMatrix)
+    ## }
+    parm[(d+1):np] <- var[upper.tri(var,diag=T)]
+    rho <- upper.triangle(Cov2Cor(var))
     ## prior for mean is normal
     mu.prior <- sum(dnorm(mu,mean0,sigma0, log=T))
     ## prior for variances is Jeffreys = uniform in log
-    logvar.prior <- sum(dnorm(parm[3:4],0,sigmav,log=T))
+    logvar.prior <- sum(dnorm(log(diag(var)),0,sigmav,log=T))
     ## prior for corr. is uniform
-    rho.prior <- dunif(rho,-1,1,log=T)+100
+    rho.prior <- sum(dunif(rho,-1,1,log=T))
     ## data likelihood
-    var <- exp(parm[3:4])
-    cov <- rho*sqrt(prod(var))
-    varm <- matrix(c(var[1],cov,cov,var[2]),2)
-    LL <- sum(dmvnorm(data$data, mu, varm, log=T))
+    LL <- sum(dmvnorm(data$data, mu, var, log=T))
     LP <- LL + mu.prior + logvar.prior + rho.prior
     return <- list(LP=LP, Dev=-2*LL,
                    ## sample also: p(d=datanew|mu,sigma), and p(d|mu,sigma)
-                   Monitor=c(dmvnorm(data$predict,mean=mu,sigma=varm),rmvnorm(1,mean=mu,sigma=varm)),
+                   Monitor=c(dmvnorm(data$predict,mean=mu,sigma=var),rmvnorm(1,mean=mu,sigma=var)),
                   yhat=1,parm=parm)
 }
 
 ## Monte Carlo sampling
-Initial.Values <- c(0,0,0,0,0)
+Initial.Values <- c(0,0,1,0,1)
 Sampleinitial <- LaplacesDemon(hyperprior0, mydata, Initial.Values,
                         Covar=NULL,
                         Thinning=2,
