@@ -1,4 +1,4 @@
-## test script for normal model with Jeffreys prior for variances and unif. for correlation
+## test script for normal model 
 library('pacman')
 library('magicaxis')
 library('ellipse')
@@ -10,6 +10,7 @@ library('magrittr')
 library('bayesplot')
 
 filename <- 'test12_6D'
+# number of parameters d is below
 
 mypurpleblue <- '#4477AA'
 myblue <- '#66CCEE'
@@ -24,12 +25,13 @@ dev.off()
 ## density-plot function
 densplot <- function (x,adjust=1,...) { density(x,adjust) %>% plot(.,...)}
 
+# seed for random generator
 set.seed(666)
 
 ## parameters to generate normal training data
-d <- 6
+d <- 6 # number of parameters
 rstart <- rnormwishart(1,rep(0,d),d,diag(d),d)
-mud <- signif(c(rstart$mu),2) # mean
+mud <- signif(c(rstart$mu),2) # mean 
 sigmad <- signif(rstart$Omega,2) # cov. matrix
 rhod <- Cov2Cor(sigmad) # corr. matrix
 truevalues <- c(mud,log(diag(sigmad)),logit((rhod[upper.tri(rhod)]+1)/2))
@@ -38,47 +40,46 @@ nr <- d*(d-1)/2 # num. correlations
 np <- 2*d + nr # total num. parameters
 
 ## training data with means and scatter matrix
-nt <- 50
+nt <- 50 # number of traninig data
 datat <- signif(rmvnorm(nt,mud,sigmad),2)
 meant <- colMeans(datat)
 scattermt <- cov(datat)*(nt-1)/nt
 
-## reference-prior parameters (mean and variance matrix)
+## hyperparameters (mean and variance matrix) for hyperprior~~
 mean0 <- 0 # mean for mu
 sigma0 <- 10000 # variance for mu
 sigmav <- 10 # variance for log-variance and logit-correlation
 
-## extra datum
+
+## extra datum to predict from training data
 datanew <- signif(rmvnorm(1,mud,sigmad),2)
-truepnew <- dmvnorm(datanew,mud,sigmad)
-## exact results: no analytic solution exists
+truepnew <- dmvnorm(datanew,mud,sigmad) # exact probability of extra datum
 
 
 ## parameters: mean, log-variances, logit-correlations, all unbounded
 parm.names <- as.parm.names(list(mu=rep(0,d), lvar=rep(0,d), lrho=matrix(0,d,d)),uppertri=c(0,0,1))
 parm.names <- parm.names[-(dpos+2*d)]
-
 pos.mu <- grep("mu",parm.names)
 pos.lvar <- grep("lvar",parm.names)
 pos.lrho <- grep("lrho",parm.names)
 
+
 ## function to generate initial values (don't know how it works)
 PGF <- function(data){
     mu <- rnorm(d,mean0,sigma0)
-    lrho <- logit((runif(nr,-1,1)+1)/2)
     lvar <- rnorm(d,0,sigmav)
+    lrho <- logit((runif(nr,-1,1)+1)/2)
     return(c(mu,lvar,lrho))
 }
 
 
 
-## model data - barely used
+## model data, input to the Monte Carlo algorithm
 mydata <- list(data=datat, predict=c(datanew), PGF=PGF,
                mon.names=c('P(d_new)',as.parm.names(list(d_new=rep(0,d)))),
                pos.mu=pos.mu, pos.lvar=pos.lvar,pos.lrho=pos.lrho,
                parm.names=parm.names,
                N=nt, y=meant)
-
 
 
 ## model
@@ -98,20 +99,24 @@ hyperprior0 <- function(parm,data){
     rho <- matrix(1,d,d)
     rho[lower.tri(rho)] <- rhov
     rho[upper.tri(rho)] <- rhov
-    stds <- diag(sqrt(exp(lvar)),d,d)
+    stds <- diag(sqrt(exp(lvar)),d,d) # diagonal matrix with standard devs
     covm <- as.positive.definite(stds %*% rho %*% stds)
-#    print(sum(c(covm-(stds %*% rho %*% stds))^2))
+#    print(sum(c(covm-(stds %*% rho %*% stds))^2)) # check
+    ## log-likelihood
     LL <- sum(dmvnorm(data$data, mu, covm, log=T))
     ## log-posterior
     LP <- LL + mu.prior + lvar.prior + lrho.prior
     return <- list(LP=LP, Dev=-2*LL,
                    ## sample also: p(d=datanew|mu,sigma), and p(d|mu,sigma)
-                   Monitor=c(dmvnorm(data$predict,mean=mu,sigma=covm),rmvnorm(1,mean=mu,sigma=covm)),
+                   Monitor=c(dmvnorm(data$predict,mean=mu,sigma=covm),
+                             rmvnorm(1,mean=mu,sigma=covm)),
                   yhat=1,parm=parm)
 }
 
 
-## Monte Carlo sampling
+## Monte Carlo sampling:
+
+## First short adaptive sampling
 Initial.Values <- c(rep(0,d),rep(0,d),rep(0,nr))
 sampleinitial <- LaplacesDemon(hyperprior0, mydata, Initial.Values,
                         Covar=NULL,
@@ -121,6 +126,7 @@ sampleinitial <- LaplacesDemon(hyperprior0, mydata, Initial.Values,
                         Algorithm="AFSS", Specs=list(A=1000, B=NULL, m=100, n=0, w=1)
                         )
 
+## Longer sampling
 sample0 <- LaplacesDemon(hyperprior0, mydata, as.initial.values(sampleinitial),
                         Covar=sampleinitial$Covar,
                         Thinning=4,
@@ -129,16 +135,28 @@ sample0 <- LaplacesDemon(hyperprior0, mydata, as.initial.values(sampleinitial),
                         Algorithm="AFSS", Specs=list(A=0, B=NULL, m=100, n=0, w=1)
                         )
 
-### plots:
 
+## Save all data and results
+save.image(file=paste0(filename,'.RData'))
+
+
+### plots:
 
 ## posterior for the parameters
 png(paste0('posterior_parameters_',filename,'.png'))
 mcmc_pairs(sample0$Posterior2)
 dev.off()
+##
+pdf(paste0('posterior_parameters_',filename,'.pdf'))
+mcmc_pairs(sample0$Posterior2)
+dev.off()
 
 ## predictive distribution as scatter + marginals
 png(paste0('predictive_distr_grid_',filename,'.png'))
+mcmc_pairs(sample0$Monitor[,-1])
+dev.off()
+##
+pdf(paste0('predictive_distr_grid_',filename,'.pdf'))
 mcmc_pairs(sample0$Monitor[,-1])
 dev.off()
 
@@ -154,11 +172,33 @@ for(i in 1:length(datat[,1])){
 points(datat[i,1],datat[i,2], col='#BBBBBB',pch=18)
 }
 dev.off()
+##
+pdf(paste0('predictive_distr_dens_',filename,'.pdf'))
+magcon(sample0$Monitor[,2],sample0$Monitor[,3],# xlim=c(-20,20), ylim=c(-40,40),
+       conlevels=c(0.05,0.5,0.95), lty=c(2,1,3),
+       imcol=brewer.pal(n=9,name='Blues'))
+title(xlab=mydata$mon.names[2],ylab=mydata$mon.names[3],main='predictive distribution (Monte Carlo)')
+points(sample0$Summary2[8,'Mean'],sample0$Summary2[9,'Mean'],
+       col='black',pch=4)
+for(i in 1:length(datat[,1])){
+points(datat[i,1],datat[i,2], col='#BBBBBB',pch=18)
+}
+dev.off()
 
 ## probability for datanew + 'uncertainty'
 uncert <- sample0$Monitor[,1]
-png(paste0('prob_datanew_',filename,'.png'))
 pnew.mean <- mean(uncert)
+png(paste0('prob_datanew_',filename,'.png'))
+densplot(uncert,
+    adjust=sd(uncert)/10,
+    main='predictive probability for d_new + uncertainty',
+    xlab=paste0('P(d_new = (',toString(datanew),') | data_training) = ',signif(pnew.mean,2),' (true: ',signif(truepnew,2),')'),
+    ylab='p(P)')
+abline(v=pnew.mean,col=myred)
+abline(v=truepnew,col=myblue)
+dev.off()
+##
+pdf(paste0('prob_datanew_',filename,'.pdf'))
 densplot(uncert,
     adjust=sd(uncert)/10,
     main='predictive probability for d_new + uncertainty',
@@ -168,9 +208,6 @@ abline(v=pnew.mean,col=myred)
 abline(v=truepnew,col=myblue)
 dev.off()
 
-
-
-save.image(file=paste0(filename,'.RData'))
 
 stop()
 
