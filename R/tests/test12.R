@@ -50,7 +50,7 @@ sigmav <- 10 # variance for log-variance and logit-correlation
 
 ## extra datum
 datanew <- signif(rmvnorm(1,mud,sigmad),2)
-
+truepnew <- dmvnorm(datanew,mud,sigmad)
 ## exact results: no analytic solution exists
 
 
@@ -113,7 +113,7 @@ hyperprior0 <- function(parm,data){
 
 ## Monte Carlo sampling
 Initial.Values <- c(rep(0,d),rep(0,d),rep(0,nr))
-Sampleinitial <- LaplacesDemon(hyperprior0, mydata, Initial.Values,
+sampleinitial <- LaplacesDemon(hyperprior0, mydata, Initial.Values,
                         Covar=NULL,
                         Thinning=2,
                         Iterations=2000, Status=1000,
@@ -121,8 +121,8 @@ Sampleinitial <- LaplacesDemon(hyperprior0, mydata, Initial.Values,
                         Algorithm="AFSS", Specs=list(A=1000, B=NULL, m=100, n=0, w=1)
                         )
 
-Sample0 <- LaplacesDemon(hyperprior0, mydata, as.initial.values(Sampleinitial),
-                        Covar=Sampleinitial$Covar,
+sample0 <- LaplacesDemon(hyperprior0, mydata, as.initial.values(sampleinitial),
+                        Covar=sampleinitial$Covar,
                         Thinning=4,
                         Iterations=20000, Status=1000,
 ##                        Algorithm="NUTS", Specs=list(A=1000, delta=0.6, epsilon=1, Lmax=5)
@@ -134,21 +134,21 @@ Sample0 <- LaplacesDemon(hyperprior0, mydata, as.initial.values(Sampleinitial),
 
 ## posterior for the parameters
 png(paste0('posterior_parameters_',filename,'.png'))
-mcmc_pairs(Sample0$Posterior2)
+mcmc_pairs(sample0$Posterior2)
 dev.off()
 
 ## predictive distribution as scatter + marginals
 png(paste0('predictive_distr_grid_',filename,'.png'))
-mcmc_pairs(Sample0$Monitor[,-1])
+mcmc_pairs(sample0$Monitor[,-1])
 dev.off()
 
 ## predictive distribution as density
 png(paste0('predictive_distr_dens_',filename,'.png'))
-magcon(Sample0$Monitor[,2],Sample0$Monitor[,3],# xlim=c(-20,20), ylim=c(-40,40),
+magcon(sample0$Monitor[,2],sample0$Monitor[,3],# xlim=c(-20,20), ylim=c(-40,40),
        conlevels=c(0.05,0.5,0.95), lty=c(2,1,3),
        imcol=brewer.pal(n=9,name='Blues'))
 title(xlab=mydata$mon.names[2],ylab=mydata$mon.names[3],main='predictive distribution (Monte Carlo)')
-points(Sample0$Summary2[8,'Mean'],Sample0$Summary2[9,'Mean'],
+points(sample0$Summary2[8,'Mean'],sample0$Summary2[9,'Mean'],
        col='black',pch=4)
 for(i in 1:length(datat[,1])){
 points(datat[i,1],datat[i,2], col='#BBBBBB',pch=18)
@@ -156,15 +156,16 @@ points(datat[i,1],datat[i,2], col='#BBBBBB',pch=18)
 dev.off()
 
 ## probability for datanew + 'uncertainty'
-uncert <- Sample0$Monitor[,1]
+uncert <- sample0$Monitor[,1]
 png(paste0('prob_datanew_',filename,'.png'))
 pnew.mean <- mean(uncert)
 densplot(uncert,
-    adjust=1/(4*sd(uncert)),
+    adjust=sd(uncert)/10,
     main='predictive probability for d_new + uncertainty',
-    xlab=paste0('P(d_new = (',signif(datanew[1],2),',',signif(datanew[2],2),') | data_training) = ',signif(pnew.mean,2)),
+    xlab=paste0('P(d_new = (',toString(datanew),') | data_training) = ',signif(pnew.mean,2),' (true: ',signif(truepnew,2),')'),
     ylab='p(P)')
 abline(v=pnew.mean,col=myred)
+abline(v=truepnew,col=myblue)
 dev.off()
 
 
@@ -243,7 +244,7 @@ yy <- dnormv(xx,mun,sigmat)
 lines(x=xx,y=yy,col='blue')
 dev.off()
 
-Sample0 <- LaplacesDemon(hyperprior0, mydata0, Initial.Values=c(1), Thinning=2,
+sample0 <- LaplacesDemon(hyperprior0, mydata0, Initial.Values=c(1), Thinning=2,
                      Iterations=100000, Status=10000,
                      Algorithm="AFSS",
                      Specs=list(A=500, B=NULL, m=100, n=0, w=1)
@@ -253,16 +254,16 @@ Sample0 <- LaplacesDemon(hyperprior0, mydata0, Initial.Values=c(1), Thinning=2,
 png('model_probability.png')
 exactp <- sqrt(sigma)/sqrt((2*pi*sigma)^n*(n*sigma0+sigma))*exp(
 -sum(draws^2)/(2*sigma)-mu0^2/(2*sigma0)+(sigma0*n^2*me^2/sigma + sigma*mu0^2/sigma0 + 2*n*me*mu0)/(2*(n*sigma0+sigma)))
-pmodel <- mean(Sample0$Monitor[,1])
-densplot(Sample0$Monitor[,1],
-    adjust=max(Sample0$Monitor[,1])/50,
+pmodel <- mean(sample0$Monitor[,1])
+densplot(sample0$Monitor[,1],
+    adjust=max(sample0$Monitor[,1])/50,
     main='probability of model + uncertainty',
     xlab=paste('P(model | data) = ',pmodel,' (red=est., blue=exact)'))
 abline(v=pmodel,col='red')
 abline(v=exactp,col='blue')
 dev.off()
 
-plot(Sample0,BurnIn=500,mydata0,PDF=TRUE,Parms=NULL)
+plot(sample0,BurnIn=500,mydata0,PDF=TRUE,Parms=NULL)
 
 
 
@@ -272,7 +273,7 @@ stop()
 #### garbage & temp scripts ####
 
 
-tsample <- Sample0
+tsample <- sample0
 for(i in 1:4){
     for(j in (i+1):5){
 png(paste0('testplottrajectory',i,j,'.png'))
@@ -294,7 +295,7 @@ points(tsample$Summary2[i,'Median'],tsample$Summary2[j,'Median'],
 dev.off()
     }}
 
-tsample <- Sample0
+tsample <- sample0
 png(paste0('testplotdensposterior.png'))
 magcon(tsample$Monitor[,2],tsample$Monitor[,3], xlim=c(-20,20), ylim=c(-40,40),
        conlevels=c(0.5,0.68,0.95), lty=c(2,1,3), imcol=brewer.pal(n=9,name='Blues'))
@@ -326,10 +327,10 @@ sum(exp(-(mu0-draws)^2/(2*(sigma+sigma0))))/sqrt(2*pi*(sigma+sigma0))
 
 
 
-len <- length(Sample0$Posterior2)
+len <- length(sample0$Posterior2)
 summ <-0
 for(i in 1:len){
-summ <- summ + prod(len*dnormv(draws,Sample0$Posterior2[i],sigma))
+summ <- summ + prod(len*dnormv(draws,sample0$Posterior2[i],sigma))
 }
 summ/len^length(draws)/len
 
