@@ -142,13 +142,40 @@ save.image(file=paste0(filename,'.RData'))
 
 ### plots:
 
+
+
 ## posterior for the parameters
-png(paste0('posterior_parameters_',filename,'.png'))
+if(np<5){
+png(paste0('posterior_parameterstest_',filename,'.png'))
 mcmc_pairs(sample0$Posterior2)
-dev.off()
+dev.off()}
 ##
+posterior <- sample0$Posterior2
+rlist <- list(rmu=1:d, rvar=(d+1):(2*d), rrho=(2*d+1):np)
 pdf(paste0('posterior_parameters_',filename,'.pdf'))
-mcmc_pairs(sample0$Posterior2)
+for(j in c('rmu','rvar','rrho')){
+    for(i in rlist[[j]]){
+    posterior <- sample0$Posterior2[,i]
+    densplot(posterior,
+    adjust=sd(posterior)/10,
+   #  main='predictive probability for d_new + uncertainty',
+    xlab=parm.names[i], ylab='density')
+    abline(v=sample0$Summary2[i,'Mean'],col=myred)
+    abline(v=truevalues[i],col=myblue)
+}}
+for(j in 1:(np-1)){
+    for(i in (j+1):np){
+        posterior <- sample0$Posterior2[,j]
+        posterior2 <- sample0$Posterior2[,i]
+        magcon(posterior,posterior2,# xlim=c(-20,20), ylim=c(-40,40),
+       conlevels=c(0.05,0.5,0.95), lty=c(2,1,3),
+       imcol=brewer.pal(n=9,name='Blues'))
+        title(xlab=parm.names[j],ylab=parm.names[i])
+points(sample0$Summary2[j,'Mean'],sample0$Summary2[i,'Mean'],
+       col=myred,pch=4)
+points(truevalues[j],truevalues[i],
+       col=mygreen,pch=4)
+    }}
 dev.off()
 
 ## predictive distribution as scatter + marginals
