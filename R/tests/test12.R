@@ -9,7 +9,7 @@ library('mvtnorm')
 library('magrittr')
 library('bayesplot')
 
-filename <- 'test12'
+filename <- 'test12_6D'
 
 mypurpleblue <- '#4477AA'
 myblue <- '#66CCEE'
@@ -27,31 +27,40 @@ densplot <- function (x,adjust=1,...) { density(x,adjust) %>% plot(.,...)}
 set.seed(666)
 
 ## parameters to generate normal training data
-d <- 3
-rstart <- rnormwishart(1,rep(0,d),d+2,diag(d),d+2)
-mud <- signif(rstart$mu,2)
-sigmad <- signif(rstart$Omega,2)
-truevalues <- c(mud,log(diag(sigmad)),logit((solve(diag(sqrt(diag(sigmad)))) %*% sigmad %*% solve(diag(sqrt(diag(sigmad))))+1)/2))
+d <- 6
+rstart <- rnormwishart(1,rep(0,d),d,diag(d),d)
+mud <- signif(c(rstart$mu),2) # mean
+sigmad <- signif(rstart$Omega,2) # cov. matrix
+rhod <- Cov2Cor(sigmad) # corr. matrix
+truevalues <- c(mud,log(diag(sigmad)),logit((rhod[upper.tri(rhod)]+1)/2))
 dpos <- choose(1:d +1, 2) # (1:d)*((1:d)+1)/2  position of diagonal elements
 nr <- d*(d-1)/2 # num. correlations
-np <- 2*d + nr # num. parameters
+np <- 2*d + nr # total num. parameters
 
 ## training data with means and scatter matrix
-nt <- 10
+nt <- 50
 datat <- signif(rmvnorm(nt,mud,sigmad),2)
 meant <- colMeans(datat)
 scattermt <- cov(datat)*(nt-1)/nt
 
 ## reference-prior parameters (mean and variance matrix)
-n0 <- 4
-mean0 <- 0
-sigma0 <- 10000
-sigmav <- 10
+mean0 <- 0 # mean for mu
+sigma0 <- 10000 # variance for mu
+sigmav <- 10 # variance for log-variance and logit-correlation
 
 ## extra datum
 datanew <- signif(rmvnorm(1,mud,sigmad),2)
 
 ## exact results: no analytic solution exists
+
+
+## parameters: mean, log-variances, logit-correlations, all unbounded
+parm.names <- as.parm.names(list(mu=rep(0,d), lvar=rep(0,d), lrho=matrix(0,d,d)),uppertri=c(0,0,1))
+parm.names <- parm.names[-(dpos+2*d)]
+
+pos.mu <- grep("mu",parm.names)
+pos.lvar <- grep("lvar",parm.names)
+pos.lrho <- grep("lrho",parm.names)
 
 ## function to generate initial values (don't know how it works)
 PGF <- function(data){
@@ -61,13 +70,6 @@ PGF <- function(data){
     return(c(mu,lvar,lrho))
 }
 
-## parameters
-parm.names <- as.parm.names(list(mu=rep(0,d), lvar=rep(0,d), lrho=matrix(0,d,d)),uppertri=c(0,0,1))
-parm.names <- parm.names[-(dpos+2*d)]
-
-pos.mu <- grep("mu",parm.names)
-pos.lvar <- grep("lvar",parm.names)
-pos.lrho <- grep("lrho",parm.names)
 
 
 ## model data - barely used
@@ -154,10 +156,11 @@ points(datat[i,1],datat[i,2], col='#BBBBBB',pch=18)
 dev.off()
 
 ## probability for datanew + 'uncertainty'
+uncert <- Sample0$Monitor[,1]
 png(paste0('prob_datanew_',filename,'.png'))
-pnew.mean <- mean(Sample0$Monitor[,1])
-densplot(Sample0$Monitor[,1],
-    adjust=0.0001,
+pnew.mean <- mean(uncert)
+densplot(uncert,
+    adjust=1/(4*sd(uncert)),
     main='predictive probability for d_new + uncertainty',
     xlab=paste0('P(d_new = (',signif(datanew[1],2),',',signif(datanew[2],2),') | data_training) = ',signif(pnew.mean,2)),
     ylab='p(P)')
