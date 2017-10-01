@@ -8,6 +8,7 @@ library('RColorBrewer')
 library('mvtnorm')
 library('magrittr')
 library('bayesplot')
+library('ggplot2')
 
 filename <- 'test12_6D'
 # number of parameters d is below

@@ -8,10 +8,7 @@ library('RColorBrewer')
 library('mvtnorm')
 library('magrittr')
 library('bayesplot')
-
-filename <- 'test13_2D'
-# number of parameters d is below
-
+library('ggplot2')
 mypurpleblue <- '#4477AA'
 myblue <- '#66CCEE'
 mygreen <- '#228833'
@@ -25,35 +22,34 @@ dev.off()
 ## density-plot function
 densplot <- function (x,adjust=1,...) { density(x,adjust) %>% plot(.,...)}
 
-# seed for random generator
+## seed for random generator
 set.seed(666)
 
-## parameters to generate normal training data
-d <- 6 # number of parameters
-rstart <- rnormwishart(1,rep(0,d),d,diag(d),d)
-mud <- signif(c(rstart$mu),2) # mean 
-sigmad <- signif(rstart$Omega,2) # cov. matrix
-rhod <- Cov2Cor(sigmad) # corr. matrix
-truevalues <- c(mud,log(diag(sigmad)),logit((rhod[upper.tri(rhod)]+1)/2))
+## base filename to save results
+filename <- 'test13_2D'
+
+## data & data names
+dnames <- scan('graph_quantities.dat', what="character", sep=",")[1:4]
+datam <- t(read.matrix('data_H_test.dat'))[,1:4]
+colnames(datam) <- dnames
+rownames(datam) <- sprintf("id[%d]",seq(1:dim(datam)[1]))
+## logit of data
+data <- logit(datam)
+d <- dim(data)[2] # num parms
+N <- dim(data)[1] # num inds
 dpos <- choose(1:d +1, 2) # (1:d)*((1:d)+1)/2  position of diagonal elements
 nr <- d*(d-1)/2 # num. correlations
 np <- 2*d + nr # total num. parameters
-
-## training data with means and scatter matrix
-nt <- 50 # number of traninig data
-datat <- signif(rmvnorm(nt,mud,sigmad),2)
-meant <- colMeans(datat)
-scattermt <- cov(datat)*(nt-1)/nt
+## suff statistics: logit-means, -stds, -corrs
+dmean <- colMeans(data)
+dcov <- cov(data)*(N-1)/N
+dstd <- sqrt(diag(dcov))
+dcor <- Cov2Cor(dcov)[upper.tri(dcov,diag=F)]
 
 ## hyperparameters for hyperprior
 mean0 <- 0 # mean for mu
 sigma0 <- 10000 # variance for mu
 sigmav <- 10 # variance for log-variance and logit-correlation
-
-
-## extra datum to predict from training data
-datanew <- signif(rmvnorm(1,mud,sigmad),2)
-truepnew <- dmvnorm(datanew,mud,sigmad) # exact probability of extra datum
 
 
 ## parameters:  means + elements of Cholesky decomposition
