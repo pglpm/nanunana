@@ -19,14 +19,13 @@ mygrey <- '#BBBBBB'
 palette(c(myblue, myred, mygreen, myyellow, myredpurple, mypurpleblue, mygrey, 'black'))
 dev.off()
 
-## density-plot function
-densplot <- function (x,adjust=1,...) { density(x,adjust) %>% plot(.,...)}
+## base filename to save results and title for plots
+filename <- 'testlogit-HW_healthy'
+ptitle <- 'healthy (logit-normal + Huang-Wang)'
 
 ## seed for random generator
 set.seed(666)
 
-## base filename to save results
-filename <- 'test13_nodata'
 
 ## data & data names
 y.names <- scan('graph_quantities.dat', what="character", sep=",")[1:4]
@@ -56,33 +55,34 @@ ynew <- dmean
 meanmu <- 0 # mean for mu
 sigmamu <- 10^2 # variance for mu
 shiftsd <- 6 # shift for sd
-Ahw <- rep(100,d) # scale hyperparam for HuangWand distribution
+Ahw <- rep(1e6,d) # scale hyperparam for HuangWand distribution
 ahw <- rep(1,d) # scale param for HuangWand distribution
 nuhw <- 2 # d.f. for HuangWand; 2 ensures uniform marginals for corrs
 
 ## parameters:  means + elements of Cholesky decomposition
-parm.names <- as.parm.names(list(mu=rep(0,d), U=matrix(0,d,d)), uppertri=c(0,1))
-pos.mu <- grep("mu",parm.names)
-pos.U <- grep("U",parm.names)
-Initial.Values <- c(rep(meanmu,d),rep(0,d+nr))
+parm.names <- as.parm.names(list(mu=rep(0,d), lnU=rep(0,d), U=matrix(0,d,d)), uppertri=c(0,0,1))
+parm.names <- parm.names[-(d2+dpos)]
+
+# parameters we want to see
+tparm.names <- as.parm.names(list(mu=rep(0,d), sigma=rep(0,d), rho=matrix(0,d,d)), uppertri=c(0,0,1))
+tparm.names <- tparm.names[-(d2+dpos)]
 
 ## quantities to be monitored during Monte Carlo: P(d_new), posterior distr
-#mon.names <- y.names
-mon.names <- as.parm.names(list(mu=rep(0,d), s=rep(0,d), r=matrix(0,d,d)), uppertri=c(0,0,1))
-mon.names <- mon.names[-(d2+dpos)]
+mon.names <- c(y.names,'p(d_new)')
 
 ## function to generate initial values (don't know how it works)
 PGF <- function(data){
     mu <- rnorm(d,meanmu,sigmamu)
     U <- rhuangwandc(nu=nuhw,a=ahw,A=Ahw)
-    return(c(mu,diag(U),U[upper.tri(U)]))
+    return(c(mu,log(diag(U)),U[upper.tri(U)]))
 }
+Initial.Values <- c(rep(meanmu,d),rep(0,d),rep(0,nr))
 
 ## model data, input to the Monte Carlo algorithm
 mydata <- list(y=data, PGF=PGF,
-               mon.names=mon.names,
-               pos.mu=pos.mu, pos.U=pos.U,
                parm.names=parm.names,
+               mon.names=mon.names,
+#               pos.mu=pos.mu, pos.sigma=pos.sigma, pos.rho=pos.rho,
                N=N, yhat=ynew)
 
 ## model
@@ -92,24 +92,21 @@ hyperprior0 <- function(parm,data){
     mu.prior <- sum(dnorm(mu,meanmu,sigmamu, log=T))
     ## prior for Cholesky matrix
     U <- diag(exp(parm[d1:d2]))
-    U[upper.tri(U,diag=F)] <- parm[d3:np]
+    U[upper.tri(U)] <- parm[d3:np]
     U.prior <- dhuangwandc(U,nu=nuhw,a=ahw,A=Ahw,log=T) 
     ## construct covariance matrix for data log-likelihood
-    #print(U)
+    #print(U) # debug
     covm <- t(U) %*% U
-    corm <- Cov2Cor(covm)
-    diagc <- diag(exp(diag(covm)-14))
-    #covm <- diagc %*% corm %*% diagc
-    #print(covm)
     ## log-likelihood
-    LL <- 0#sum(dmvnorm(data$y, mu, covm, log=T))
+    LL <- sum(dmvnorm(data$y, mu, covm, log=T))
     ## log-posterior
     LP <- LL + mu.prior + U.prior
     return <- list(LP=LP, Dev=-2*LL,
-                   ## sample also: p(d=datanew|mu,sigma), and p(d|mu,sigma)
-                   #Monitor=c(invlogit(rmvnorm(1,mean=mu,sigma=covm))),
-                   Monitor=c(mu,diag(diagc),corm[upper.tri(corm)]),
-                  yhat=data$yhat,parm=parm)
+                   ## monitor posterior and probability uncertainty for new datum
+                   Monitor=c(invlogit(rmvnorm(1,mu,covm)),
+                             dmvnorm(data$yhat,mu,covm, log=T)),
+                   yhat=1,
+                   parm=parm)
 }
 
 
@@ -118,7 +115,7 @@ hyperprior0 <- function(parm,data){
 ## First short adaptive sampling
 sampleinitial <- LaplacesDemon(hyperprior0, mydata, Initial.Values,
                         Covar=NULL,
-                        Thinning=2,
+                        Thinning=1,
                         Iterations=1000, Status=100,
 ##                        Algorithm="NUTS", Specs=list(A=1000, delta=0.6, epsilon=1, Lmax=5)
                         Algorithm="AFSS", Specs=list(A=500, B=NULL, m=100, n=0, w=1)
@@ -128,7 +125,7 @@ sampleinitial <- LaplacesDemon(hyperprior0, mydata, Initial.Values,
 sample0 <- LaplacesDemon(hyperprior0, mydata, as.initial.values(sampleinitial),
                         Covar=sampleinitial$Covar,
                         Thinning=1,
-                        Iterations=5000, Status=100,
+                        Iterations=2000, Status=100,
 ##                        Algorithm="NUTS", Specs=list(A=1000, delta=0.6, epsilon=1, Lmax=5)
                         Algorithm="AFSS", Specs=list(A=0, B=NULL, m=100, n=0, w=1)
                         )
@@ -137,132 +134,103 @@ sample0 <- LaplacesDemon(hyperprior0, mydata, as.initial.values(sampleinitial),
 ## Save all data and results
 save.image(file=paste0(filename,'.RData'))
 
-sample0$Monitor[,(d+1):(2*d)] <- log(sample0$Monitor[,(d+1):(2*d)])
-
-## predictive distribution
-dm <- length(mon.names)
-pdf(paste0('prior_param_distr_',filename,'.pdf'))
-for(i in 1:dm){
-    posterior <- sample0$Monitor[,i]
-    densplot(posterior, adjust=sd(posterior)/10,
-    xlab=mon.names[i], ylab='density', xlim=c(-2,2))
-    abline(v=mean(posterior),col=myred)
-#    for(j in 1:N){ abline(v=datam[j,i],col=myyellow)}
+## transform hyperparameters in understandable ones: stds, corrs
+samples <- sample0$Posterior1
+nsamples <- dim(samples)[1]
+for(i in 1:nsamples){
+    covm <- diag(exp(samples[i,d1:d2]))
+    covm[upper.tri(covm)] <- samples[i,d3:np]
+    covm <- t(covm) %*% covm
+    samples[i,d1:d2] <- sqrt(diag(covm))
+    samples[i,d3:np] <- Cov2Cor(covm)[upper.tri(covm)]
 }
-for(j in 1:(dm-1)){
-    for(i in (j+1):dm){
-        posterior <- sample0$Monitor[,j]
-        posterior2 <- sample0$Monitor[,i]
-        dat <- data.frame(x=posterior,y=posterior2)
-        print(
-            ggplot() + stat_bin2d(data=dat,aes(x=x,y=y),binwidth=0.2) +
-              scale_fill_gradientn(colours=brewer.pal(n=9,name='Blues')) +
-              labs(x=mon.names[j],y=mon.names[i]) +
-            xlim(-2,2) + ylim(-2,2)
-              )
-    }}
-dev.off()
 
-stop()
 ### plots:
 
-
-
 ## posterior for the parameters
-if(np<0){
-png(paste0('posterior_parameterstest_',filename,'.png'))
-mcmc_pairs(sample0$Posterior1)
-dev.off()}
-##
-pdf(paste0('posterior_parameters_',filename,'.pdf'))
+binningdiv <- 10
+pdf(paste0('parameter_posterior_',filename,'.pdf'))
 for(i in 1:np){
-    posterior <- sample0$Posterior1[,i]
-    densplot(posterior,
-    adjust=sd(posterior)/10,
-   #  main='predictive probability for d_new + uncertainty',
-    xlab=parm.names[i], ylab='density')
-    abline(v=sample0$Summary1[i,'Mean'],col=myred)
+    posterior <- samples[,i]
+    dat <- data.frame(x=posterior)
+    print(
+        ggplot() + geom_histogram(data=dat,aes(x=x,y=..density..),
+                                  binwidth=sd(posterior)/binningdiv) +
+        labs(x=tparm.names[i],title=ptitle) +
+        geom_vline(xintercept=mean(posterior),colour=myred)
+        #+geom_vline(xintercept=median(posterior),colour=mygreen)
+    )
 }
 for(j in 1:(np-1)){
     for(i in (j+1):np){
-        posterior <- sample0$Posterior1[,j]
-        posterior2 <- sample0$Posterior1[,i]
-        magcon(posterior,posterior2,# xlim=c(-20,20), ylim=c(-40,40),
-       conlevels=c(0.05,0.5,0.95), lty=c(2,1,3),
-       imcol=brewer.pal(n=9,name='Blues'))
-        title(xlab=parm.names[j],ylab=parm.names[i])
-        points(sample0$Summary1[j,'Mean'],sample0$Summary1[i,'Mean'],
-       col=myred,pch=4)
+        posterior <- samples[,j]
+        posterior2 <- samples[,i]
+        dat <- data.frame(x=posterior,y=posterior2)
+        print(
+            ggplot() + stat_bin2d(data=dat,aes(x=x,y=y,fill=..density..),
+                                  binwidth=2*c(sd(posterior),
+                                               sd(posterior2))/binningdiv
+                                 #, trans="log10"
+                                  ) +
+            scale_fill_gradientn(colours=brewer.pal(n=9,name='Blues')) +
+            labs(x=tparm.names[j],y=tparm.names[i],title=ptitle) +
+            geom_point(data=data.frame(x=mean(posterior),y=mean(posterior2))
+                      ,aes(x,y),colour=myred,size=4,shape=16)
+        )
     }}
 dev.off()
 
-## predictive distribution
-dm <- length(mon.names)
-pdf(paste0('predictive_distr_',filename,'.pdf'))
-for(i in 1:dm){
+## posterior predictive for the quantities
+binningdiv <- 10
+pdf(paste0('predictive_posterior_',filename,'.pdf'))
+for(i in 1:d){
     posterior <- sample0$Monitor[,i]
-    densplot(posterior,
-    adjust=sd(posterior)/10,
-   #  main='predictive probability for d_new + uncertainty',
-    xlab=parm.names[i], ylab='density')
-    abline(v=sample0$Summary1[i,'Mean'],col=myred)
-#    for(j in 1:N){ abline(v=datam[j,i],col=myyellow)}
+    dat <- data.frame(x=posterior)
+    print(
+        ggplot() + geom_histogram(data=dat,aes(x=x,y=..density..),
+                                  binwidth=1/50) +
+        labs(x=mon.names[i],title=ptitle) +
+        geom_vline(xintercept=mean(posterior),colour=myred)
+        + xlim(0,1)
+        #+geom_vline(xintercept=median(posterior),colour=mygreen)
+    )
 }
-for(j in 1:(dm-1)){
-    for(i in (j+1):dm){
+for(j in 1:(d-1)){
+    for(i in (j+1):d){
         posterior <- sample0$Monitor[,j]
         posterior2 <- sample0$Monitor[,i]
-        magcon(posterior,posterior2,# xlim=c(-20,20), ylim=c(-40,40),
-       conlevels=c(0.05,0.5,0.95), lty=c(2,1,3),
-       imcol=brewer.pal(n=9,name='Blues'))
-        title(xlab=mon.names[j],ylab=mon.names[i])
-        points(sample0$Summary1[np+1+j,'Mean'],sample0$Summary1[np+1+i,'Mean'],
-               col=myred,pch=4)
-#        for(k in 1:N){
-#            points(datam[k,j],datam[k,i],col=myyellow,pch=15)}
+        dat <- data.frame(x=posterior,y=posterior2)
+        datpoints <- data.frame(x=datam[,j],y=datam[,i])
+        print(
+            ggplot() + stat_bin2d(data=dat,aes(x=x,y=y,fill=..density..),
+                                  #binwidth=rep(1/25,2),drop=F
+                                  breaks=seq(0,1,length.out=25) #, trans="log10"
+                                  ) +
+            scale_fill_gradientn(colours=brewer.pal(n=9,name='Blues')) +
+            labs(x=mon.names[j],y=mon.names[i],title=ptitle) +
+             xlim(0,1) + ylim(0,1) +
+            geom_point(data=data.frame(x=mean(posterior),y=mean(posterior2))
+                      ,aes(x,y),colour=myred,size=4,shape=16)
+            + geom_point(data=datpoints,aes(x=x,y=y),
+                         colour=myyellow,size=4,shape=5)
+        )
     }}
 dev.off()
 
-
-
-
-png(paste0('predictive_distr_grid_',filename,'.png'))
-mcmc_pairs(sample0$Monitor[,-1])
-dev.off()
-##
-pdf(paste0('predictive_distr_grid_',filename,'.pdf'))
-mcmc_pairs(sample0$Monitor[,-1])
-dev.off()
-
-## predictive distribution as density
-png(paste0('predictive_distr_dens_',filename,'.png'))
-magcon(sample0$Monitor[,2],sample0$Monitor[,3],# xlim=c(-20,20), ylim=c(-40,40),
-       conlevels=c(0.05,0.5,0.95), lty=c(2,1,3),
-       imcol=brewer.pal(n=9,name='Blues'))
-title(xlab=mydata$mon.names[2],ylab=mydata$mon.names[3],main='predictive distribution (Monte Carlo)')
-points(sample0$Summary1[8,'Mean'],sample0$Summary1[9,'Mean'],
-       col='black',pch=4)
-for(i in 1:length(mydata$y[,1])){
-points(mydata$y[i,1],mydata$y[i,2], col='#BBBBBB',pch=18)
-}
-dev.off()
-##
-pdf(paste0('predictive_distr_dens_',filename,'.pdf'))
-magcon(sample0$Monitor[,2],sample0$Monitor[,3],# xlim=c(-20,20), ylim=c(-40,40),
-       conlevels=c(0.05,0.5,0.95), lty=c(2,1,3),
-       imcol=brewer.pal(n=9,name='Blues'))
-title(xlab=mydata$mon.names[2],ylab=mydata$mon.names[3],main='predictive distribution (Monte Carlo)')
-points(sample0$Summary1[8,'Mean'],sample0$Summary1[9,'Mean'],
-       col='black',pch=4)
-for(i in 1:length(mydata$y[,1])){
-points(mydata$y[i,1],mydata$y[i,2], col='#BBBBBB',pch=18)
-}
+## probability for new datum + its "uncertainty"
+posterior <- sample0$Monitor[-(1:d)]
+pdf(paste0('prob_newdatum_',filename,'.pdf'))
+    dat <- data.frame(x=posterior)
+    print(
+        ggplot() + geom_histogram(data=dat,aes(x=x,y=..density..),
+                                  binwidth=sd(posterior)/binningdiv) +
+        labs(x=paste0('p(d_new) = ',signif(mean(posterior),2)),title=ptitle) +
+        geom_vline(xintercept=mean(posterior),colour=myred)
+        #+geom_vline(xintercept=median(posterior),colour=mygreen)
+    )
 dev.off()
 
-## probability for datanew + 'uncertainty'
-uncert <- sample0$Monitor[,1]
-pnew.mean <- mean(uncert)
-png(paste0('prob_datanew_',filename,'.png'))
+stop()
 densplot(uncert,
     adjust=sd(uncert)/10,
     main='predictive probability for d_new + uncertainty',
