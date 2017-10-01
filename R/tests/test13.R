@@ -29,9 +29,9 @@ set.seed(666)
 filename <- 'test13_2D'
 
 ## data & data names
-dnames <- scan('graph_quantities.dat', what="character", sep=",")[1:4]
+y.names <- scan('graph_quantities.dat', what="character", sep=",")[1:4]
 datam <- t(read.matrix('data_H_test.dat'))[,1:4]
-colnames(datam) <- dnames
+colnames(datam) <- y.names
 rownames(datam) <- sprintf("id[%d]",seq(1:dim(datam)[1]))
 ## logit of data
 data <- logit(datam)
@@ -40,96 +40,94 @@ N <- dim(data)[1] # num inds
 dpos <- choose(1:d +1, 2) # (1:d)*((1:d)+1)/2  position of diagonal elements
 nr <- d*(d-1)/2 # num. correlations
 np <- 2*d + nr # total num. parameters
+d1 <- d+1
+d2 <- 2*d
+d3 <- 2*d+1
 ## suff statistics: logit-means, -stds, -corrs
 dmean <- colMeans(data)
 dcov <- cov(data)*(N-1)/N
 dstd <- sqrt(diag(dcov))
 dcor <- Cov2Cor(dcov)[upper.tri(dcov,diag=F)]
 
-## hyperparameters for hyperprior
-mean0 <- 0 # mean for mu
-sigma0 <- 10000 # variance for mu
-sigmav <- 10 # variance for log-variance and logit-correlation
+## new datum - we take the mean of the data we have just for check
+ynew <- dmean
 
+## hyperparameters for hyperprior
+meanmu <- 0 # mean for mu
+sigmamu <- 10^2 # variance for mu
+shiftsd <- 6 # shift for sd
+Ahw <- rep(100,d) # scale hyperparam for HuangWand distribution
+ahw <- rep(1,d) # scale param for HuangWand distribution
+nuhw <- 2 # d.f. for HuangWand; 2 ensures uniform marginals for corrs
 
 ## parameters:  means + elements of Cholesky decomposition
 parm.names <- as.parm.names(list(mu=rep(0,d), U=matrix(0,d,d)), uppertri=c(0,1))
 pos.mu <- grep("mu",parm.names)
 pos.U <- grep("U",parm.names)
+Initial.Values <- c(rep(meanmu,d),rep(0,d+nr))
 
+## quantities to be monitored during Monte Carlo: P(d_new), posterior distr
+mon.names <- y.names
 
 ## function to generate initial values (don't know how it works)
 PGF <- function(data){
-    mu <- rnorm(d,mean0,sigma0)
-    lvar <- rnorm(d,0,sigmav)
-    lrho <- logit((runif(nr,-1,1)+1)/2)
-    return(c(mu,lvar,lrho))
+    mu <- rnorm(d,meanmu,sigmamu)
+    U <- rhuangwandc(nu=nuhw,a=ahw,A=Ahw)
+    return(c(mu,diag(U),U[upper.tri(U)]))
 }
 
-
-
 ## model data, input to the Monte Carlo algorithm
-mydata <- list(data=datat, predict=c(datanew), PGF=PGF,
-               mon.names=c('P(d_new)',as.parm.names(list(d_new=rep(0,d)))),
+mydata <- list(y=data, PGF=PGF,
+               mon.names=mon.names,
                pos.mu=pos.mu, pos.U=pos.U,
                parm.names=parm.names,
-               N=nt, y=meant)
-
+               N=N, yhat=ynew)
 
 ## model
-Initial.Values <- c(rep(0,d),rep(0,nr))
 hyperprior0 <- function(parm,data){
     ## prior for mean is normal
     mu <- parm[1:d]
-    mu.prior <- sum(dnorm(mu,mean0,sigma0, log=T))
+    mu.prior <- sum(dnorm(mu,meanmu,sigmamu, log=T))
     ## prior for Cholesky matrix
-    lvar <- parm[(d+1):(2*d)]
-    lvar.prior <- sum(dnorm(lvar,0,sigmav,log=T))
+    U <- diag(exp(parm[d1:d2]))
+    U[upper.tri(U,diag=F)] <- parm[d3:np]
+    U.prior <- dhuangwandc(U,nu=nuhw,a=ahw,A=Ahw,log=T) 
     ## prior for corrs is uniform = logistic for 2*logit(corrs)+1
     lrho <- parm[(2*d+1):np]
     lrho.prior <- sum(dlogis(lrho,log=T))
     ## construct covariance matrix for data log-likelihood
-    rhov <- 2*invlogit(lrho) - 1
-    rho <- diag(d)*0.5
-    rho[upper.tri(rho)] <- rhov
-    rho <- rho + t(rho)
-    if(!is.positive.definite(rho)){print('******* rho *******')
-        print(rhov)
-        print(rho)
-        print(eigen(rho)$values)
-    print(rho-as.positive.definite(rho))}
-    stds <- diag(sqrt(exp(lvar)),d,d) # diagonal matrix with standard devs
-    covm <- as.positive.definite(stds %*% rho %*% stds)
-#    print(sum(c(covm-(stds %*% rho %*% stds))^2)) # check
+    #print(U)
+    covm <- t(U) %*% U
+    diagc <- diag(exp(diag(covm)-14))
+    covm <- diagc %*% Cov2Cor(covm) %*% diagc
+    #print(covm)
     ## log-likelihood
-    LL <- sum(dmvnorm(data$data, mu, covm, log=T))
+    LL <- sum(dmvnorm(data$y, mu, covm, log=T))
     ## log-posterior
-    LP <- LL + mu.prior + lvar.prior + lrho.prior
+    LP <- LL + mu.prior + U.prior
     return <- list(LP=LP, Dev=-2*LL,
                    ## sample also: p(d=datanew|mu,sigma), and p(d|mu,sigma)
-                   Monitor=c(dmvnorm(data$predict,mean=mu,sigma=covm),
-                             rmvnorm(1,mean=mu,sigma=covm)),
-                  yhat=1,parm=parm)
+                   Monitor=c(invlogit(rmvnorm(1,mean=mu,sigma=covm))),
+                  yhat=data$yhat,parm=parm)
 }
 
 
 ## Monte Carlo sampling:
 
 ## First short adaptive sampling
-Initial.Values <- c(rep(0,d),rep(0,d),rep(0,nr))
 sampleinitial <- LaplacesDemon(hyperprior0, mydata, Initial.Values,
                         Covar=NULL,
                         Thinning=2,
-                        Iterations=2000, Status=1000,
+                        Iterations=1000, Status=100,
 ##                        Algorithm="NUTS", Specs=list(A=1000, delta=0.6, epsilon=1, Lmax=5)
-                        Algorithm="AFSS", Specs=list(A=1000, B=NULL, m=100, n=0, w=1)
+                        Algorithm="AFSS", Specs=list(A=500, B=NULL, m=100, n=0, w=1)
                         )
 
 ## Longer sampling
 sample0 <- LaplacesDemon(hyperprior0, mydata, as.initial.values(sampleinitial),
                         Covar=sampleinitial$Covar,
-                        Thinning=4,
-                        Iterations=20000, Status=1000,
+                        Thinning=1,
+                        Iterations=1000, Status=100,
 ##                        Algorithm="NUTS", Specs=list(A=1000, delta=0.6, epsilon=1, Lmax=5)
                         Algorithm="AFSS", Specs=list(A=0, B=NULL, m=100, n=0, w=1)
                         )
@@ -144,40 +142,62 @@ save.image(file=paste0(filename,'.RData'))
 
 
 ## posterior for the parameters
-if(np<5){
+if(np<0){
 png(paste0('posterior_parameterstest_',filename,'.png'))
-mcmc_pairs(sample0$Posterior2)
+mcmc_pairs(sample0$Posterior1)
 dev.off()}
 ##
-posterior <- sample0$Posterior2
-rlist <- list(rmu=1:d, rvar=(d+1):(2*d), rrho=(2*d+1):np)
 pdf(paste0('posterior_parameters_',filename,'.pdf'))
-for(j in c('rmu','rvar','rrho')){
-    for(i in rlist[[j]]){
-    posterior <- sample0$Posterior2[,i]
+for(i in 1:np){
+    posterior <- sample0$Posterior1[,i]
     densplot(posterior,
     adjust=sd(posterior)/10,
    #  main='predictive probability for d_new + uncertainty',
     xlab=parm.names[i], ylab='density')
-    abline(v=sample0$Summary2[i,'Mean'],col=myred)
-    abline(v=truevalues[i],col=myblue)
-}}
+    abline(v=sample0$Summary1[i,'Mean'],col=myred)
+}
 for(j in 1:(np-1)){
     for(i in (j+1):np){
-        posterior <- sample0$Posterior2[,j]
-        posterior2 <- sample0$Posterior2[,i]
+        posterior <- sample0$Posterior1[,j]
+        posterior2 <- sample0$Posterior1[,i]
         magcon(posterior,posterior2,# xlim=c(-20,20), ylim=c(-40,40),
        conlevels=c(0.05,0.5,0.95), lty=c(2,1,3),
        imcol=brewer.pal(n=9,name='Blues'))
         title(xlab=parm.names[j],ylab=parm.names[i])
-points(sample0$Summary2[j,'Mean'],sample0$Summary2[i,'Mean'],
+        points(sample0$Summary1[j,'Mean'],sample0$Summary1[i,'Mean'],
        col=myred,pch=4)
-points(truevalues[j],truevalues[i],
-       col=mygreen,pch=4)
     }}
 dev.off()
 
-## predictive distribution as scatter + marginals
+## predictive distribution 
+pdf(paste0('predictive_distr_',filename,'.pdf'))
+for(i in 1:d){
+    posterior <- sample0$Monitor[,i]
+    densplot(posterior,
+    adjust=sd(posterior)/10,
+   #  main='predictive probability for d_new + uncertainty',
+    xlab=parm.names[i], ylab='density')
+    abline(v=sample0$Summary1[i,'Mean'],col=myred)
+    for(j in 1:N){ abline(v=datam[j,i],col=myyellow)}
+}
+for(j in 1:(d-1)){
+    for(i in (j+1):d){
+        posterior <- sample0$Monitor[,j]
+        posterior2 <- sample0$Monitor[,i]
+        magcon(posterior,posterior2,# xlim=c(-20,20), ylim=c(-40,40),
+       conlevels=c(0.05,0.5,0.95), lty=c(2,1,3),
+       imcol=brewer.pal(n=9,name='Blues'))
+        title(xlab=mon.names[j],ylab=mon.names[i])
+        points(sample0$Summary1[np+1+j,'Mean'],sample0$Summary1[np+1+i,'Mean'],
+               col=myred,pch=4)
+        for(k in 1:N){
+            points(datam[k,j],datam[k,i],col=myyellow,pch=15)
+        }
+    }}
+dev.off()
+
+
+
 png(paste0('predictive_distr_grid_',filename,'.png'))
 mcmc_pairs(sample0$Monitor[,-1])
 dev.off()
@@ -192,10 +212,10 @@ magcon(sample0$Monitor[,2],sample0$Monitor[,3],# xlim=c(-20,20), ylim=c(-40,40),
        conlevels=c(0.05,0.5,0.95), lty=c(2,1,3),
        imcol=brewer.pal(n=9,name='Blues'))
 title(xlab=mydata$mon.names[2],ylab=mydata$mon.names[3],main='predictive distribution (Monte Carlo)')
-points(sample0$Summary2[8,'Mean'],sample0$Summary2[9,'Mean'],
+points(sample0$Summary1[8,'Mean'],sample0$Summary1[9,'Mean'],
        col='black',pch=4)
-for(i in 1:length(datat[,1])){
-points(datat[i,1],datat[i,2], col='#BBBBBB',pch=18)
+for(i in 1:length(mydata$y[,1])){
+points(mydata$y[i,1],mydata$y[i,2], col='#BBBBBB',pch=18)
 }
 dev.off()
 ##
@@ -204,10 +224,10 @@ magcon(sample0$Monitor[,2],sample0$Monitor[,3],# xlim=c(-20,20), ylim=c(-40,40),
        conlevels=c(0.05,0.5,0.95), lty=c(2,1,3),
        imcol=brewer.pal(n=9,name='Blues'))
 title(xlab=mydata$mon.names[2],ylab=mydata$mon.names[3],main='predictive distribution (Monte Carlo)')
-points(sample0$Summary2[8,'Mean'],sample0$Summary2[9,'Mean'],
+points(sample0$Summary1[8,'Mean'],sample0$Summary1[9,'Mean'],
        col='black',pch=4)
-for(i in 1:length(datat[,1])){
-points(datat[i,1],datat[i,2], col='#BBBBBB',pch=18)
+for(i in 1:length(mydata$y[,1])){
+points(mydata$y[i,1],mydata$y[i,2], col='#BBBBBB',pch=18)
 }
 dev.off()
 
