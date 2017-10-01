@@ -20,9 +20,9 @@ palette(c(myblue, myred, mygreen, myyellow, myredpurple, mypurpleblue, mygrey, '
 dev.off()
 
 ## base filename to save results and title for plots
-filename <- 'logit-HW_healthy'
-ptitle <- 'healthy (logit-normal + Huang-Wang)'
-datafile <- 'data_H.dat'
+filename <- 'logit-HW_schizo'
+ptitle <- 'schizo (logit-normal + Huang-Wang)'
+datafile <- 'data_S.dat'
 
 ## seed for random generator
 set.seed(666)

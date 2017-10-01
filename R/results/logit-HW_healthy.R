@@ -29,8 +29,8 @@ set.seed(666)
 
 
 ## data & data names
-y.names <- scan('graph_quantities.dat', what="character", sep=",")[1:3]
-datam <- t(read.matrix(datafile))[,1:3]
+y.names <- scan('graph_quantities.dat', what="character", sep=",")#[1:3]
+datam <- t(read.matrix(datafile))#[,1:3]
 colnames(datam) <- y.names
 rownames(datam) <- sprintf("id[%d]",seq(1:dim(datam)[1]))
 ## logit of data
@@ -127,7 +127,7 @@ sample2 <- LaplacesDemon.hpc(hyperprior0, mydata, as.initial.values(sampleinitia
                         Covar=sampleinitial$Covar,
                         Thinning=1,
                         Iterations=5e5, Status=1000,
-                        Chains=2,CPUs=2,Packages=c('mvtnorm'),LogFile='LD_log',#Type="MPI",
+                        Chains=2,CPUs=2,Packages=c('mvtnorm'),LogFile=paste0(filename,'_LD_log'),#Type="MPI",
 ##                        Algorithm="NUTS", Specs=list(A=1000, delta=0.6, epsilon=1, Lmax=5)
                         Algorithm="AFSS", Specs=list(A=0, B=NULL, m=100, n=0, w=1)
                         )
