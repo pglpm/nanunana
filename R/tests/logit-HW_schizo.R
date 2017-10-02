@@ -20,7 +20,7 @@ palette(c(myblue, myred, mygreen, myyellow, myredpurple, mypurpleblue, mygrey, '
 dev.off()
 
 ## base filename to save results and title for plots
-filename <- 'logit-HW_schizo'
+filename <- 'check2_HW_marginals'
 ptitle <- 'schizo (logit-normal + Huang-Wang)'
 datafile <- 'data_S.dat'
 
@@ -38,11 +38,14 @@ data <- logit(datam)
 d <- dim(data)[2] # num parms
 N <- dim(data)[1] # num inds
 dpos <- choose(1:d +1, 2) # (1:d)*((1:d)+1)/2  position of diagonal elements
+ddpos <- c(d+dpos,(np+1):(np+d)) # indices of positive params
 nr <- d*(d-1)/2 # num. correlations
 np <- 2*d + nr # total num. parameters
 d1 <- d+1
 d2 <- 2*d
 d3 <- 2*d+1
+np1 <- np+1
+npd <- np+d
 ## suff statistics: logit-means, -stds, -corrs
 dmean <- colMeans(data)
 dcov <- cov(data)*(N-1)/N
@@ -61,8 +64,8 @@ ahw <- rep(1,d) # scale param for HuangWand distribution
 nuhw <- 2 # d.f. for HuangWand; 2 ensures uniform marginals for corrs
 
 ## parameters:  means + elements of Cholesky decomposition
-parm.names <- as.parm.names(list(mu=rep(0,d), lnU=rep(0,d), U=matrix(0,d,d)), uppertri=c(0,0,1))
-parm.names <- parm.names[-(d2+dpos)]
+parm.names <- as.parm.names(list(mu=rep(0,d), U=matrix(0,d,d),gamma=rep(0,d)), uppertri=c(0,1,0))
+#parm.names <- parm.names[-(d2+dpos)]
 
 # parameters we want to see
 tparm.names <- as.parm.names(list(mu=rep(0,d), sigma=rep(0,d), rho=matrix(0,d,d)), uppertri=c(0,0,1))
@@ -71,13 +74,17 @@ tparm.names <- tparm.names[-(d2+dpos)]
 ## quantities to be monitored during Monte Carlo: P(d_new), posterior distr
 mon.names <- c(y.names,'p(d_new)')
 
+wn <- nuhw+d-1
+iAhw <- 1/(Ahw[1]^2)
+
 ## function to generate initial values (don't know how it works)
 PGF <- function(data){
     mu <- rnorm(d,meanmu,sigmamu)
-    U <- rhuangwandc(nu=nuhw,a=ahw,A=Ahw)
-    return(c(mu,log(diag(U)),U[upper.tri(U)]))
+    gamma <- rinvgamma(d,0.5,iAhw)
+    U <- rinvwishartc(1,nu=wn,A=Ahw,2*nuhw*diag(1/gamma))
+    return(c(mu,U[upper.tri(U,diag=T)],gamma))
 }
-Initial.Values <- c(rep(meanmu,d),rep(0,d),rep(0,nr))
+Initial.Values <- c(rep(meanmu,d),rep(1,nr),rep(1,d))
 
 ## model data, input to the Monte Carlo algorithm
 mydata <- list(y=data, PGF=PGF,
@@ -92,20 +99,24 @@ hyperprior0 <- function(parm,data){
     mu <- parm[1:d]
     mu.prior <- sum(dnorm(mu,meanmu,sigmamu, log=T))
     ## prior for Cholesky matrix
-    U <- diag(exp(parm[d1:d2]))
-    U[upper.tri(U)] <- parm[d3:np]
-    U.prior <- dhuangwandc(U,nu=nuhw,a=ahw,A=Ahw,log=T) 
+    parm[ddpos] <- interval(parm[ddpos],1e-100,Inf)
+    #U <- diag(parm[d1:d2])
+    U <- matrix(0,d,d)
+    U[upper.tri(U)] <- parm[d1:np]
+    gamma <- parm[np1:npd]
+    U.prior <- dinvwishartc(U,nu=wn,2*nuhw*diag(1/gamma),log=T) +
+        sum(dinvgamma(gamma,0.5,iAhw,log=T))
     ## construct covariance matrix for data log-likelihood
     #print(U) # debug
-    covm <- t(U) %*% U
     ## log-likelihood
-    LL <- sum(dmvnorm(data$y, mu, covm, log=T))
+    LL <- 0# sum(dmvnorm(data$y, mu, covm, log=T))
     ## log-posterior
     LP <- LL + mu.prior + U.prior
+    #covm <- as.positive.definite(t(U) %*% U)
     return <- list(LP=LP, Dev=-2*LL,
                    ## monitor posterior and probability uncertainty for new datum
-                   Monitor=c(invlogit(rmvnorm(1,mu,covm)),
-                             dmvnorm(data$yhat,mu,covm)),
+                   Monitor=c(invlogit(rmvnc(1,mu,U)), # UPPER-triangular U!
+                             dmvnc(data$yhat,mu,U)),
                    yhat=1,
                    parm=parm)
 }
@@ -117,7 +128,7 @@ hyperprior0 <- function(parm,data){
 sampleinitial <- LaplacesDemon(hyperprior0, mydata, Initial.Values,
                         Covar=NULL,
                         Thinning=1,
-                        Iterations=1000, Status=100,
+                        Iterations=1000, Status=100,LogFile=paste0(filename,'_LD_init_log'),
 ##                        Algorithm="NUTS", Specs=list(A=1000, delta=0.6, epsilon=1, Lmax=5)
                         Algorithm="AFSS", Specs=list(A=500, B=NULL, m=100, n=0, w=1)
                         )
@@ -126,8 +137,8 @@ sampleinitial <- LaplacesDemon(hyperprior0, mydata, Initial.Values,
 sample2 <- LaplacesDemon.hpc(hyperprior0, mydata, as.initial.values(sampleinitial),
                         Covar=sampleinitial$Covar,
                         Thinning=1,
-                        Iterations=5e5, Status=1000,
-                        Chains=2,CPUs=2,Packages=c('mvtnorm'),LogFile='LD_log',#Type="MPI",
+                        Iterations=2000, Status=200,
+                        Chains=2,CPUs=2,LogFile=paste0(filename,'_LD_log'),#Packages=c('mvtnorm'),#Type="MPI",
 ##                        Algorithm="NUTS", Specs=list(A=1000, delta=0.6, epsilon=1, Lmax=5)
                         Algorithm="AFSS", Specs=list(A=0, B=NULL, m=100, n=0, w=1)
                         )
@@ -137,11 +148,11 @@ sample0 <- Combine(sample2,mydata)
 
 
 ## transform hyperparameters in understandable ones: stds, corrs
-samples <- sample0$Posterior1
+samples <- sample0$Posterior1[,1:np]
 nsamples <- dim(samples)[1]
 for(i in 1:nsamples){
-    covm <- diag(exp(samples[i,d1:d2]))
-    covm[upper.tri(covm)] <- samples[i,d3:np]
+    covm <- matrix(0,d,d)
+    covm[upper.tri(covm,diag=T)] <- samples[i,d1:np]
     covm <- t(covm) %*% covm
     samples[i,d1:d2] <- sqrt(diag(covm))
     samples[i,d3:np] <- Cov2Cor(covm)[upper.tri(covm)]
