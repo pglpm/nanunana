@@ -6,7 +6,7 @@
 %% Home page: http://magnaspesmeretrix.org/
 %% Email (remove ZZ): pglpm0ZZ[at]gmail.com
 %% Created: 2000-08-23T16:53:30+0200
-%% Last-Updated: 2017-10-01T11:11:08+0200
+%% Last-Updated: 2017-10-11T11:16:41+0200
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % NB: This database contains also items whose content's validity I
@@ -173,6 +173,7 @@
 @String{arg = {Argumentation}}
 @String{ari = {ARI -- Interdiscipl.\ J. Phys.\ Eng.\ Sci.}}
 @String{arma = {Arch.\ Rational Mech.\ Anal.}}
+@String{arn = {Annu.\ Rev.\ Neurosci.}}
 @String{arns = {Annu.\ Rev.\ Nucl.\ Sci.}}
 @String{arp = {Annu.\ Rev.\ Physiol.}}
 @String{arpc = {Annu.\ Rev.\ Phys.\ Chem.}}
@@ -251,7 +252,7 @@
 @String{cjp = {Can.\ J. Phys.}}
 @String{cm = {Colloq.\ Math.}}
 @String{cma = {Computers Math.\ Applic.}}
-@String{cmame = {Comput.\ Methods Appl.\ Mech.\ Engrg.}}
+@String{cmame = {Comput.\ Meth.\ Appl.\ Mech.\ Engrg.}}
 @String{cmbbe = {Comput.\ Meth.\ Biomech.\ Biomed.\ Eng.}}
 @String{cmda = {Celestial Mech.\ Dyn.\ Astron.}}
 @String{cme = {Cubo Matem{\'a}tica Educacional}}
@@ -600,6 +601,7 @@
 @String{mcs = {Math.\ Comput.\ Simulat.}}
 @String{mcsmpif = {\langfrench{M{\'e}m.\ cl.\ sci.\ math.\ phys.\ Inst.\ Fr.}}}
 @String{mecc = {Meccanica}}
+@String{mee = {Meth.\ Ecol.\ Evol.}}
 @String{messmath = {Messenger of Mathematics}}
 @String{metas = {Metascience}}
 @String{metrol = {Metrologia}}
@@ -858,6 +860,7 @@
 @String{sds = {Stat.\ \amp\ Decis.\ Suppl.}}
 @String{se = {Sci.\ \amp\ Educ.}}
 @String{sea = {\langfrench{Sciences et Avenir}}}
+@String{sem = {Structural Equation Modeling}}
 @String{semprob = {\langfrench{S{\'e}minaire de probabilit{\'e}s de Strasbourg}}}
 @String{serra = {Stoch.\ Environ.\ Res.\ Ris.\ Assess.}}
 @String{sgp = {Surv.\ Geophys.}}
@@ -42047,7 +42050,7 @@ year =	       {1992},
 volume =       {7},
 number =       {4},
 pages =	       {472--483},
-keywords =     {Gibbs sampling, Bayesian probability theory},
+keywords =     {Gibbs sampling, Bayesian probability theory, thinning},
 mynote =       {inadvertently calculates an improper prior}
 }
 
@@ -67085,6 +67088,17 @@ pages =	       {408--417},
 keywords =     {probability theory, sufficiency, exchangeability}
 }
 
+@Article{letacetal2000,
+author =       {G{\'e}rard Letac and Jacek Weso{\l}owski},
+title =	       {An Independence Property for the Product of {GIG} and Gamma Laws},
+journal =      ap,
+year =	       {2000},
+volume =       {28},
+number =       {3},
+pages =	       {1371--1383},
+keywords =     {covariance matrix, correlation matrix}
+}
+
 @Article{lettetal1989,
 author =       {P. D. Lett and W. D. Phillips and S. L. Rolston and C. E. Tanner and R. N. Watts and C. I. Westbrook},
 title =	       {Optical molasses},
@@ -68774,6 +68788,15 @@ year =	       {1980},
 keywords =     {exchangeability}
 }
 
+@Book{linketal2010,
+author =       {William A. Link and Richard J. Barker},
+title =	       {Bayesian Inference: With Ecological Applications},
+publisher =    {Academic Press},
+year =	       {2010},
+address =      {London},
+keywords =     {Monte Carlo, Bayesian probability theory}
+}
+
 @Article{linketal2012,
 author =       {William A. Link and Mitchell J. Eaton},
 title =	       {On thinning of chains in {MCMC}},
@@ -69032,6 +69055,18 @@ title =	       {Kinetic Energy-Based Temperature Computation in Non-Equilibrium 
 year =	       {2009},
 note =	       {\arxiveprint{0912.4393}},
 keywords =     {statistical mechanics}
+}
+
+@Article{liuetal2015,
+author =       {Haiyan Liu and Zhiyong Zhang and Kevin J. Grimm},
+title =	       {Comparison of Inverse {Wishart} and Separation- Strategy Priors for {Bayesian} Estimation of Covariance Parameter Matrix in Growth Curve Analysis},
+journal =      sem,
+year =	       {2015},
+volume =       {23},
+number =       {3},
+pages =	       {1--14},
+keywords =     {covariance matrix, correlation matrix},
+mynote =       {seems to make an impossible specification of correlations, eqn (13+) p. 5}
 }
 
 @Book{livens1918,
@@ -70768,6 +70803,17 @@ journal =      ejp,
 year =	       {1985},
 volume =       {6},
 pages =	       {143--147}
+}
+
+@Article{maceachernetal1994,
+author =       {Steven N. MacEachern and L. Mark Berliner},
+title =	       {Subsampling the {Gibbs} Sampler},
+journal =      amst,
+year =	       {1994},
+volume =       {48},
+number =       {3},
+pages =	       {188--190},
+keywords =     {Markov-chain Monte Carlo, Bayesian probability theory, thinning}
 }
 
 @Article{macfarlane1962,
@@ -75462,6 +75508,18 @@ volume =       {71},
 series =       {Other titles in applied mathematics},
 address =      {Philadelphia},
 note =	       {\url{http://matrixanalysis.com/}. First publ.\ 2000}
+}
+
+@Book{meynetal1993_r2009,
+author =       {Sean Meyn and Richard L. Tweedie},
+title =	       {Markov Chains and Stochastic Stability},
+publisher =    {Cambridge University Press},
+year =	       {2009},
+address =      {Cambridge},
+edition =      {2},
+keywords =     {Monte Carlo, Bayesian probability theory},
+origyear =     {1993},
+note =	       {First publ.\ 1993}
 }
 
 @Book{mezardetal1987,
@@ -82143,6 +82201,17 @@ volume =       {15},
 number =       {4},
 pages =	       {1031--1041},
 note =	       {\arxiveprint{gr-qc/9708045}}
+}
+
+@Article{pajor2017,
+author =       {Anna Pajor},
+title =	       {Estimating the Marginal Likelihood Using the Arithmetic Mean Identity},
+journal =      ba,
+year =	       {2017},
+volume =       {12},
+number =       {1},
+pages =	       {261--287},
+keywords =     {evidence, model comparison, Bayesian probability theory}
 }
 
 @Article{pakdamanetal2010,
@@ -91107,6 +91176,18 @@ note =	       {\url{http://www.met.reading.ac.uk/~ocean/Dynamics/pub/rm00.pdf}},
 keywords =     {geophysical fluid dynamics}
 }
 
+@Article{robertsetal2009,
+author =       {Gareth O. Roberts and Jeffrey S. Rosenthal},
+title =	       {Examples of Adaptive {MCMC}},
+journal =      jcgs,
+year =	       {2009},
+volume =       {18},
+number =       {2},
+pages =	       {349--367},
+keywords =     {Markov-chain Monte Carlo, log transformation, Bayesian probability theory},
+note =	       {\url{http://probability.ca/jeff/ftpdir/adaptex.pdf}}
+}
+
 @Article{robertson1906,
 author =       {T. Brailsford Robertson},
 title =	       {Note on an Extension of the Theoretical Applicability of {Guldberg} and {Waage's} Mass Law},
@@ -92782,6 +92863,15 @@ volume =       {28},
 number =       {2},
 pages =	       {201--213},
 keywords =     {relativity theory}
+}
+
+@Article{rowlandetal2016,
+author =       {David C. Rowland and Yasser Roudi and Moser, May-Britt and Edvard I. Moser},
+title =	       {Ten Years of Grid Cells},
+journal =      arn,
+year =	       {2016},
+volume =       {39},
+pages =	       {19--40}
 }
 
 @Article{rowlinson1983,
@@ -104550,6 +104640,17 @@ volume =       {72},
 number =       {2},
 pages =	       {022328},
 note =	       {\arxiveprint{quant-ph/0504046}}
+}
+
+@Article{tibbitsetal2014,
+author =       {Matthew M. Tibbits and Chris Groendyke and Murali Haran and John C. Liechty},
+title =	       {Automated Factor Slice Sampling},
+journal =      jcgs,
+year =	       {2014},
+volume =       {23},
+number =       {2},
+pages =	       {543--563},
+keywords =     {Markov-chain Monte Carlo, probability theory}
 }
 
 @Book{tiersten1990,

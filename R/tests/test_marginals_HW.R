@@ -1,12 +1,7 @@
 ## test script for normal model 
-library('pacman')
-library('magicaxis')
-library('ellipse')
 library('MCMCpack')
 library('LaplacesDemon')
 library('RColorBrewer')
-library('mvtnorm')
-library('magrittr')
 library('bayesplot')
 library('ggplot2')
 mypurpleblue <- '#4477AA'
@@ -37,10 +32,10 @@ rownames(datam) <- sprintf("id[%d]",seq(1:dim(datam)[1]))
 data <- logit(datam)
 d <- dim(data)[2] # num parms
 N <- dim(data)[1] # num inds
-dpos <- choose(1:d +1, 2) # (1:d)*((1:d)+1)/2  position of diagonal elements
-ddpos <- c(d+dpos,(np+1):(np+d)) # indices of positive params
 nr <- d*(d-1)/2 # num. correlations
 np <- 2*d + nr # total num. parameters
+dpos <- choose(1:d +1, 2) # (1:d)*((1:d)+1)/2  position of diagonal elements
+ddpos <- c(d+dpos,(np+1):(np+d)) # indices of positive params
 d1 <- d+1
 d2 <- 2*d
 d3 <- 2*d+1
@@ -84,7 +79,7 @@ PGF <- function(data){
     U <- rinvwishartc(1,nu=wn,A=Ahw,2*nuhw*diag(1/gamma))
     return(c(mu,U[upper.tri(U,diag=T)],gamma))
 }
-Initial.Values <- c(rep(meanmu,d),rep(1,nr),rep(1,d))
+Initial.Values <- c(rep(meanmu,d),rep(1,d+nr),rep(1,d))
 
 ## model data, input to the Monte Carlo algorithm
 mydata <- list(y=data, PGF=PGF,
@@ -102,7 +97,7 @@ hyperprior0 <- function(parm,data){
     parm[ddpos] <- interval(parm[ddpos],1e-100,Inf)
     #U <- diag(parm[d1:d2])
     U <- matrix(0,d,d)
-    U[upper.tri(U)] <- parm[d1:np]
+    U[upper.tri(U,diag=T)] <- parm[d1:np]
     gamma <- parm[np1:npd]
     U.prior <- dinvwishartc(U,nu=wn,2*nuhw*diag(1/gamma),log=T) +
         sum(dinvgamma(gamma,0.5,iAhw,log=T))
@@ -128,7 +123,7 @@ hyperprior0 <- function(parm,data){
 sampleinitial <- LaplacesDemon(hyperprior0, mydata, Initial.Values,
                         Covar=NULL,
                         Thinning=1,
-                        Iterations=2000, Status=200,LogFile=paste0(filename,'_LD_init_log'),
+                        Iterations=2000, Status=200,#LogFile=paste0(filename,'_LD_init_log'),
 ##                        Algorithm="NUTS", Specs=list(A=1000, delta=0.6, epsilon=1, Lmax=5)
                         Algorithm="AFSS", Specs=list(A=500, B=NULL, m=100, n=0, w=1)
                         )
@@ -154,6 +149,7 @@ for(i in 1:nsamples){
     covm <- matrix(0,d,d)
     covm[upper.tri(covm,diag=T)] <- samples[i,d1:np]
     covm <- t(covm) %*% covm
+    if(!is.positive.definite(covm)){print(i)}
     samples[i,d1:d2] <- sqrt(diag(covm))
     samples[i,d3:np] <- Cov2Cor(covm)[upper.tri(covm)]
 }
@@ -543,3 +539,81 @@ points(mean(posterior),mean(posterior2),
        col=myred,pch=4)
     }}
 dev.off()
+
+
+rtc(U,nu=wn,2*nuhw*diag(1/gamma),log=T) +
+    sum(dinvgamma(gamma,0.5,iAhw,log=T))
+
+numbe <- 1e4
+samplescov <- matrix(0,numbe,d+nr)
+for(i in 1:1e4){
+                  covm <- rhuangwand(2,A=rep(25,d))
+               samplescov[i,] <- c(log10(sqrt(diag(covm))), Cov2Cor(covm)[upper.tri(covm)])
+}
+## posterior for the parameters
+binningdiv <- 10
+pdf(paste0('testtest','.pdf'))
+for(i in 1:(d+nr)){
+    posterior <- samplescov[,i]
+    dat <- data.frame(x=posterior)
+    print(
+        ggplot() + geom_histogram(data=dat,aes(x=x,y=..density..),
+                                  binwidth=sd(posterior)/binningdiv) +
+        labs(x=tparm.names[i],title=ptitle) +
+        geom_vline(xintercept=mean(posterior),colour=myred)
+        #+geom_vline(xintercept=median(posterior),colour=mygreen)
+    )
+}
+for(j in 1:(d+nr-1)){
+    for(i in (j+1):(d+nr)){
+        ## if there are more than 10 hyperparameters we choose a random subset of marginals to show
+        if(np<11 || (np>10 && runif(1)<50/choose(np,2))){
+        posterior <- samplescov[,j]
+        posterior2 <- samplescov[,i]
+        dat <- data.frame(x=posterior,y=posterior2)
+        print(
+            ggplot() + stat_bin2d(data=dat,aes(x=x,y=y,fill=..density..),
+                                  binwidth=2*c(sd(posterior),
+                                               sd(posterior2))/binningdiv
+                                 #, trans="log10"
+                                  ) +
+            scale_fill_gradientn(colours=brewer.pal(n=9,name='Blues')) +
+            labs(x=tparm.names[j],y=tparm.names[i],title=ptitle) +
+            geom_point(data=data.frame(x=mean(posterior),y=mean(posterior2))
+                      ,aes(x,y),colour=myred,size=4,shape=16)
+        )
+        }
+    }}
+dev.off()
+
+
+
+    
+    L <- matrix(0,d,d)
+    L[upper.tri(L,diag=T)] <- runif(d+nr,0,10)
+    covm <- t(L)%*%L
+    gamma <- rinvgamma(d,0.5,iAhw)
+    gamma #<- 1/(1:3)
+    2*nuhw*diag(1/gamma)
+    dinvwishartc(L,wn,2*nuhw*diag(1/gamma),log=T)
+    dinvwishart(covm,wn,2*nuhw*diag(1/gamma),log=T)
+    dhuangwandc(L,2,gamma,Ahw,log=T)
+    dinvwishartc(L,wn,2*nuhw*diag(1/gamma),log=T)+
+        sum(dinvgamma(gamma,0.5,iAhw,log=T))
+
+    L <- matrix(0,d,d)
+    L[upper.tri(L,diag=T)] <- runif(d+nr,0,10)
+    gamma <- runif(d,0,100)
+    Af <- runif(d,0,100)
+    dhuangwandc(L,2,gamma,Af,log=T)
+    dinvwishartc(L,wn,2*nuhw*diag(1/gamma),log=T)+
+        sum(dinvgamma(gamma,0.5,1/Af^2,log=T))
+
+
+    
+    dinvwishartc(L,wn,covm)
+    dinvwishart(covm,wn,covm)
+
+    dinvwishartc(L,wn,2*nuhw*diag(1/gamma))
+dinvwishart(covm,wn,2*nuhw*diag(1/gamma))
+
