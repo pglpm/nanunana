@@ -17,8 +17,8 @@ palette(c(myblue, myred, mygreen, myyellow, myredpurple, mypurpleblue, mygrey, '
 dev.off()
 
 ## base filename to save results and title for plots
-filename <- 'logit-unif_health_all_rdmh'
-ptitle <- 'logit-uniform model, Health all (RDMH)'
+filename <- 'logit-unif_healthy_all_rdmh'
+ptitle <- 'logit-uniform model, Healthy all (RDMH)'
 datafile <- 'data_H.dat'
 
 ## seed for random generator
@@ -34,15 +34,15 @@ colnames(datam) <- y.names
 rownames(datam) <- sprintf("id[%d]",1:N)
 ## logit of data
 data <- logit(datam)
+d1 <- d+1
+d2 <- 2*d
+d3 <- 2*d+1
 nr <- d*(d-1)/2 # num. correlations
 np <- 2*d + nr # total num. parameters
 dnp <- 3*d + nr # total num. parameters
 dpos <- choose((1:d) +1, 2) # (1:d)*((1:d)+1)/2  position of diagonal elements
 odpos <- (1:(d+nr))[-dpos] # off-diag
 ddpos <- d2+dpos
-d1 <- d+1
-d2 <- 2*d
-d3 <- 2*d+1
 ## suff statistics: logit-means, -stds, -corrs
 dmean <- colMeans(data)
 dcov <- cov(data)*(N-1)/N
@@ -54,7 +54,7 @@ ynew <- dmean
 
 ## hyperparameters for hyperprior
 meanmu <- 0 # mean for mu
-stdmu <- 30 # std for mu
+stdmu <- 10 # std for mu
 lsigmaa <- -5 # lower bound logsigma
 lsigmab <- 5 # upper bound logsigma
 nu <- d+1 # scale hyperparam for inv-Wishart
@@ -93,8 +93,8 @@ mon.names <- c('')
 ##     return(c(mu, lsigma, lower.triangle(U,diag=T)))
 ## }
 PGF <- function(data){
-    mu <- rnorm(d,dmean,3*sd(dmean))
-    lsigma <- interval(rnorm(d,log(dstd),3*sd(log(dstd))),lsigmaa,lsigmab)
+    mu <- rnorm(d,dmean,sd(dmean))
+    lsigma <- interval(rnorm(d,log(dstd),sd(log(dstd))),lsigmaa,lsigmab)
     U <- rinvwishart(d+1,diag(d))
     return(c(mu, lsigma, lower.triangle(U,diag=T)))
 }
@@ -159,8 +159,8 @@ Initial.Values[i,] <- GIV(prob, mydata, n=1000, PGF=T)
 
 sample2 <- LaplacesDemon.hpc(prob, mydata, Initial.Values,
                         Covar=NULL,
-                        Thinning=1,
-                        Iterations=100000, Status=5000,
+                        Thinning=10,
+                        Iterations=1e6, Status=5e4,
                         Chains=nchains,CPUs=nchains,LogFile=paste0(filename,'_LDlog'), #Packages=c('Matrix'),#Type="MPI",
                         Algorithm="RDMH"#, Specs=list(B=list(1:d,d1:d2,d3:dnp))
                         ##Algorithm="Slice", Specs=list(B=list(1:d,d1:d2,d3:dnp), Bounds=list(c(-Inf,Inf), c(exp(lsigmaa),exp(lsigmab)), c(-500,500)), m=Inf, Type="Continuous", w=1)
