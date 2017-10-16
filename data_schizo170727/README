@@ -1,9 +1,0 @@
-data: results of small data set, where brain region map probability threshold is 25%
-
-data2: results of big data set (56 controls, 48 patients), where brain region map probability threshold is 50% 
-
-data3: as in data2 but threshold graphs, th=0.2
-
-data4: as in data2 but threshold graphs, th=0.4
-
-data5:as in data2 but richclub graphs

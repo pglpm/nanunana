@@ -1,5 +1,0 @@
-bin_1_patient_1, bin_1_patient_2, bin_1_patient_3, ..., bin_1_patient_N
-bin_2_patient_1, bin_2_patient_2, bin_2_patient_3, ..., bin_2_patient_N
-bin_3_patient_1, bin_3_patient_2, bin_3_patient_3, ..., bin_3_patient_N
-...
-bin_M_patient_1, bin_M_patient_2, bin_M_patient_3, ..., bin_M_patient_N
