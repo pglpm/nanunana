@@ -165,7 +165,7 @@ Initial.Values[i,] <- GIV(prob, mydata, n=1000, PGF=T)
 sample2 <- LaplacesDemon.hpc(prob, mydata, Initial.Values,
                         Covar=NULL,
                         Thinning=10,
-                        Iterations=1e3, Status=5e2,
+                        Iterations=1e4, Status=5e2,
                         Chains=nchains,CPUs=nchains,LogFile=paste0(filename,'_LDlog'), Packages=c('tmvtnorm'),#Type="MPI",
                         Algorithm="RDMH"#, Specs=list(B=list(1:d,d1:d2,d3:dnp))
                         ##Algorithm="Slice", Specs=list(B=list(1:d,d1:d2,d3:dnp), Bounds=list(c(-Inf,Inf), c(exp(lsigmaa),exp(lsigmab)), c(-500,500)), m=Inf, Type="Continuous", w=1)
