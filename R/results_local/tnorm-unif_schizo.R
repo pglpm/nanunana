@@ -52,13 +52,13 @@ dstd <- sqrt(diag(dcov))
 ynew <- dmean
 
 ## hyperparameters for hyperprior
-meanmu <- 0.5 # mean for mu
-stdmu <- 0.5 # std for mu
+mua <- -1 # lower bound for for mu
+mub <- 1 # upper bound for for mu
 lsigmaa <- -5 # lower bound logsigma
 lsigmab <- 1 # upper bound logsigma
 nu <- d+1 # scale hyperparam for inv-Wishart
 S <- diag(d) # scale matrix for inv-Wishart
-lowerl <- rep(0,d)
+lowerl <- rep(-1,d)
 upperl <- rep(1,d)
 
 ## parameters:  means + elements of Cholesky decomposition
@@ -126,10 +126,10 @@ mydata <- list(y=data, PGF=PGF,
 
 prob <- function(parm,data){
     ## mu
-    parm[pmu] <- interval(parm[pmu],0,1)
-    mu.prior <- sum(dunif(parm[pmu],0,1,log=T))#sum(dnorm(parm[pmu],meanmu,stdmu,log=T))
+    parm[pmu] <- interval(parm[pmu],mua,mub)
+    mu.prior <- sum(dunif(parm[pmu],mua,mub,log=T))#sum(dnorm(parm[pmu],meanmu,stdmu,log=T))
     ## sigma
-    parm[pls] <- interval(parm[pls],(lsigmaa),(lsigmab))
+    parm[pls] <- interval(parm[pls],lsigmaa,lsigmab)
     sigma.prior <- sum(dunif((parm[pls]),lsigmaa,lsigmab,log=T))
     ## rho
     U <- as.symmetric.matrix(parm[pU],d)
@@ -141,7 +141,6 @@ prob <- function(parm,data){
     ## likelihood
     ##cho <- chol(U) %*% diag(exp(parm[pls])/sqrt(diag(U)))
     diago <- diag(exp(parm[pls])/sqrt(diag(U)))
-    
     LL <- sum(dtmvnorm(data$y, mean=parm[pmu], sigma=diago %*% U %*% diago,
                        lower=lowerl, upper=upperl, log=T))
     ##
@@ -164,7 +163,7 @@ Initial.Values[i,] <- GIV(prob, mydata, n=1000, PGF=T)
 
 sample2 <- LaplacesDemon.hpc(prob, mydata, Initial.Values,
                         Covar=NULL,
-                        Thinning=10,
+                        Thinning=1,
                         Iterations=1e4, Status=5e2,
                         Chains=nchains,CPUs=nchains,LogFile=paste0(filename,'_LDlog'), Packages=c('tmvtnorm'),#Type="MPI",
                         Algorithm="RDMH"#, Specs=list(B=list(1:d,d1:d2,d3:dnp))
@@ -212,9 +211,9 @@ edg <- matrix(0,nbins+1,npar)
 ##     function(x){dunif(x,-1,1)}
 ## )
 
-edg[,1:d] <- seq(0,1,length.out=nbins+1)
+edg[,1:d] <- seq(-1,1,length.out=nbins+1)
 for(i in c(d+pmu, d+pls)){
-edg[,i] <- seq(quantile(samples[,i],0.1), quantile(samples[,i],0.9) ,length.out=nbins+1)
+edg[,i] <- seq(quantile(samples[,i],0.05), quantile(samples[,i],0.95) ,length.out=nbins+1)
 }
 ##edg[,d+pls] <- seq((lsigmaa),(lsigmab),length.out=nbins+1)##seq(min(rsamples[,i]), max(rsamples[,i]), length.out=nbins+1)
 edg[,(3*d)+(1:nr)] <- seq(-1,1,length.out=nbins+1)##seq(min(rsamples[,i]), max(rsamples[,i]), length.out=nbins+1)
@@ -225,12 +224,19 @@ edg[,(3*d)+(1:nr)] <- seq(-1,1,length.out=nbins+1)##seq(min(rsamples[,i]), max(r
 ## yyc[i,] <- yy[i,]*nsamples*(edg[2,i]-edg[1,i])
 ## }
 
+capture.output(str(sample0), file=paste0(filename,'_str.txt'))
+capture.output(sample0$Summary1, file=paste0(filename,'_summary.txt'))
+capture.output(Consort(sample0), file=paste0(filename,'_consort.txt'))
 
-pdf(paste0(filename,'_dens.pdf'))
+pdf(paste0(filename,'_other.pdf'))
 plot(0:10, type = "n", xaxt="n", yaxt="n", bty="n", xlab = "", ylab = "")
 text(1, 9, ptitle, pos=4,cex=0.5)
 text(1, 8, paste0(d,' graph prop, ',N,' indiv'), pos=4,cex=0.5)
 text(1, 7, paste0('LML = ',lml), pos=4,cex=0.5)
+text(1, 6, paste0('time = ',sample0$Minutes), pos=4,cex=0.5)
+dev.off()
+
+pdf(paste0(filename,'_dens.pdf'))
 #
 for(i in 1:d){
     posterior <- samples[,i]
@@ -244,19 +250,6 @@ for(i in 1:d){
         + geom_vline(xintercept=median(posterior),colour=mygreen,linetype='dashed')
         #+ geom_vline(xintercept=data[,i],colour=myred)
         + geom_point(aes(x=data[,i], y=0),size=2,colour=myred,shape=16)
-        #+xlim(-3*sd(posterior),3*sd(posterior))
-    )
-}
-for(i in d1:npar){
-    posterior <- samples[,i]
-    dat <- data.frame(x=posterior)
-   # data.f <- data.frame(x=xx[i,], y=yy[i,])
-    print(
-        ggplot() + geom_histogram(data=dat,aes(x=x,y=..density..),
-                                  breaks=edg[,i]) #+ scale_y_log10()
-        +labs(x=tparm.names[i],title=paste0('mean =',signif(mean(posterior),3),', sd = ',signif(sd(posterior),3)))
-        + geom_vline(xintercept=mean(posterior),colour=mygreen)
-        + geom_vline(xintercept=median(posterior),colour=mygreen,linetype='dashed')
         #+xlim(-3*sd(posterior),3*sd(posterior))
     )
 }
@@ -283,12 +276,56 @@ for(j in 1:(d-1)){
         }
 }
 dev.off()    
+
+pdf(paste0(filename,'_params_dens.pdf'))
+for(i in d1:npar){
+    posterior <- samples[,i]
+    dat <- data.frame(x=posterior)
+   # data.f <- data.frame(x=xx[i,], y=yy[i,])
+    print(
+        ggplot() + geom_histogram(data=dat,aes(x=x,y=..density..),
+                                  breaks=edg[,i]) #+ scale_y_log10()
+        +labs(x=tparm.names[i],title=paste0('mean =',signif(mean(posterior),3),', sd = ',signif(sd(posterior),3)))
+        + geom_vline(xintercept=mean(posterior),colour=mygreen)
+        + geom_vline(xintercept=median(posterior),colour=mygreen,linetype='dashed')
+        #+xlim(-3*sd(posterior),3*sd(posterior))
+    )
+}
+dev.off()
+
+pdf(paste0(filename,'_deviance.pdf'))
+#
+    posterior <- sample0$Deviance
+    dat <- data.frame(x=posterior)
+   # data.f <- data.frame(x=xx[i,], y=yy[i,])
+    print(
+        ggplot() + geom_histogram(data=dat,aes(x=x,y=..density..),
+                                  breaks=seq(quantile(posterior,0.05), quantile(posterior,0.95) ,length.out=nbins+1)) #+ scale_y_log10()
+        +labs(x='deviance',title=paste0('mean =',signif(mean(posterior),3),', sd = ',signif(sd(posterior),3)))
+        + geom_vline(xintercept=mean(posterior),colour=mygreen)
+        + geom_vline(xintercept=median(posterior),colour=mygreen,linetype='dashed')
+        #+ geom_vline(xintercept=data[,i],colour=myred)
+        #+ geom_point(aes(x=data[,i], y=0),size=2,colour=myred,shape=16)
+        #+xlim(-3*sd(posterior),3*sd(posterior))
+    )
+#
+    posterior <- exp(-sample0$Deviance/2)
+    dat <- data.frame(x=posterior)
+   # data.f <- data.frame(x=xx[i,], y=yy[i,])
+    print(
+        ggplot() + geom_histogram(data=dat,aes(x=x,y=..density..),
+                                  breaks=seq(quantile(posterior,0.05), quantile(posterior,0.95) ,length.out=nbins+1)) #+ scale_y_log10()
+        +labs(x='exp-deviance',title=paste0('mean =',signif(mean(posterior),3),', sd = ',signif(sd(posterior),3)))
+        + geom_vline(xintercept=mean(posterior),colour=mygreen)
+        + geom_vline(xintercept=median(posterior),colour=mygreen,linetype='dashed')
+        #+ geom_vline(xintercept=data[,i],colour=myred)
+        #+ geom_point(aes(x=data[,i], y=0),size=2,colour=myred,shape=16)
+        #+xlim(-3*sd(posterior),3*sd(posterior))
+    )
+dev.off()
+
 ##logs
 pdf(paste0(filename,'_logcounts.pdf'))
-plot(0:10, type = "n", xaxt="n", yaxt="n", bty="n", xlab = "", ylab = "")
-text(1, 9, ptitle, pos=4,cex=0.5)
-text(1, 8, paste0(d,' graph prop, ',N,' indiv'), pos=4,cex=0.5)
-text(1, 7, paste0('LML = ',lml), pos=4,cex=0.5)
 #
 for(i in 1:d){
     posterior <- samples[,i]
@@ -302,19 +339,6 @@ for(i in 1:d){
         + geom_vline(xintercept=median(posterior),colour=myyellow,linetype='dashed')
         #+ geom_vline(xintercept=data[,i],colour=myred)
         + geom_point(aes(x=data[,i], y=1),size=2,colour=myred,shape=16)
-        #+xlim(-3*sd(posterior),3*sd(posterior))
-    )
-}
-for(i in d1:npar){
-    posterior <- samples[,i]
-    dat <- data.frame(x=posterior)
-    #data.f <- data.frame(x=xx[i,], y=yyc[i,])
-    print(
-        ggplot() + geom_histogram(data=dat,aes(x=x,y=..count..),
-                                  breaks=edg[,i])+ scale_y_log10()
-        +labs(x=tparm.names[i],title=paste0('mean =',signif(mean(posterior),3),', sd = ',signif(sd(posterior),3)))
-        + geom_vline(xintercept=mean(posterior),colour=myyellow)
-        + geom_vline(xintercept=median(posterior),colour=myyellow,linetype='dashed')
         #+xlim(-3*sd(posterior),3*sd(posterior))
     )
 }
@@ -341,6 +365,22 @@ for(j in 1:(d-1)){
         )
         }
     }
+dev.off()
+
+pdf(paste0(filename,'_params_logcounts.pdf'))
+for(i in d1:npar){
+    posterior <- samples[,i]
+    dat <- data.frame(x=posterior)
+    #data.f <- data.frame(x=xx[i,], y=yyc[i,])
+    print(
+        ggplot() + geom_histogram(data=dat,aes(x=x,y=..count..),
+                                  breaks=edg[,i])+ scale_y_log10()
+        +labs(x=tparm.names[i],title=paste0('mean =',signif(mean(posterior),3),', sd = ',signif(sd(posterior),3)))
+        + geom_vline(xintercept=mean(posterior),colour=myyellow)
+        + geom_vline(xintercept=median(posterior),colour=myyellow,linetype='dashed')
+        #+xlim(-3*sd(posterior),3*sd(posterior))
+    )
+}
 dev.off()
 
 plot(sample0, BurnIn=0, mydata, PDF=T, Parms=NULL)
