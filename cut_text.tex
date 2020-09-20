@@ -1,0 +1,1329 @@
+================== CUT TEXT =====================================
+
+
+
+  A logit-normal model with normal-inverse-Wishart parameter distribution.
+  This model is 
+
+
+  Logit-normal model (Monte Carlo) \citep[\cf][-- conforms the
+  properties of the normal to bounded parameter
+  spaces]{aitchisonetal1980,aitchison1982,aitchison1986}  \citep{johnson1949,mead1965}
+  \begin{itemize}
+  \item sufficient statistics: observed sample means, observed sample standard
+    deviations, and observed sample correlation coefficients of the
+    \emph{logit} of the data;
+  \item parameter prior: product of vague prior(broad normal) in means,
+    uniform in the order of magnitude of standard deviations between two
+    particular order of magnitudes,
+    uniform in each correlation.
+  \end{itemize}
+
+
+  Logit-normal model conjugate (exact analytic formula)
+  \begin{itemize}
+  \item sufficient statistics: observed sample means, observed sample standard
+    deviations, and observed sample correlation coefficients of the
+    \emph{logit} of the data;
+  \item parameter prior: normal--inverse-Wishart conjugate prior.
+    \citep[\chap~VIII]{zellneretal1964}
+  \end{itemize}
+
+
+
+  Truncated-normal model (Monte Carlo)
+  \begin{itemize}
+  \item sufficient statistics: observed sample means, observed sample
+    standard deviations, and observed sample correlation coefficients of
+    the data;
+  \item parameter prior: product of vague prior(broad normal) in means,
+    uniform in the order of magnitude of standard deviations between two
+    particular order of magnitudes, uniform in each correlation.
+  \end{itemize}
+Beta products (Monte Carlo)
+  \begin{itemize}
+  \item sufficient statistics: observed sample geometric means and
+    geometric means of $1-\text{variable}$;
+  \item parameter prior: uniform in order of magnitude of shape
+    parameters.\mynote{to be decided yet} Or possibly some conjugate prior.
+  \end{itemize}
+
+
+8< 8< 8< 8< 8< 8< piece of text 8< 8< 8< 8< 8< 8< 8< 8< 8< 8< 
+
+
+For justification of products of priors about covariances:
+\citep{barnardetal2000} \citep[\sect~3.10]{jeffreys1946,jeffreys1939_r2003}
+\citep{huzurbazar1956}.
+
+
+
+Machine learning: classifying methods don't provide a conditional
+probability that can be used to update the clinician's one as in
+\eqn~\eqref{eq:bayes_theorem_intro}. Approaches that don't give
+probabilistic results or that give the probability of category given an
+input don't suit our purpose.
+
+** Relation to frequentist methods, maximum likelihood etc.
+
+
+
+\mynote{** added by LM. Maybe move this paragraph with * above? --Begin\ldots}
+The choice of a model depends on theoretical and
+practical factors: mainly the biophysical meaning and properties of the graph
+quantities, and the easiness with which one or another mathematical
+function can be computed or approximated.
+
+It is sometimes difficult to relate or translate biophysical considerations
+about the graph quantities into the shape of a probability distribution for
+future inferences; especially in multidimensional problems, where such
+shape can be well beyond our mental and graphical visualization
+capabilities. The notion of \emph{sufficient statistics} can be a helpful
+bridge between biophysical considerations and probability distribution. The
+idea is that it may be easier for us to conceive and understand a
+connection between biophysical considerations and a some special statistics
+of our measurements of the graph quantities, than between biophysical
+considerations and an abstract multidimensional distribution function. Once
+such statistics are selected, they in turn uniquely select a distribution
+function for us, thanks to the Pitman-Koopman theorem
+\citetext{\citealp{koopman1936,pitman1936,darmois1935}; see also also
+  \citealp{hipp1974,andersen1970,denny1967,fraser1963,barankinetal1963}}.
+
+
+In this paper we focus on the second leg of this bridge, showing how to
+proceed once some statistics have been selected. The first leg of the
+bridge is even more important, but we must leave its exploration to
+scientists more knowledgeable about fMRI data and their biophysical
+meaning.\mynote{\ldots end--}
+
+
+8< 8< 8< 8< 8< 8< 8< 8< 8< 8< 8< 8< 8< 8< 8< 8< 8< 8< 
+
+\subsection{Hyperparameter priors}
+\label{sec:hyperparam_priors}
+
+ \citep{leonardetal1992,yangetal1994,pinheiroetal1996,barnardetal2000,eversonetal2000,daniels2006,huangetal2013b,alvarezetal2014,hurtadoruaetal2015}  \citep{gelmanetal1996}
+
+
+
+
+
+\subsection{Discrimination power of a model}
+\label{sec:discrimination}
+
+***
+
+\subsection{Reliability of a model}
+\label{sec:reliability}
+
+\mynote{Sox \etal\ \citey[p.~54]{soxetal1988_r2013} mention and briefly
+  explain repeated cross-validation. From their explanation one can work
+  out that the result is just the probability $\p(\yD\|\yM)$ used in model
+  selection \citep{mackay1992,jaynes1994_r2003}. We should combine this
+  with some observations by Draper \citep[pp.~760--767]{draperetal1996} and
+ \citep{piironenetal2017}}
+
+
+---------------------------------------------------------------
+--------------- cut text -----------------------------------------
+
+
+For our logit-transformed quantities,
+however, such choice of constants would lead to very high probability at
+the boundary of the domain of $\yx$. No choice of constants can produce a
+flat distribution for the connectivity weights $\yx$, but a vaguely
+informative parameter distribution, which we call \enquote{flat prior} can be
+obtained with
+\begin{equation}
+  \label{eq:values_flat_prior}
+\text{\enquote{flat prior}:}\qquad  \ykao=1, \quad  \ymuo=0, \quad  \ynuo=\yd+1, \quad  \yLao = (2+\yd)\id_{\yd};
+\end{equation}
+leading to a distribution for $\yx$ with zero curvature at the centre of the
+domain and flat distribution for the correlations of $\ylmm$.
+
+
+
+
+
+Three such models we examine and assess:
+
+\subsubsection{Logit-normal model}
+
+
+
+
+
+
+\subsubsection{I. Truncated-normal model} We denote it by $\yMtn$. For each
+health condition we assume that the empirical mean and
+covariances~\eqref{eq:example_suff_stat} are sufficient statistics, besides
+the number $\yn$ of training data, as in the example above. This assumption
+selects a truncated normal distribution as likelihood, for each health
+condition:
+\begin{equation}
+  \label{eq:truncated-normal}
+  \yL_{\yh}(\yx \| \ymm_{\yh}, \yss_{\yh}, \yMtn)
+  \propto
+  \begin{cases}
+    \dnormal(\yx \| \ymm_{\yh}, \yss_{\yh}), & \yx \in \clcl{-1,1}^{\yd},
+    \\
+    0, & \text{otherwise}.
+  \end{cases}
+\end{equation}
+These sufficient statistics equivalently say that the average and standard
+deviation of each component of the connectivity weights of past patients, and
+the pairwise correlations of such components, are all that is needed to
+make a probabilistic prediction about the connectivity weights of a new
+patient. The likelihood above is a \emph{truncated} normal owing to the
+restricted range of the connectivity weights. Because of the truncation the
+parameters $(\ymm_{\yh}, \yss_{\yh})$ do not exactly equal the and
+covariance matrix of the distribution.
+
+For the parameter distribution we first decompose the \enquote{quasi-covariance}
+parameter $\yss_{\yh}$ into a diagonal matrix of \enquote{quasi-standard
+  deviations} $\ycc_{\yh}$ and a matrix of \enquote{quasi-correlations}
+$\yrr_{\yh}$, in the standard way:
+\begin{equation}
+  \label{eq:trunc-norm_decomp_covariance}
+  \yss_{\yh} = \ycc_{\yh} \, \yrr_{\yh} \, \ycc_{\yh}.
+\end{equation}
+Then we choose a product of independent distributions:
+\begin{subequations}
+  \begin{equation}
+    \label{eq:truncated-normal_parameters_factor_condition}
+    \pf(\ymm_{\yhu},\ycc_{\yhu},\yrr_{\yhu};
+    \ymm_{\yhd},\ycc_{\yhd},\yrr_{\yhd} \| \yMtn, \yI)
+    = \pf(\ymm_{\yhu},\ycc_{\yhu},\yrr_{\yhu}\| \yMtn, \yI)\times
+    \pf(\ymm_{\yhd},\ycc_{\yhd},\yrr_{\yhd} \| \yMtn, \yI),
+  \end{equation}
+  and for each health condition $\yh$, omitting this subscript from the
+  parameters for brevity,
+  \begin{gather}
+    \label{eq:truncated-normal_parameters_factor_individual}
+    \pf(\ymm,\ycc,\yrr\| \yMtn, \yI)
+    =
+    \prod_k\pf(\ym_k\|\yMtn, \yI) \times \prod_k \pf(\yc_{kk}\|\yMtn, \yI) \times
+    \pf(\yrr_{\yh}\| \yMtn, \yI),
+    \\
+    \label{eq:truncated-normal_parameters}
+    \begin{gathered}
+      \pf( \ym_k\|\yMtn, \yI)
+      = \frac{1}{2}
+      \delt( -1 \le \ym_k \le 1 ),
+      \qquad
+      \pf( \yc_{kk}\|\yMtn, \yI)
+      = \frac{1}{7\yc_{kk}}
+      \delt(-5 \le \ln\yc_{kk} \le 2),
+      \\
+      \pf(\yrr\| \yMtn, \yI)
+      = \text{such that the $\yr_{kl}$ have uniform distributions}.
+    \end{gathered}
+  \end{gather}
+\end{subequations}
+We are following Barnard \etal\ \citey{barnardetal2000} in the idea of
+assigning independent priors to means, standard deviations, and
+correlations. The uniform distribution for the location parameters $\ym_i$ seems
+to represent well our initial ignorance of where the means of the connectivity
+weights of an health condition could lie. The distribution for scale
+parameters $\yc_{ii}$ is uniform in their logarithm, following arguments of
+scale-invariance by Jeffreys
+\citey[\sect~3.10]{jeffreys1946,jeffreys1939_r2003}; we chose a nominal
+lower bound of circa $0.01$ % 10^-2.2
+since we expect the connectivity weights to be contaminated by
+fMRI-measurement noise, and a nominal upper bound of circa $10$ % 0.87
+that yields a flat likelihood $\yL$ in the range $\clcl{-1,1}$. The distribution
+for $\yrr$ is obtained by marginalizing an inverse-Wishart distribution
+with $\yd+1$ degrees of freedom over its variance variables
+\citetext{\citealp[\sect~3.6]{gelmanetal1995_r2014};
+  \citealp[\sect~2.2]{barnardetal2000}}, leading to a distribution that has
+uniform marginals for each correlation $\yr_{ij}$; the distribution is not
+uniform in the full space of matrices $\yrr$, owing to the constraints
+among their elements.
+
+Owing to the analytically intractable combination of likelihood and
+parameter distribution, this model was studied using Markov-chain Monte Carlo
+simulations with random-dive Metropolis-Hastings sampling
+\citep{dutta2012}\mynote{LM: reference to methods section instead}. The
+calculation of the truncated-normal is itself laborious
+\citep{geweke1991,geweke2005}. For these reasons this model is
+computationally expensive.
+
+\subsubsection{II. Beta-product model}
+
+We denote it by $\yMb$. For each health condition we assume that the geometric
+means of the quantities $(1+\yxx_i)$ and $(1-\yxx_i)$ are sufficient
+statistics:
+\begin{equation}
+  \label{eq:beta_suff_stats}
+  \Biggl[ \oldprod_{i_{\yh}=1}^{\yn_{\yh}} (1+\yx_{i_{\yh}})\Biggr]^{\frac{1}{\yn_{\yh}}},
+  \qquad
+  \Biggl[ \oldprod_{i_{\yh}=1}^{\yn_{\yh}} (1-\yx_{i_{\yh}})\Biggr]^{\frac{1}{\yn_{\yh}}}.
+\end{equation}
+The geometric mean makes sense because correlation is a
+normalized quantity
+\citep[\sect~IMD4:9--11]{flemingetal1986,pattersonetal2005}, and the affine
+transformation is necessary to have positive values in the geometric mean.
+These sufficient statistics select a product of affinely transformed beta
+distributions as likelihood for each health condition:
+\begin{equation}
+  \label{eq:beta_likelihood}
+  \yL_{\yh}(\yx \| \yba_{\yh}, \ybb_{\yh}, \yMb, \yI) =
+  \oldprod_{k=1}^{\yd} \frac{1}{2}
+  \dbeta\biggl[\frac{(\yx_{\yh})_k + 1}{2} \bigcond
+  (\yba_{\yh})_k, (\ybb_{\yh})_k\biggr],
+\end{equation}
+where $(\yba_{\yh}, \ybb_{\yh})$ are the $\yd$ pairs of scale parameters of
+the beta distribution. In contrast to the previous and the next model,
+these sufficient statistics lack any kind of joint information (like
+correlations) between the components of the connectivity weights.
+
+For the parameter distribution we first express the scale parameters of each
+beta distribution in terms of its mean $\ybm$ and standard deviation
+$\ybs$; omitting the health-condition and component indices for brevity,
+% calculation in study_tnormal_beta.nb
+\begin{equation}
+  \label{eq:mean_std_from_beta_parameters}
+  \ybaa = \frac{(1+\ybmm)\,(1-\ybmm^2-\ybss^2)}{2\ybss^2},
+  \qquad
+  \ybbb = \frac{(1-\ybmm)\,(1-\ybmm^2-\ybss^2)}{2\ybss^2}.
+\end{equation}
+Then we choose again a product of independent distributions for the two health
+conditions,
+\begin{subequations}
+  \begin{equation}
+    \label{eq:beta_parameters_factor_condition}
+    \pf(\ybm_{\yhu}, \ybs_{\yhu} ; \ybm_{\yhd}, \ybs_{\yhd} \| \yMb, \yI)
+    =
+    \pf(\ybm_{\yhu}, \ybs_{\yhu} \|\yMb, \yI) \times
+    \pf(\ybm_{\yhd}, \ybs_{\yhd} \| \yMb, \yI),
+  \end{equation}
+  and for each health condition, omitting the subscript $\yh$,
+  \begin{gather}
+    \label{eq:beta_parameters_factor_individual}
+    \pf(\ybm, \ybs \|\yMb, \yI) =
+    \prod_k \pf( \ybmm_k\|\yMb, \yI)\,\pf( \ybss_k\| \ybmm_k, \yMb, \yI)
+    \\  
+    \label{eq:beta_parameters}
+    \begin{aligned}
+      \pf( \ybmm_k\|\yMb, \yI) &= 
+                                 \frac{1}{2}
+                                 \delt( -1 \le \ybmm_k \le 1 ),
+      \\
+      \pf( \ybss_k\| \ybmm_k, \yMb, \yI)
+                               &= \frac{1}{(5+\ln\sqrt{\smash[b]{1-\ybmm_k^2}})\,\ybss_k}
+                                 \delt\bigl(-5 \le \ln\ybss_k \le \ln\sqrt{\smash[b]{1-\ybmm_k^2}}\bigr).
+    \end{aligned}
+  \end{gather}
+\end{subequations}
+The motivation for a uniform distribution for the means $\ybmm_i$ and a
+log-uniform distribution for the standard deviations $\ybss_i$ is the same
+as for the truncated-normal model. The nominal lower bound for the standard
+deviation is again circa $0.01$ and the upper bound is
+$\sqrt{\smash[b]{1-\ybmm_i^2}}$, the theoretical maximum.
+
+This model is also analytically intractable but numerically easier than the
+truncated-normal one, thanks to its factorization properties. It was also
+studied using Markov-chain Monte Carlo with random-dive Metropolis-Hastings
+sampling.
+
+\subsubsection{III. Logit-normal model}
+\label{sec:logit-normal_model}
+
+We denote it by $\yMln$. For each health condition we take as sufficient
+statistics the empirical means and empirical covariance matrices of an
+inverse-sigmoid function $\logit$ of the connectivity weights $\yxx_i$. We
+call this function, somewhat improperly, \enquote{logit}:
+\begin{equation}
+  \label{eq:inv-logit}
+\logit\colon \opop{-1,1} \to \RR, \qquad
+  \logit(\yxx_k) \defd \ln\frac{1+\yxx_k}{1-\yxx_k},
+\end{equation}
+see \fig~\ref{fig:logit_function}. For brevity we shall denote
+$\logit(\yx) \defd \bigl( \logit(\yxx_i) \bigr)$.
+The sufficient statistics are therefore
+\begin{equation}
+  \label{eq:logit-normal_suff_stats}
+  \av{\logit(\yx)}_{\yh} \defd \frac{1}{\yn_{\yh}}\oldsum_{i_{\yh}=1}^{\yn_{\yh}} \logit(\yx_{i_{\yh}}), \qquad
+\Cov[\logit(\yx)]_{\yh} \defd  \frac{1}{\yn_{\yh}}\oldsum_{i_{\yh}=1}^{\yn_{\yh}}
+  (\yx_{i_{\yh}}-\av{\logit(\yx)}_{\yh})(\yx_{i_{\yh}}-\av{\logit(\yx)}_{\yh})\T.
+\end{equation}
+With this choice the likelihood is a normal distribution for the
+logit-transformed connectivity weights:
+\begin{equation}
+  \label{eq:logit-normal}
+  \yL_{\yh}(\yx \| \ylmm_{\yh}, \ylss_{\yh}, \yMln, \yI)
+=
+\dnormal[\logit(\yx) \| \ylmm_{\yh}, \ylss_{\yh}]
+\, \oldprod_k\frac{2}{1-\yxx_k^2},
+\end{equation}
+the last factor being the Jacobian determinant for the logit
+transformation.
+
+The idea of transforming a quantity into a normally distributed one was
+discussed by Edgeworth \citey{edgeworth1898}, and for generalized logit
+transformations by Johnson \citey{johnson1949} and Mead \citey{mead1965}.
+When the likelihood is a normal distribution we can use a conjugate
+parameter distribution, that is, a parameter distribution that maintains the same
+functional form when conditional on the data
+\citetext{\citealp[\chap~9]{degroot1970_r2004};
+  \citealp{diaconisetal1979b}}. This is a convenient statistical model,
+with closed-form formulae, and unlike the previous two it allows for
+bimodal probability distributions for the connectivity weights.
+
+Assuming again independent parameter distributions for the two health conditions,
+\begin{subequations}\label{eq:general_prior_logit-normal}
+  \begin{equation}
+    \label{eq:logit-normal_parameters_factor_condition}
+    \pf(\ylmm_{\yhu},\ylss_{\yhu} ;
+    \ylmm_{\yhd},\ylss_{\yhd}\| \yMln, \yI)
+    = \pf(\ylmm_{\yhu},\ylss_{\yhu} \| \yMln, \yI)\times
+    \pf(\ylmm_{\yhd},\ylss_{\yhd}  \| \yMln, \yI),
+  \end{equation}
+  for each health condition we assume a normal-inverse-Wishart distribution
+  for the parameters:
+  \begin{gather}
+    \label{eq:logit-normal_parameters_factor_individual}
+    \pf(\ylmm, \ylss \|\ykao,\ymuo,\ynuo,\yLao,\yMln, \yI) =
+    \pf( \ylmm\| \ylss, \ykao,\ymuo, \yMln, \yI)
+    \times \pf( \ylss\| \ynuo,\yLao, \yMln, \yI),
+    \\[\jot]  
+    \begin{aligned}
+      \label{eq:logit-normal_parameters}
+      \pf( \ylmm\| \ylss, \ykao, \ymuo, \yMln, \yI)
+      &= \dnormal(\ylmm \| \ymuo, \ylss/\ykao),
+      \\
+      \pf( \ylss\| \ynuo,\yLao, \yMln, \yI)
+      &= \diwishart(\ylss \| \ynuo, \yLao)\propto
+        \det(\ylss)^{-\frac{\ynuo+\yd+1}{2}}
+        \,
+        \exp\bigl(-\tfrac{1}{2} \tr\yLao\ylss^{-1}\bigr)
+    \end{aligned}
+  \end{gather}
+\end{subequations}
+\citetext{for the inverse-Wishart distribution see
+\citealp[\sect~3.4]{guptaetal2000}; \citealp{tiaoetal1964}; also
+\citealp[\sect~3.2.5]{bernardoetal1994_r2000}}.
+
+Before we specify the constants $(\ykao,\ymuo,\ynuo,\yLao)$ of this
+parameter distribution, let us recall some of its properties
+\citetext{\citealp[\sect~3.6]{gelmanetal1995_r2014};
+  \citealp{minka1998_r2001,murphy2007}}. As mentioned, its form remains the
+same when it is conditioned on the data, with updated constants
+$(\yka,\ymu,\ynu,\yLa)$ depending on the prior ones and on the sufficient
+statistics~\eqref{eq:logit-normal_suff_stats}:
+\begin{multline}\label{eq:update_consts_logit-norm}
+  \pf[\ylmm, \ylss \|(\yx_i),\ykao,\ymuo,\ynuo,\yLao,\yMln, \yI] \equiv
+  \pf(\ylmm, \ylss \|\yka,\ymu,\ynu,\yLa,\yMln, \yI)
+  \qquad\text{with}\\
+  \begin{aligned}
+    \yka &= \ykao + \yn,\quad     &\ynu &= \ynuo + \yn,\\
+    \ymu &= \frac{\ykao\,\ymuo+\yn\, \av{\logit(\yx)}}{\ykao+\yn},\quad
+    &\yLa &= \yLao + \yn\, \Cov[\logit(\yx)]
+           + \frac{\ykao\,\yn}{\ykao+\yn} \bigl[\av{\logit(\yx)}-\ymuo\bigr] \bigl[\av{\logit(\yx)}-\ymuo\bigr]\T.
+  \end{aligned}
+\end{multline}
+The normal-inverse-Wishart distribution has these characteristics:
+\begin{equation}
+  \label{eq:moments_modes_norm-iwishart}
+  \begin{aligned}
+    &\text{$\ylmm$:}\quad\;\hphantom{\Biggl\{}\text{mean \amp\ mode} = \ymu,
+      \qquad\text{covariances} = \frac{1}{\yka\,(\ynu-\yd-1)}\yLa;\\
+    &\text{$\ylss$:}\quad\left\{ 
+      \!\begin{aligned}
+          &\text{mean} = \frac{1}{\ynu-\yd-1}\yLa,
+            \qquad\text{mode} = \frac{1}{\ynu+\yd+2}\yLa,\\
+          &\text{diagonal variances} =
+            \frac{2}{(\ynu-\yd-3)(\ynu-\yd-1)^2}{(\yLa)_{kk}}^2.
+      \end{aligned}\right.
+  \end{aligned}
+\end{equation}
+
+The formulae above say that the uncertainty in the location parameter
+$\ylmm$ decreases as $\yka$ and $\ynu$ increase for fixed $\yLa$, and the
+uncertainty in the matrix scale parameter $\ylss$ decreases with increasing
+$\ynu$. As mentioned before, when $\ynu=\yd+1$ the marginal distributions
+for the correlations of $\ylmm$ are flat
+\citetext{\citealp[\sect~3.6]{gelmanetal1995_r2014};
+  \citealp[\sect~2.2]{barnardetal2000}}. As the number $\yn$ of training
+data increases, the probability for the data will tend to a logit-normal
+distribution with location and matrix scale parameters equal to the
+empirical average and covariance matrix of the logit-transformed data.
+
+Because of these properties, a \enquote{vaguely informative} parameter
+distribution would have small $\ykao$ and $\ynuo$ and large $\yLao$
+\citep{minka1998_r2001,murphy2007}. For our logit-transformed quantities,
+however, such choice of constants would lead to very high probability at
+the boundary of the domain of $\yx$. No choice of constants can produce a
+flat distribution for the connectivity weights $\yx$, but a vaguely
+informative parameter distribution, which we call \enquote{flat prior} can be
+obtained with
+\begin{equation}
+  \label{eq:values_flat_prior}
+\text{\enquote{flat prior}:}\qquad  \ykao=1, \quad  \ymuo=0, \quad  \ynuo=\yd+1, \quad  \yLao = (2+\yd)\id_{\yd};
+\end{equation}
+leading to a distribution for $\yx$ with zero curvature at the centre of the
+domain and flat distribution for the correlations of $\ylmm$.
+
+\mynote{LM: change this motivation}Another possibility is to construct a
+parameter distribution constructed from data similar to the one under study. We
+select three connectivity weights
+%% "f(9, 51)", "f(49, 68)", "f(50, 68)"
+having high empirical correlations with the remaining $37$ correlations
+across all patients. We compute the empirical covariance matrix $\ylssdata$
+of the logit-transform of these, and set the mode of the scale constant
+$\ylss$, from \eqn~\eqref{eq:moments_modes_norm-iwishart}, equal to this
+covariance matrix. We also choose a small value of $\yka$ to have a larger
+variance for the location parameter $\ylmm$, and set $\ynu=\yd+1$ to have
+flat marginal distributions for the correlations of $\ylmm$. With these
+choices we have an parameter distribution that uses some information from the
+auxiliary data, which we call \enquote{cupped prior} owing to its shape:
+\begin{equation}
+  \label{eq:values_cupped_prior}
+\text{\enquote{cupped prior}:}\qquad  \ykao=0.1, \quad  \ymuo=0, \quad  \ynuo=\yd+1, \quad  \yLao = (2\yd +3) \ylssdata \approx \id_{\yd}.
+\end{equation}
+
+Figure~\ref{fig:priors_logit-n_parameters} shows the one-dimensional
+marginal distribution for any component of the parameter $\ylmm$ and any
+diagonal element of the parameter $\ylss$, for each prior; the correlations
+related to the off-diagonal elements of $\ylss$ are uniformly distributed
+for either prior. Figure~\ref{fig:priors_logit-n} shows the marginal
+probability distribution of each connectivity weight yielded by these two
+parameter distributions.
+\begin{figure}[!h]
+  \centering
+\includegraphics[width=\linewidth]{parameterdensity_priors.pdf}%
+\caption{Marginals of the parameter distribution for the two priors of
+  logit-normal model}
+\label{fig:priors_logit-n_parameters}
+\end{figure}
+\begin{figure}[!h]
+  \centering
+\includegraphics[width=0.75\linewidth]{priors_logit-normal40.pdf}%
+\caption{Marginal probability distribution for each connectivity weight obtained
+  with the two parameter priors of logit-normal model}
+\label{fig:priors_logit-n}
+\end{figure}
+
+\mynote{LM: write short paragraph about additional informative prior
+  constructed from auxiliary data and its poor performance to be discussed
+  later.}
+
+
+Finally, the likelihood \eqref{eq:test_prob_intro} of the health condition
+for this model also has a closed form: a multivariate t~distribution
+\citep{kotzetal2004,minka1998_r2001,murphy2007} with $\ynu-\yd+1$ degrees
+of freedom, mean $\ymu$, and scale matrix
+$\frac{\yka+1}{\yka\,(\ynu-\yd+1)}\yLa$, multiplied by the Jacobian
+determinant of the logit transformation:
+\begin{multline}
+  \label{eq:predictive_distribution}
+  \pf[\yx \| (\yx_i),\ykao,\ymuo,\ynuo,\yLao,\yMln, \yI] \equiv
+  \pf(\yx \| \yka,\ymu,\ynu,\yLa,\yMln, \yI) ={}\\
+  \dstudentt\Bigl[\logit(\yx) \bigcond \ynu-\yd+1, \ymu,
+  \tfrac{\yka+1}{\yka\,(\ynu-\yd+1)}\yLa \Bigr]
+  \,\oldprod_k\frac{2}{1-\yxx_k^2}.
+\end{multline}
+
+
+
+\bigskip
+
+\subsubsection{Further remarks on the three models and on convergence}
+\label{sec:remarks_models}
+
+All three proposed models share an important assumption: that the distribution
+for the parameters of the two health conditions are independent:
+\eqns~\eqref{eq:truncated-normal_parameters_factor_condition},
+\eqref{eq:beta_parameters_factor_condition},
+\eqref{eq:logit-normal_parameters_factor_condition}. Since the likelihoods
+also factorize, the training data for one health condition cannot influence
+the updated probability distribution for the connectivity weights of the other.
+This assumption may not be realistic -- we would expect data of one health
+condition to give at least an idea of the order of magnitude of the other's
+-- and may lead to a lessened predicting power of the models. An explicit
+dependence of the parameters is assumed, for example, in Mosteller \amp\
+Wallace's \citep{mostelleretal1963} analogous study.
+
+This assumption, however, leads to far easier computations -- \eg, Monte
+Carlo simulations can be broken down in two and run in parallel -- and
+simpler closed-form formulae for the logit-normal model. In \sect~** we
+will see that the results are quite good notwithstanding this assumption.
+
+As the training data accumulate, the parameter distribution conditional on them,
+usually called posterior parameter distribution, becomes more and more peaked.
+This is clear in the logit-normal model, for example, by substituting the
+updated constants~\eqref{eq:update_consts_logit-norm} into the parameter
+distribution~\eqref{eq:logit-normal_parameters}: the scale parameters for
+$\ylmm$ and $\ylss$ become increasingly smaller. This means that the
+distribution for the connectivity weights $\yx$,
+\eqn~\eqref{eq:goal_1st_exchangeability_parametric} is approximately equal
+to the likelihood calculated with the mean or mode of the parameters. This
+kind of convergence can happen quite fast, with a small training dataset.
+
+The position of the modes and means of the peaked posterior distributions,
+however, may continue to move as the data further accumulate, although we
+expect them to eventually keep a stable position. This convergence is the
+most important and the most difficult to assess; it cannot be
+mathematically proven (we may imagine a situation where data oscillate with
+increasing period proportional to their number; in this case we would
+observe an eternally oscillating behaviour of our posterior distributions).
+
+\mynote{todo LM: Add comment about correlation of quantities related to the
+  same voxels.}
+
+\subsection{Predictions and assessment of the logit-normal model}
+\label{sec:assessment_logit-normal}
+
+\subsubsection{Predictions}
+
+We can now calculate the probability distribution for the value of a connectivity
+weight $\yx$ given the training data under the logit-normal model,
+using the general formula~\eqref{eq:goal_1st_exchangeability_parametric}
+with the specific likelihood~\eqref{eq:logit-normal} and flat
+prior~\eqref{eq:general_prior_logit-normal} \amp\
+\eqref{eq:values_flat_prior}, or cupped
+prior~\eqref{eq:general_prior_logit-normal} \amp\
+\eqref{eq:values_cupped_prior}. The one-dimensional marginal distributions
+are shown in \figs~\ref{fig:1dmarginals_flat_histo}
+and~\ref{fig:1dmarginals_info_histo} for the two priors, superposed to the
+histograms of the training data. An example of two-dimensional marginal
+distribution is shown in \fig~\ref{fig:2dmarginal}. With this amount of training
+data \mynote{CB: what is the amount?} these posteriors, the logit-t
+distributions~\eqref{eq:predictive_distribution}, are well-approximated by the
+logit-normal likelihood~\eqref{eq:logit-normal} calculated at the mean
+value of the parameters.\mynote{CB: Where can I see this?}
+% * <morrison@fz-juelich.de> 2017-11-29T11:30:35.399Z:
+% 
+% OK, we need to slow right down here.
+% Don't show all the connectivity weights in the figs. 5 and 6. Choose a small number that shows some interesting behavious, like well fitting or bad fitting. Lead the reader by the hand as to what he/she is seeing in the plots and what conclusions she should draw. 
+% Compare the results for flat prior and cupped prior explictly.
+% Please also write more informative captions and put the labelling of colours in there, rather than as a legend.
+% The 2D plot - why is it there? What do we learn from it?
+% 
+% ^.
+
+% \begin{figure}[!h]
+%   \centering
+% \includegraphics[width=\linewidth]{marginals1d_flatprior.pdf}%
+% \caption{One-dimensional marginal distributions for flat prior}
+% \label{fig:1dmarginals_flat}
+% \end{figure}
+\begin{figure}[p]
+  \centering
+\includegraphics[width=\linewidth]{data_1dhisto_flatprior.pdf}
+\caption{One-dimensional marginal distributions for flat prior with
+  histograms of the data}
+\label{fig:1dmarginals_flat_histo}
+\end{figure}
+% * <c.bachmann@fz-juelich.de> 2017-12-12T15:26:32.772Z:
+% 
+% Hi,
+% can we just use panel f(51,91), f(37,91), f(32,58) and f(25,70) for figure 5,6 and 8.  
+% I would like to give the names of the according regions to you such that they can be added
+% as in figure 1. Do you agree with that? I will also include only these panels in figure 1.
+% Could you also (in general) move the legend to the caption? 
+% Thanks:);)
+% Here are the names:
+% 51   Left Superior Parietal Lobule 
+% 91   Left Lingual Gyrus
+% 37   Left Superior Temporal Gyrus, anterior division
+% 32   Left Heschl's Gyrus
+% 58   Left Middle Temporal Gyrus, posterior division
+% 25   Right Central Opercular Cortex
+% 70  Right parahippocampal gyrus, posterior division
+% 
+% and here the shortcuts:
+% 
+% "l Heschl's gyr - l middle temp gyr (pd)",
+% "r cent operc cort - r paracingulate gyr (pd)",
+% "l sup par lob - l lingual gyr"
+% "l sup temp gyr (ad)-l lingual gyr"
+% 
+% ^.
+% \begin{figure}[!h]
+%   \centering
+% \includegraphics[width=\linewidth]{marginals1d_infoprior.pdf}%
+% \caption{One-dimensional marginal distributions for cupped prior}
+% \label{fig:1dmarginals_info}
+% \end{figure}
+\begin{figure}[p]
+  \centering
+\includegraphics[width=\linewidth]{data_1dhisto_infoprior.pdf}
+\caption{One-dimensional marginal distributions for cupped prior with
+  histograms of the data}
+\label{fig:1dmarginals_info_histo}
+\end{figure}
+
+
+\begin{figure}[b]
+  \centering
+\includegraphics[width=0.75\linewidth]{2dmarginal_prior37_13_34.png}
+\caption{Example marginal distribution for two connectivity weights}
+\label{fig:2dmarginal}
+\end{figure}
+
+These plots \mynote{CB: Do you mean figure 6?} show that the data have roughly determined the shape and the
+modes of the probability distributions, but the prior parameter distributions still
+affect their precise locations. As clear from
+\fig~\ref{fig:priors_logit-n}, the flat prior tends to move the modes to
+the centre of the domain, the cupped prior to the borders. The fit of
+the posterior distributions to the training data is not spectacular. Some
+of the histograms, for example that for $\yx(51,91)$,
+suggest that some of the connectivity weights might have bimodal
+distributions with modes close to the centre of the domain, at least for
+schizophrenic patients. A likelihood different from a logit-normal would be
+needed to fit these features. However, the training data set is not large, and the
+fit could change for better or worse with more training data.
+
+\begin{figure}[p]
+  \centering
+\includegraphics[width=\linewidth]{plotparams.pdf}
+\caption{One-dimensional marginal distributions for the location and scale
+  parameters $(\ylmm,\ylss)$ for both health groups and both priors}
+\label{fig:parameter_distributions}
+\end{figure}
+The marginals of the posterior parameter distributions for the scale and
+location parameters $(\ylmm,\ylss)$ are shown in
+\fig~\ref{fig:parameter_distributions} for both health groups and both priors.
+The two health groups have clearly distinct location parameters, but their
+scale parameters are clearly distinct only for few connectivity weights, \eg\
+$\yx(25,70)$. The two priors agree on the means and modes of the location
+parameters $\ylmm$, but yield very different means and modes of the scale
+parameters $\ylss$. The posterior distributions of these parameters are enough
+peaked to make the logit-normal likelihood~\eqref{eq:logit-normal},
+with the mean parameter values, a good approximation of the posterior
+distribution~\eqref{eq:predictive_distribution} for $\yx$.
+% * <morrison@fz-juelich.de> 2017-11-29T11:40:19.974Z:
+% 
+% Again, slow down here. 
+% Don't show all the distributions, just show enough to make your point.
+% Make your point more accessible to a non-mathematician. What should we conclude from different location parameters and similar scales, or vice versa? What are the consequences for the task at hand?
+% Please expand the caption and lose the legend
+% 
+% ^.
+\mynote{LM: explain why graphs for informative prior are not shown (or show
+  them otherwies).}
+
+\subsubsection{Assessment}
+
+The main goal of the statistical model, however, is to provide likelihoods
+\eqref{eq:test_prob_intro} for the health conditions, good enough to help
+the clinician update her pre-test probability about the health condition of
+a patient, \eqn~\eqref{eq:pre-test_prob_intro}. Let us explore how the
+model fares in this respect. Since we do not have extra patients to test,
+we can get a feeling of the proficiency of the model through two devices.
+The first device is to set one patient from our dataset aside for
+diagnosing his or her condition by training the model with the rest of the
+patients, doing this for all our dataset patients in turn; this device has
+similarities to leave-one-out cross-validation \citep[vol.~2,
+pp.~1454--1458]{allen1974,stone1974,kotzetal1982_r2006}. The second device
+is to diagnose each patient by training the model with all our dataset
+patients, including that same patient; we are thus imagining to have a new
+patient with the same characteristics of one already observed
+\citep[\cf][]{gelmanetal1996,draperetal1996}. The last device will also
+illustrate how the model updates itself and takes into account new data and
+possible outliers.
+
+Either device requires the clinician's pre-test probability
+$\p(\text{health condition}\Cond\text{prior info})$. We consider two cases.
+First, the case of a completely uncertain clinician who assigns equal
+pre-test probabilities to either health condition; the post-test
+probability thus relies completely on the likelihoods for the health
+conditions given by the model. Second, the case of a misinformed clinician
+who assigns a high, $95\%$ pre-test probability to the \emph{wrong} health
+condition; this allows us to see how much the likelihoods for the health
+conditions given by the model can salvage the clinician's poor initial
+assessment.
+
+The results of the first, leave-one-out device for the case of the
+uncertain clinician are shown in \fig~\ref{fig:xval_flatprior} for both
+priors. The flat prior yields more false negatives ($24.5\%$) among the
+healthy patients than the cupped prior ($3.6\%$), and vice versa the cupped
+prior yields more false positives ($34.7\%$) among the healthy patients
+than the flat prior ($28.6\%$). The false positives are quite high for both
+priors; this may be because of the fewer number of training data for the
+schizophrenic condition (48 vs 55; 13\% fewer).
+%% cross-val results %%
+%% flat prior: 85.45\%  71.4\%; 78.4\% (g-mean 78.1\%)
+%% info prior: 96.4\%  65.3\%; 80.8\% (g-mean 79.3\%)
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=\linewidth]{1outxval_flatprior.pdf}\\
+  \includegraphics[width=\linewidth]{1outxval_infoprior.pdf}%
+\caption{Upper histogram: cross-validation with flat prior. True positives:
+  $85.5\%$, false negatives: $24.5\%$; true negatives: $71.4\%$, false
+  positives: $28.6\%$. Lower histogram: cross-validation with cupped prior.
+  True positives: $96.4\%$, false negatives: $3.6\%$; true negatives:
+  $65.3\%$, false positives: $34.7\%$.}
+\label{fig:xval_flatprior}
+\end{figure}
+
+
+
+%% cross-val results "10\% bad clinician"%%
+%% flat prior: 50.9\%  36.7\%; 43.8\% (g-mean 43.2\%)
+%% info prior: 56.4\%  28.6\%; 42.5\% (g-mean 40.1\%)
+%%
+%% cross-val results "5\% bad clinician"%%
+%% flat prior: 30.9\%  30.6\%; 30.8\% (g-mean 30.8\%)
+%% info prior: 27.3\%  20.4\%; 23.8\% (g-mean 23.6\%)
+The results of the first device for the case of the misinformed clinician
+are:
+\begin{itemize}
+\item Flat prior: $30.9\%$ true positives and $69.1\%$ false negatives for
+  the healthy patients; $30.6\%$ true negative and $69.4\%$ false positives
+  for the schizophrenic patients.
+\item Cupped prior: $27.3\%$ true positives and $72.7\%$ false
+  negatives for the healthy patients; $20.4\%$ true negative and $79.6\%$
+  false positives for the schizophrenic patients.
+\end{itemize}
+Thus, even if the clinician would have correctly diagnosed only one patient
+in twenty, the model manages to raise this ratio to almost one in four or
+almost one in three. The flat prior outperforms the cupped one in this
+case.
+% * <morrison@fz-juelich.de> 2017-11-29T11:53:02.484Z:
+% 
+% I wonder if a table might help convey this information more efficiently
+% 
+% ^.
+
+\begin{figure}[!h]
+  \centering
+\includegraphics[width=\linewidth]{alldata_flatprior.pdf}\\
+\includegraphics[width=\linewidth]{alldata_infoprior.pdf}%
+\caption{Upper histogram: replicate validation with flat prior. True positives: $100\%$,
+false negatives: $0\%$; true negatives: $95.9\%$, false positives: $4.1\%$.
+Lower histogram: Replicate validation with cupped prior. True positives: $100\%$,
+false negatives: $0\%$; true negatives: $81.6\%$, false positives: $18.4\%$.}
+\label{fig:allval_flatprior}
+\end{figure}
+The results of the second, replicate-patient device for the case of the
+uncertain clinician are shown in \fig~\ref{fig:allval_flatprior} for both
+priors. Neither prior leads to false negatives; the flat prior leads to only
+two false positives out of 49 ($4.1\%$), much better than the 8 in 49
+($18.4\%$) of the cupped prior. The schizophrenic patients No. 22 and
+42 seem to be strong outliers, although their categorization in the source
+database was \enquote{schizo strict} like the rest.
+%% replicate-val results %%
+%% flat prior: 100\%  95.9\%;  97.96\% (g-mean 97.9\%)
+%% info prior: 100\%  81.6\%;  90.8\% (g-mean 90.35\%)
+
+%% replicate-val results "5\% bad clinician"%%
+%% flat prior: 80\%  71.4\%
+%% info prior: 65.5\%  40.8\%
+The results of the second device for the case of the misinformed clinician
+are:
+\begin{itemize}
+\item Flat prior: $80\%$ true positives and $20\%$ false negatives for
+  the healthy patients; $71.4\%$ true negative and $28.6\%$ false positives
+  for the schizophrenic patients.
+\item Cupped prior: $65.5\%$ true positives and $34.5\%$ false
+  negatives for the healthy patients; $40.8\%$ true negative and $59.2\%$
+  false positives for the schizophrenic patients.
+\end{itemize}
+The model manages to overturn the misinformed clinician's wrong diagnosis,
+and the flat prior outperforms the cupped prior, leading to a majority
+of true positives and true negatives.
+
+A comparison of the leave-one-out-device
+fig.~\ref{fig:xval_flatprior} with the
+replication-device
+fig.~\ref{fig:allval_flatprior} shows that
+wrongly predicted cases, once they are incorporated in the training, lead
+to subsequent correct predictions of similar cases, especially when the
+flat prior is used. Clearly our training set is still too small, but a
+great advantage of a statistical model is its ability to update itself at
+every new use.
+
+
+%% fmri-data log-evidence for 37 quantities %%
+%% flat: -1759.03
+%% cupped: -2479.88
+%% informed: -1273.52
+%%
+%% average log-evidence after update with all data minus one:
+%% flat: -11.53
+%% cupped: -16.11
+%% informed: -9.096
+As an additional assessment of the difference between using the flat prior
+and the cupped prior with the model, we calculate their log-evidence
+for full set of $\yd=37$ connectivity weights. The flat prior is strongly
+favoured with a log-evidence $-1759$, against $-2529$ for the cupped
+prior (these log-evidences are much lower than in
+table~\ref{tab:model_comparison} owing to the larger dimensionality of the
+data space). \mynote{LM: add log-evidence for informative prior.}
+
+%% health-condition log-evidence %%
+%% flat: -336
+%% cupped: -503
+%% informed: -209
+%%
+%% average log-evidence after update with all data minus one:
+%% flat: -0.642515
+%% cupped: -0.555595
+%% informed: -1.10658
+
+\mynote{LM: add discussion about log-evidence when fMRI data is fixed and
+  its accordance with the cross-validation graphs}
+
+\subsubsection{Conditional entropy and convergence}
+
+Given our training set of patients, we can also ask this question: what is
+the probability the clinician will arrive at a post-test probability $\ynp$
+for schizophrenia for the next future patient $i=0$, assuming a
+fifty-fifty pre-test probability? This probability will depend on the
+result $\yx$ of the fMRI test that will be made on the patient:
+$\ynp=\pf(\yH_0^{\yhd} \| \yx,\yD, \yM, \yI)$. \mynote{CB: Sorry I do not
+quite get it. Do you want to know the post-test probability of a subject
+beeing e.g. schizophrenic without or with having the results of the scans?
+Or did I understand you completely wrong here?}
+The model can then answer this
+question by predicting the future value of $\yx$, relying on the values of
+connectivity weights observed so far for the two health conditions. By using
+the probability rules for conjunction and conditional probability, and
+making a change of variables from $\yx$ to $\ynp$,
+\begin{subequations}\label{eq:prob_of_prob}
+  \begin{gather}
+    \begin{aligned}
+    \p(\yH_0^{\yhd} \| \yD\land \yM \land \yI)
+    &= \int \pf(\yH_0^{\yhd} \| \yx,\yD, \yM, \yI)
+      \,
+      \pf(\yx \| \yD, \yM, \yI)\,\di\yx,
+    \\
+      &= \int \ynp \underbrace{
+        \int\delt\bigl[\ynp - \pf(\yH_0^{\yhd} \| \yx,\yD, \yM, \yI)\bigr]
+      \,
+      \pf(\yx \| \yD, \yM, \yI)\,\di\yx}_{\zerob{\scriptsize\enquote{probability distribution} for $\ynp$}}
+        \,\di\ynp,
+      \\
+      &=\int \ynp\, \pf(\ynp\| \yD, \yM, \yI) \,\di\ynp,
+    \end{aligned}\label{eq:prob_of_prob_main}
+    \\[\jot]
+    \shortintertext{with}
+    \begin{aligned}
+    \pf(\yH_0^{\yhd} \| \yx,\yD, \yM, \yI)
+    &= \frac{\pf(\yx \| \yH_0^{\yhd} ,\yD, \yM, \yI) \, \pf(\yH_0^{\yhd}\|\yD,\yI)}{
+      \sum_{\yh}\pf(\yx \| \yH_0^{\yh} ,\yD, \yM, \yI) \, \pf(\yH_0^{\yh}\|\yD,\yI)},
+    \\[\jot]
+    \pf(\yx \| \yD, \yM, \yI)
+    &= \sum_{\yh}\pf(\yx \| \yH_0^{\yh} ,\yD, \yM, \yI) \, \pf(\yH_0^{\yh}\|\yD,\yI),
+    \end{aligned}\label{eq:prob_of_prob_defs}
+  \end{gather}
+\end{subequations}
+and the pre-test probability $\pf(\yH_0^{\yhd}\|\yD,\yI)=1/2$. The
+probability distribution for $\ynp$ can be sampled by sampling $\yx$, which for
+this model means simply sampling from the
+t~distribution~\eqref{eq:predictive_distribution} and then make a logit
+transformation. Note that the expected value of $\ynp$ is
+$\pf(\yH_0^{\yhd}\|\yD,\yI)=1/2$, as expected from symmetry and as can be
+checked by substituting \eqref{eq:prob_of_prob_defs}
+in~\eqref{eq:prob_of_prob_main} and simplifying.
+
+We can also calculate the Shannon entropy (in base $2$) associated with the
+probability distribution $(\ynp, 1-\ynp)$, measured in bits:
+\begin{equation}
+  \entropy(\ynp) \defd -\ynp\log_2\ynp - (1-\ynp)\log_2(1-\ynp),
+  \label{eq:entropy_def}
+\end{equation}
+$\entropy(\ynp)=1\;\bit$ corresponding to complete uncertainty
+(fifty-fifty) and $\entropy(\ynp)=0\;\bit$ to complete certainty (100\% or
+0\%). The expected value of this entropy under the distribution
+$\pf(\ynp \| \yD, \yM, \yI)$ is the conditional entropy of the unknown
+condition $\yH_0^{\yh}$ given the unknown quantity $\yx$ \citep[\sects~2.2,
+8.4]{coveretal1991_r2006}: from \eqn~\eqref{eq:prob_of_prob_main},
+\begin{equation}
+  \label{eq:conditional_entropy_equivalence}
+  \int \entropy(\ynp) \, \pf(\ynp \| \yD, \yM, \yI) \,\di\ynp
+  \equiv
+  \int \entropy\bigl[\pf(\yH_0^{\yhd} \| \yx,\yD, \yM, \yI)\bigr]
+  \, \pf(\yx \| \yD, \yM, \yI)\,\di\yx
+  \defs \entropy(\yH_0^{\yh} \|\yx).
+\end{equation}
+The conditional entropy tells us how much uncertainty about the health
+condition $\yH_0^{\yh}$ we expect to have upon knowledge of the scan result
+$\yx$.
+
+With no training, the distribution of $\ynp$ is a Dirac delta at
+$\ynp=1/2$, and the conditional entropy is $1\;\bit$: the model is
+saying that for the very first patient our untrained test will not change
+the pre-test probability, as expected. As training data accumulate the
+distribution of $\ynp$ shifts from the centre to the borders and the
+conditional entropy decreases. Figure~\ref{fig:cond_entropy_4data} shows
+the distribution conditional on two data per health condition with the flat prior.
+\begin{figure}[!h]
+  \centering
+\includegraphics[width=0.75\linewidth]{conditional_entropy40_train_4.pdf}%
+\caption{Distribution of predicted future probabilities for schizophrenic
+  patient and conditional entropy for the next prediction ($\approx 66\%$
+  certainty), assuming complete pre-test uncertainty}
+\label{fig:cond_entropy_4data}
+\end{figure}
+
+
+The distribution of the probability $\ynp$ with all training data and the
+flat prior is shown in the histogram of \fig~\ref{fig:cond_entropy}; its
+conditional entropy is $0.282\;\bit$, corresponding to a certainty of
+$95.1\%$ in one direction of the other. In other words, the model says that
+when we diagnose the next patient starting from a fifty-fifty pre-test
+probability, we can expect reaching a post-test probability of $95\%$ for
+one health condition or the other. This is consistent with the replication
+assessment of \fig~\ref{fig:allval_flatprior}. The histogram also shows
+that the model seems to be more certain in the case of healthy patients
+than schizophrenic ones, as shown by the higher peak for the former (the
+probability mass for the two cases is equal, however, \ie\
+$\pf(\ynp>1/2)= \pf(\ynp<1/2)$). This feature is also reflected in the
+assessments of \figs~\ref{fig:xval_flatprior}
+and~\ref{fig:allval_flatprior}.
+%% flat: cond entr = 0.28 bit = 95.1\%
+%% info: cond entr = 0.45 bit = 90.5\%
+%% flat with 1.1\% schizo (real data): cond entr = 97.3\%
+\begin{figure}[!h]
+  \centering
+\includegraphics[width=0.75\linewidth]{conditional_entropy40_flat.pdf}%
+\caption{Distribution of predicted future probabilities for schizophrenic
+  patient and conditional entropy for the next prediction ($\approx 95\%$
+  certainty), assuming complete pre-test uncertainty}
+\label{fig:cond_entropy}
+\end{figure}
+
+For the cupped prior the distribution of $\ynp$ (not shown) is slightly
+less peaked at $\ynp=0\text{ or }1$ and has a higher conditional entropy of
+$0.451\;\bit$, corresponding to a $90.6\%$ certainty, slightly less
+than for the flat prior. This difference accords with the difference
+between the replication assessments of the two priors,
+\fig~\ref{fig:allval_flatprior}.
+
+
+The conditional entropy might be taken as a measure of the training data
+needed to reach a stable posterior parameter distribution that is unlikely to
+change with more data. A conditional entropy of $0.08\;\bit$, for example,
+would correspond to a $99\%$ post-test certainty. A rough calculation with
+replication of our data suggests that we would need almost four times the
+amount we have now, \ie\ circa 200 healthy and 200 schizophrenic
+patients, to reach this level.
+
+
+\subsubsection{Which prior?}
+
+In many studies a choice is made between different priors. Testing both and
+comparing the results can be profitable if the computational costs are low
+enough as for the logit-normal model. In fact, even combining them can lead
+to better predictions \citep{hoetingetal1999}. Let us compare their
+behaviour.
+
+The log-evidence is \emph{overwhelmingly} in favour of the flat prior: this
+prior gives the training data $10^{332}$ times more probability than the
+cupped prior does. The reason is that the cupped prior considers very high
+or very low values of connectivity weights $\yx_k$ as more likely, see
+\fig~\ref{fig:priors_logit-n}, whereas the data tend to group towards the
+centre of the $\yx$ domain, as shown by the histograms in
+\fig~\ref{fig:1dmarginals_flat_histo}. Yet the leave-one-out and replicate
+assessments show that both priors perform very similarly.
+
+We studied also other parameter distributions (studies not reported here),
+constructed from the auxiliary data to have better-informed constants
+$(\ykao,\ymuo,\ynuo,\yLao)$, even different for each health condition; some
+of these priors had even higher log-evidence than the flat prior. Yet they
+performed rather poorly in the two assessments -- yielding only
+$50\%$ to $60\%$ true positive and negatives.
+
+These studies show that the log-evidence cannot be taken as a measure of
+how much the likelihoods for the health conditions given by a model can
+improve the pre-test probability of the clinician. This is clear if we
+imagine a scenario where healthy and schizophrenic patients presents
+statistically very similar fMRI data: even if we could find a model that
+predict such data with high probability, this model would give equal
+likelihoods to both health conditions, and therefore the post-test
+probabilities would be equal to the pre-test ones, as clear from
+\eqn~\eqref{eq:bayes_theorem_intro}.
+
+
+\mynote{LM: old version below}
+The probability of a model given a set of data is, by Bayes's theorem,
+\begin{equation}
+  \label{eq:probability_model}
+  \p(\text{model} \Cond \text{data} \Land \text{prior info}) \propto
+  \p(\text{data} \Cond \text{model} \Land \text{prior info}) \times
+  \p(\text{model} \Cond  \text{prior info}). 
+\end{equation}
+The first factor on the right-hand side is the likelihood of the model in
+view of the data. If the models we consider are assigned equal prior
+probabilities, the most probable model is the one with the greatest
+likelihood. The ratio of the likelihoods of two models is called Bayes
+factor \citetext{\citealp[\chaps~V, VI, A]{jeffreys1939_r2003};
+  \citealp{good1950,mackay1992}. For historical references besides
+  \citealp{jeffreys1935,jeffreys1936} see \citealp[\chaps~14, 15]{good1983}
+  and references therein}. Given the smallness of the probabilities
+involved, the logarithm of the likelihoods is often used, or the logarithm
+of the odds, which is called \enquote{weight of evidence} by Good
+\citey[\sect~6.1]{good1950} and just \enquote{evidence} by Jaynes
+\citey[\sect~4.2]{jaynes1994_r2003}. Here we call it \emph{log-evidence}.
+
+
+Two factors combine for a parametric model to have greater log-evidence than
+another. First, the data lie in the typical set \citep[see][\sect~3.1 for a
+more formal definition]{coveretal1991_r2006} predicted by the first model
+more than the typical set predicted by the second.\mynote{CB: What is a 
+typical set? What is the first and second model} Second, the typical set
+of the first model is smaller than the second's: because of normalization,
+data in a smaller typical set receive larger probability. The second factor
+is called \enquote{Ockham's razor} because it favours models with fewer
+parameters, penalizing complex models prone to overfitting. Mackay
+\citey{mackay1992} gives a pellucid discussion of this topic.
+Log-evidence and Bayes factors require a careful interpretation, especially
+with regard to their dependence on the parameter distributions of the models
+under comparison, and their use is still under discussion
+\citep{lindleyetal1982,kassetal1995,bergeretal1996,bergeretal1998,portamana2017c}.
+
+
+
+For a parametric statistical model $\yM$ the log-evidence is just the
+probability of the data given the model. In our case we must be careful
+because we have two different kinds of data: the health conditions and the
+fMRI  results. One of these kinds can be \emph{selected} by a human
+being or device -- in our case, for example, we selected a roughly equal
+number of healthy and schizophrenic patients to form our training data --
+and because of this reason it does not make sense to use it as evidence for
+the model.\mynote{CB: I do not understand the reasoning here. First you
+talk about different kinds of data and then about how many patients we 
+used for training. Where is the connection here? What should we used
+instead for the evidence of our model? LM: this formulation will be
+completely changed}
+
+If the health conditions $\yH$ are selected we have, discarding irrelevant
+dependencies in the conditionals,
+\begin{multline}
+  \label{eq:evidence_likelihood}
+  \p(\yM \| \yF \land \yH \land  \yM \land \yI) \propto
+  \p(\yF \| \yH \land  \yM \land \yI)\times
+  \p(\yM \|  \yI)
+  = {}\\
+\int \bigl[ \prod_i \yL_{\yh_i}(\yf_i \| \yth_{\yh_i}) \bigr]\,
+\pf(\ythh, \yths \|\yM ,\yI) \,\di\ythh\,\di\yths
+\times     \p(\yM \|  \yI),
+\end{multline}
+and the log-evidence is given by the logarithm of the denominator of the
+updated parameter distribution in \eqn~\eqref{eq:updated_hyperprior}:
+\begin{equation}
+  \label{eq:log-evidence_health_selected}
+  \text{log-evidence with selected health data} =
+  \ln \int \bigl[ \prod_i \yL_{\yh_i}(\yf_i \| \yth_{\yh_i}) \bigr]\,
+\pf(\ythh, \yths \|\yM ,\yI) \,\di\ythh\,\di\yths.
+\end{equation}
+If the fMRI data $\yF$ are selected we have
+\begin{multline}
+  \label{eq:evidence_likelihood_selected_fmri}
+  \p(\yM \| \yF \land \yH \land  \yM \land \yI) \propto
+  \p(\yH \| \yF \land  \yM \land \yI)\times
+  \p(\yM \|  \yI)
+  ={}\\
+  \frac{\p(\yF \| \yH \land  \yM \land \yI)\,\p(\yH \| \yI)}{
+    \sum_{\yH}\p(\yF \| \yH \land  \yM \land \yI)\,\p(\yH \| \yI)}
+  \times
+  \p(\yM \|  \yI)
+  = {}\\
+\frac{\int \bigl[ \prod_i \yL_{\yh_i}(\yf_i \| \yth_{\yh_i}) \bigr]\;
+  \pf(\ythh, \yths \|\yM ,\yI) \,\di\ythh\,\di\yths
+  \,\pf(\set{\yh} \| \yI)}{
+\sum_{\set{\yh_i}}\int \bigl[ \prod_i \yL_{\yh_i}(\yf_i \| \yth_{\yh_i}) \bigr]\;
+  \pf(\ythh, \yths \|\yM ,\yI) \,\di\ythh\,\di\yths
+  \,\pf(\set{\yh_i} \| \yI)
+}
+\times     \p(\yM \|  \yI),
+\end{multline}
+and the log-evidence has a more complex expression:
+\begin{multline}
+  \label{eq:log-evidence_fmri_selected}
+  \text{log-evidence with selected fMRI data} =
+\ln\int \bigl[ \prod_i \yL_{\yh_i}(\yf_i \| \yth_{\yh_i}) \bigr]\;
+  \pf(\ythh, \yths \|\yM ,\yI) \,\di\ythh\,\di\yths
+  \,\pf(\set{\yh} \| \yI) -{}\\
+\ln\sum_{\set{\yh_i}}\int \bigl[ \prod_i \yL_{\yh_i}(\yf_i \| \yth_{\yh_i}) \bigr]\;
+  \pf(\ythh, \yths \|\yM ,\yI) \,\di\ythh\,\di\yths
+  \,\pf(\set{\yh_i} \| \yI),
+\end{multline}
+and can require a lot of computational resources or approximation even if
+the integrals have closed form, owing to the sum over all possible
+combinations of health conditions in the denominator. This log-evidence
+depends on the particular pre-test probabilities $\pf(\set{\yh_i} \| \yI)$
+for the health conditions.
+
+The two log-evidences above can have very different values, and a model
+favoured by the first over another can be disfavoured by the second. For
+the moment we use the first log-evidence together with efficiency
+considerations to decide and choose one of our three statistical models. We
+return to the second log-evidence in
+\sect~\ref{sec:assessment_logit-normal}.
+
+
+
+
+To compare our three models we use only a subset of ten connectivity weights
+\mynote{CB: it this true? LM: yes, in the Monte Carlo simulations we only
+  used 10, remember?}
+from the full set of $39$, those with the highest difference in averages
+between the schizophrenic and healthy patients.
+%% chosen correlations:
+%% "f(9, 78)", "f(15, 35)", "f(51, 68)", "f(51, 91)", "f(63, 91)",
+%% "f(37, 58)", "f(54, 85)", "f(31, 51)", "f(30, 31)", "f(24, 31)"
+From the training data of
+all $\ynh=55$ healthy and $\yns=49$ schizophrenic patients, we calculate
+the updated parameter distributions and the log-evidence of each model. The
+truncated-normal and beta-product models were studied via Markov-chain
+Monte Carlo (details in \sect~**); \mynote{CB: enter section}the 
+logit-normal model only requires
+basic numeric matrix algorithms, available in programming languages like R,
+python, Mathematica, Matlab.
+
+
+The results are summarized in table~\ref{tab:model_comparison}.
+%% RESULTS %%
+%% file fmri_logit-t_optimprior40.nb
+%% -- 10 quantities --
+%% log-evidence beta 1st run: -238 + -244 = -482
+%% log-evidence beta 2nd run: -239 + -246 = -485
+%% time beta: 40 min
+%%
+%% log-evidence trunc-norm 1st run: -203 + -186 = -389
+%% log-evidence trunc-norm 2nd run: -210 + -223 = -433
+%% log-evidence trunc-norm 3rd run: -220 + -217 = -437
+%% time trunc-norm: 17 h
+%%
+%% log-evidence logit-norm cupped-prior: -290.71 + -280.286 = -570.996
+%% log-evidence logit-norm flat-prior: -236.705 + -229.788 = -466.494
+%% time logit-norm: 5 s
+%%
+\begin{table}[!t]
+  \centering
+  \begin{tabular}{lll}
+    \textbf{Model} & \textbf{log-evidence} & \textbf{computation
+                                                    time (per run)}\\
+    \hline
+    truncated-normal & $-420\pm 25$& $17\:\mathrm{h}$ (computer cluster)\\
+    beta-product & $-480\pm 5$ & $40\:\mathrm{min}$ (computer cluster)\\
+    logit-normal (flat prior)& $-466$ & $2\:\mathrm{s}$ (laptop)\\
+    logit-normal (cupped prior)& $-571$ & $2\:\mathrm{s}$ (laptop)
+  \end{tabular}
+    \caption{Model comparison}
+  \label{tab:model_comparison}
+\end{table}
+The computed log-evidence greatly favours the truncated-normal model; the
+logit-normal model with flat prior comes second, the beta-product model
+third, and the logit-normal model with cupped prior last. The computation
+for the favoured truncated-normal model took considerable time, however;
+even more if we count the time spent in selecting the most suitable Monte
+Carlo sampling algorithm and in testing its convergence. These values of
+the log-evidence also show that it is greatly affected by the prior
+parameter distribution of the model.
+
+Since the log-evidence may not be the most suitable measure for model
+selection in our problem, as mentioned above, and since our goal is to
+discuss a general method and not to find the best model for schizophrenia
+diagnostics from fMRI data, we focus the rest of our discussion on the
+logit-normal model.
+
+\subsection{Remarks on prior knowledge, data reduction, sufficiency}
+\label{sec:data_prior_model}
+
+\mynote{Add some reference to Draper \citep[pp.~760--767]{draperetal1996}} \citep{draper1995}
+
+\mynote{This section is still badly explained}
+% * <morrison@fz-juelich.de> 2017-09-13T08:15:09.818Z:
+% 
+% I wonder if some of it could be reasonably moved to the discussion so we
+% can plough ahead with creating the models
+%
+%
+% LM: yes this is best moved to the discussion
+% ^.
+
+The two devices for taming the complexity of our inference problem, just
+explained, seem to be very different. The first reduces the dimension of
+the fMRI-data space; the second, the choice of possible hyperdistributions.
+Yet both devices are just restricting the choice of hyperdistributions over
+$\ypp$-space. Both state that our hyperdistribution $\pf(\ypp \|\yI)$
+should give zero weight to particular kinds of distributions
+$\yp_{\yh}(\yf)$; the hyperdistribution is non-zero only within a subset of
+$\ypp$-space, a subset of much fewer dimensions, which can be parametrized
+by a variable $\yt$. Within this subset the data will have more influence
+on the predictive distribution~\eqref{eq:goal_1st_exchangeability}.
+
+By restricting the hyperdistribution in these two ways we have not bypassed the
+issue of the influence of the hyperdistribution on the predictive distribution,
+though. Quite the opposite: we have excluded some predictive distributions
+a priori, before even seeing the data. The a-priori assumption can be
+supported by biological reasons, in which case it is reasonable. Or it can
+just be a working hypothesis, a convenient conceptual device to overcome
+the mathematical difficulties related to the hyperdistribution and the large
+dimensions of $\ypp$-space. In this ca\label{sec:data_preprocessing}se it is good to consider several
+such working assumptions.
+
+This strong kind of working assumption is not necessarily fatal for our
+inferential problem. It is still possible that we will be able to
+discriminate the health condition $\yh$ of the new patient sharply
+enough, notwithstanding the sufficiency assumption. Mathematically this
+means that the discrimination would have been even sharper without the
+sufficiency assumption; but this increased precision may be insignificant
+for our purposes. An intuitive illustration of this is given in
+\fig~\ref{restriction_hyperdistribution}.
+\begin{figure}[!h]
+  \centering
+\includegraphics[width=0.499\linewidth]{d12.png}%
+\includegraphics[width=0.499\linewidth]{suf12.png}%
+\caption{Restriction of hyperdistribution to a subset of $\ypp$-space.}
+\label{restriction_hyperdistribution}
+\end{figure}
+The plot on the left shows that the data
+select two distinct distributions in $\ypp$-space for two health categories,
+corresponding to the modes of the blue and red hyperdistributions. We now
+assume that our hyperdistribution is zero outside of the black line, thus reducing
+the dimensionality of our inference problem. The plot on the right shows
+the two distribution selected by the same data on the space of restricted
+hyperdistributions, again corresponding to the modes of the blue and red curve.
+Although less sharply separated than in the full $\ypp$-space, the two
+distributions are enough distinct for our inference purposes.
+
+
+
+If the working assumption, on the other hand, does not lead to a sharp
+enough discrimination of the health condition, we have to consider
+alternative working assumptions. Eventually, if we gather enough data and
+gain more computational power, we may abandon working assumptions of
+sufficiency altogether and return to the more flexible
+equation~\eqref{eq:goal_1st_exchangeability}.
+
+
+
+
+
+------------------------------------------------------------------
+-------------------------------------------------------------------
+
+
+\subsection{Selection of model, \ie\ graph properties and sufficient statistics}
+\label{sec:model_selection}
+
+
+\citetext{\citealp{mackay1992}; \citealp[\chaps~20, 4]{jaynes1994_r2003};
+  \citealp[\chaps~V--VI]{jeffreys1939_r2003}; \citealp{lewisetal1997}}
+
+For our simplified inference we can choose among different sets of graph
+properties and of sufficient statistics. Let us call each possible combined
+choice a \emph{model} $\yM_m$ It is important to decide which of these
+models is the most reliable, or most probable on the assumption that one
+among them is biologically valid. The answer is given by the probability
+calculus:\mynote{this formula has to be modified: health conditions are known}
+\begin{equation}
+  \label{eq:model_selection}
+  \p(\yM_m \| \yD, \yI) =
+  \frac{
+\p(\yD \| \yM_m, \yI)\, \p(\yM_m \| \yI)
+}{ \p(\yD \| \yI)}.
+\end{equation}
+If we assume all models to be equally possible a priori, $\p(\yM_m \| \yI)$
+is the same for all $m$.
+
+It can be shown that the formula above corresponds to a mixture of $n$-out
+cross-selection procedures. Moreover, the formula automatically gives a
+lower probability to models that are more complex, \ie\ that use a greater
+number of graph properties or sufficient statistics \citep{mackay1992}.

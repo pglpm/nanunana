@@ -1,0 +1,113 @@
+---
+title: "Playing with dirichletprocess"
+output:
+  pdf_document: default
+---
+
+```{r setup, echo=FALSE}
+require('dirichletprocess')
+require('mvtnorm')
+require('foreach')
+options(digits=3)
+set.seed(222)
+```
+# Questions on `clusterParameters`
+
+```{r dp}
+## Generate 10 datapoints on 2D data space from two multinormals:
+## one centred at (-1,-1), the other at (1,1),
+## with sd = 0.1
+datasize <- 10
+y <- matrix(rnorm(n=2*datasize, mean=c(-1,-1,1,1), sd=0.1), nrow=datasize, ncol=2, byrow=TRUE)
+y
+
+## Create Dirichlet-process object, multinormal mixture:
+dp <- DirichletProcessMvnormal(y)
+
+## This object has clusterParameters, with specific values:
+dp$clusterParameters
+```
+
+**Question**: where do the `clusterParameters` in the initial
+Dirichlet-process object come from? Can they be considered prior samples of
+the $\theta$s, rather than posterior?
+
+
+```{r}
+## Fit the first Dirichlet-process, save the result under a new name:
+fitdp <- Fit(dp, its=1000, progressBar=FALSE)
+```
+
+The parameters in the first sample in the fitted object seem to be equal to
+the `clusterParameters` in the initial object:
+
+```{r}
+fitdp$clusterParametersChain[[1]]
+```
+
+**Question**: in general, the `clusterParameters` of a fitted object are
+effectively the last samples of the Monte Carlo chain. Is this correct?
+
+
+
+# LikelihoodDP
+
+This actually gives the matrix of probability densities of the data
+conditional on the `clusterParameters` (or equivalently the likelihood of
+the `clusterParameters` in view of the data)
+$$
+\bigl(\mathrm{p}(y_i \rvert \theta_j, \text{\small
+hyperparameters})
+\bigr)_{ij}
+$$
+as can be seen by an explicit calculation with `dmvnorm`:
+
+```{r}
+## with LikelihoodDP
+LikelihoodDP(fitdp)
+
+## with dmvnorm
+unname(foreach(i=1:datasize, .combine='rbind') %:% # iterate over data
+       foreach(j=1:datasize, .combine='cbind') %do% { #iterate over params
+           dmvnorm(x=y[i,],
+                   mean=fitdp$clusterParameters$mu[,,fitdp$clusterLabels[j]],
+                   sigma=fitdp$clusterParameters$sig[,,fitdp$clusterLabels[j]],
+                   checkSymmetry=FALSE, log=FALSE)
+       })
+```
+
+# Posterior predictive in conjugate multinormal case
+
+
+
+
+
+question on `PosteriorClusters`:
+where are they drawn from?
+can they be used to draw from the prior?
+They also work in case of unfitted object: where are they drawn from?
+
+What does `ClusterLabelPredict` do?
+
+How do I draw prior probabilities from the process?
+
+How to update the hyperparameters?
+
+How to have a fixed alpha?
+
+not clear what happens with `ClusterParameterUpdate` and
+`ClusterComponentUpdate`: they don't save the new samples in the chain?
+
+where are `weights` for the conjugate multinormal case?
+
+check if g0Priors works
+
+what does "initialize" mean?
+
+`$weights` from page 15 is actually missing
+
+what is `mhDraws`?
+
+faster using directly
+`UpdateAlpha(ClusterParameterUpdate(ClusterComponentUpdate(...)))`
+

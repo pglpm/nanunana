@@ -369,25 +369,14 @@ CB: Should we use here present to past?
 We requested data of Schizophrenic patients and control individuals from
  Schizconnect (http://schizconnect.org), a virtual database for public schizophre
 nia neuroimaging data.
- In our request we asked for resting state T2*-weighted functional and T1-weight
-ed structural magnet resonance images (MRI) from individuals participating
- in the COBRE study either with no known disorder or diagnosed as schizophrenic
- according to the Diagnostic and Statistical Manual of Mental Disorders
- (DSM) IV, excluding schizoaffective disorders.
- The resultant provided data set comprised 91 control individuals and 74
- schizophrenic patients 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-CB: We did not use all the data for now.
-\end_layout
-
-\end_inset
-
-, whose voluntary and informed participation in the COBRE study was ensured
- by the institutional guidelines at the University of New Mexico Human Research
- Protections Office.
+ In our request we asked for resting state T2*-weighted functional (rfMRI)
+ and T1-weighted structural magnet resonance images (MRI) from individuals
+ participating in the COBRE study either with no known disorder or diagnosed
+ as schizophrenic according to the Diagnostic and Statistical Manual of
+ Mental Disorders (DSM) IV, excluding schizoaffective disorders.
+ In the COBRE study the voluntary and informed participation of the subjects
+ was ensured by the institutional guidelines at the University of New Mexico
+ Human Research Protections Office.
 \begin_inset Note Note
 status open
 
@@ -397,8 +386,21 @@ CB: Is this ment by 'Informed consent' ?
 
 \end_inset
 
+ The resultant provided data set comprised 91 control individuals and 74
+ schizophrenic patients.
+ Out of these we randomly selected the data from 54 controls and 49 Schizophreni
+c subject, since we wanted to demonstrate our method on a small data set
+ with unequal group size.
  A detailed description on the exact experimental design and the MRI scanning
- is provided by (citation: Cetin at all).
+ is provided by Çetin at.
+ all 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Cetin2014"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsubsection
@@ -406,26 +408,45 @@ Data preprocessing
 \end_layout
 
 \begin_layout Standard
-Preprocessing of the rfMRI images is carried out by FSL (Smith et al., 2004;
- Jenkinson et al., 2012) including the following steps: removal of the first
- 10 images; motion correction (MCFLIRT); spacial filtering with a 4mm FWHM
- Gaussian kernel
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-CB: is this true?
-\end_layout
+Preprocessing of the rfMRI images is carried out by FMRIB`s Software Library
+ tools (FSL, v5.08) 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Jenkinson2012,Smith2004"
 
 \end_inset
 
-; temporal high-pass filtering with a cut-off frequency of 0.2Hz; white matter
- and CSF regression (fsl_regfilt)
+ including the following steps: removal of the first image 10 volumes, leaving
+ the remaining 130 volumes for further data processing; removing non-brain
+ tissue (Bet) 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Smith2002"
+
+\end_inset
+
+; motion correction (MCFLIRT) 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Jenkinson2002"
+
+\end_inset
+
+; spacial smoothing with a 
+\begin_inset Formula $6\:mm$
+\end_inset
+
+ full width at half maximum Gaussian kernel; temporal low-pass filtering
+ with a cut-off frequency of 
+\begin_inset Formula $0.009\:Hz$
+\end_inset
+
+; white matter and cerebrospinal fluid regression (fsl_regfilt/MELODIC)
 \begin_inset Note Note
 status open
 
 \begin_layout Plain Layout
-CB: is there anything else to say -> look up publications
+CB: What to cite here?
 \end_layout
 
 \end_inset
@@ -434,41 +455,49 @@ CB: is there anything else to say -> look up publications
 \end_layout
 
 \begin_layout Subsubsection*
-Graph construction
+ROI selection and connectivity measure
 \end_layout
 
 \begin_layout Standard
-For each subject we register the rfMRI image first to structural space (FSL)
- and then to the MNI standard space (Ants).
- Regions of the resulting functional image in standard space are extracted
- such that they match the 94 regions identified by the Oxford lateral cortical
- atlas (with a probability above 50 percents).
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-CB: How to cite this?
-\end_layout
+For each subject we linearly register the rfMRI image first to the structural,
+ scull-removed image (image segmentation for scull removing with SPM8, Wellcome
+ Department of Cognitive Neurology, London, UKFSL; linear registration with
+ FSL/FLIRT 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Jenkinson2001,Jenkinson2002"
 
 \end_inset
 
- The resulting regions of interest form the nodes of the individual graphs.
- Edge weights are measured based on the (absolute) value of the Pearson
- correlation coefficient calculated the mean activity of the two nodes considere
-d.
- Thus, we end up with a weighted, undirected, fully connected graph of 94
- nodes for each patient.
+) and then through a non-linear mappting to the MNI standard brain (non-linear
+ registration with Advanced Normalization Tools (Ants) 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Avants2011"
+
+\end_inset
+
+; MNI 152 standard brain, nonlinear 6th generation 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Grabner2006"
+
+\end_inset
+
+).
+ Regions of interest (ROIs) of the resulting functional image in standard
+ space are extracted such that they match the 94 regions identified by the
+ Oxford lateral cortical atlas (with a probability above 50 percents) 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Desikan2006"
+
+\end_inset
+
+.The temporal mean signals across the voxels in each ROI are used to calculate
+ the functional connectivity measured based on the Pearson correlation coefficie
+nt.
  
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-CB: thresholding?
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Subsubsection*

@@ -1,0 +1,24 @@
+%% Author: PGL  Porta Mana
+%% Created: 2020-09-07T10:52:58+0200
+%% Last-Updated: 2020-09-14T13:19:02+0200
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+-- NOTES FOR THE APPROACH IN THE NON-PARAMETRIC VERSION --
+
+The clinician needs the *likelihood of the health condition*, that is, *the
+probability of the test result given the health condition*, for two
+reasons:
+
+1. in order to combine the evidence from several tests - whose number and
+availability can be different from patient to patient - and the prior guess,
+
+2. in order to make a treatment decision based on a utility function, which
+can be different from patient to patient.
+
+
+We want an algorithm that gives us such health-likelihood and that learns
+from previously analysed and verified cases. This last requirement means
+that some "state" in the algorithm must be updated and saved from case to
+case. This state allows us to calculate the updated probability of the test
+result (health-likelihood).
+

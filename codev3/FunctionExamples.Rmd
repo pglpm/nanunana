@@ -1,0 +1,95 @@
+---
+title: "Likelihood/Posterior Functions"
+output:
+  pdf_document: default
+---
+
+```{r setup}
+require(dirichletprocess)
+```
+
+```{r dp}
+dp <- DirichletProcessGaussian(scale(faithful$waiting))
+dp <- Fit(dp, 1000, progressBar = F)
+```
+
+# LikelihoodDP 
+
+This returns a vector of length `r nrow(faithful)`. Each of the datapoints evaluated with its fitted cluster parameters. 
+
+```{r}
+length(LikelihoodDP(dp))
+```
+
+# LikelihoodFunction
+
+This returns a function that can then be evaluated. By default it uses the last fitted clusters and weights: 
+
+```{r}
+cbind(Weight = dp$pointsPerCluster, 
+      MuParams = dp$clusterParameters[[1]],
+      SigmaParam = dp$clusterParameters[[2]])
+```
+
+Which are then wrapped into a function
+
+```{r}
+likelihoodF <- LikelihoodFunction(dp)
+
+plot(seq(-2, 2, by=0.1), 
+     likelihoodF(seq(-2, 2, by=0.1)), 
+     type="l")
+```
+
+# PosteriorFunction 
+
+Instead of using the fitted parameters exactly, we draw from the distribution of the fitted parameters, so each call of the function will be slightly different. 
+
+Here we draw thrice and plot the results. 
+
+```{r}
+pf1 <- PosteriorFunction(dp)
+pf2 <- PosteriorFunction(dp)
+pf3 <- PosteriorFunction(dp)
+
+plot(seq(-2, 2, by=0.1),
+     pf1(seq(-2, 2, by=0.1)), type="l")
+lines(seq(-2, 2, by=0.1),
+     pf2(seq(-2, 2, by=0.1)), type="l", col="red")
+lines(seq(-2, 2, by=0.1),
+     pf3(seq(-2, 2, by=0.1)), type="l", col="blue")
+```
+
+# P(Y_{n+1}|pi)
+
+So I think to calculate your interested quantity you need to do the following: 
+
+```{r}
+yNP1 <- seq(0, 2, by=0.1)
+
+pfEval <- matrix(nrow=length(yNP1), ncol=500)
+
+j <- 1
+
+for(i in 500:100){
+  
+  pf <- PosteriorFunction(dp, i)
+  pfEval[, j] <- pf(yNP1)
+  
+  j <- j + 1
+  
+}
+
+head(pfEval[, 1:5])
+```
+
+
+So each column is a sample of your predictive density and each row is a $Y_N+1$. 
+
+
+
+
+
+
+
+
