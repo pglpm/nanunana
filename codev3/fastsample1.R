@@ -266,7 +266,19 @@ matplot(xg,jlogit(xg)*pmarg(logit2(xg),xfitdp,m=marg,i),type='l',col=myred, add=
     dev.off()
 }
 
+## cross-validation exploration
+crossvalsy <- log(posteriorx(y,fitdp))-log(posteriorx(y,fitdp2))
+crossvalsy2 <- log(posteriorx(y2,fitdp))-log(posteriorx(y2,fitdp2))
 
+> mean(crossvalsy)
+[1] 24.46407
+> sd(crossvalsy)
+[1] 11.95194
+
+> mean(crossvalsy2)
+[1] -27.75432
+> sd(crossvalsy2)
+[1] 13.99938
 
 
 ##############################################################################

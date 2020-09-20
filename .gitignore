@@ -13,6 +13,7 @@
 *.out.ps
 .Rhistory
 Rplots.pdf
+.RData
 *~
 _*
 _region_.*
