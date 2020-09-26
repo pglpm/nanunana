@@ -54,7 +54,38 @@ dp <- DirichletProcessMvnormal(data)
 nSamples <- 1000
 fitDp <- Fit(dp, its=nSamples)
 
+posteriorsamplepar <- function(x, dpobj, ind=length(dpobj$weigthsChain, marg=NULL)){
+    if(is.null(dim(x))){dim(x) <- c(1,length(x))}
+    if(is.null(marg)){marg <- seq_len(ncol(x))}
 
+    pc <- PosteriorClusters(dpobj=dpobj, ind=ind)
+    w <- pc$weights
+    mu <- pc$params[[1]][,marg,]
+    sig <- pc$params[[2]][marg,marg,]
+
+    foreach(l=seq_along(w), .combine='+')%dopar%{
+        w[l] * dmvnorm(x, mean=mu[,,l], sigma=sig[,,l], log=FALSE, checkSymmetry=FALSE)
+    }
+}
+
+posteriorsample <- function(x, dpobj, ind=length(dpobj$weigthsChain), marg=NULL){
+    pc <- PosteriorClusters(dpobj=dpobj, ind=ind)
+    w <- pc$weights
+    if(is.null(marg)){marg <- seq_len(dim(pc$params[[1]])[2])}
+    if(is.null(dim(x))){x <- matrix(x,ncol=length(marg))}
+
+    mu <- pc$params[[1]][,marg,]
+    sig <- pc$params[[2]][marg,marg,]
+
+    comps <- numeric(nrow(x))
+
+    for(l in seq_along(w)){
+        comps <- comps +
+        w[l] * dmvnorm(x, mean=mu[,,l], sigma=sig[,,l], log=FALSE, checkSymmetry=FALSE)
+    }
+
+    comps
+}
 
 ## p(ynew[m] | data, hyperp)
 postmargx <- function(x,dpobj,m){
@@ -151,6 +182,18 @@ llf <- function(x,dpobj,ind){
     }
 }
 
+testv <- 10*diag(2)
+foreach(i=1:length(dp$pointsPerCluster),.combine='+')%do%{dmvnorm(testv,mean=dp$clusterParameters$mu[,,i], sigma=solve(dp$clusterParameters$sig[,,i])) * dp$pointsPerCluster[i]/dp$n}
+c(LikelihoodFunction(dp)(testv))
+
+
+G <- dp$mixingDistribution$priorParameters
+df <- G$nu - length(G$mu0) + 1
+sigma <- solve(G$Lambda) * (G$kappa0 + 1)/(G$kappa0 * df)
+(LikelihoodFunction(dp)(testv)*dp$n + dp$alpha * dmvt(x=testv, delta=G$mu0, sigma=sigma, df=df, type='shifted', log=FALSE))/(dp$alpha + dp$n)
+
+
+
 
 ## test MC chain
 testdp <- dp
@@ -230,6 +273,16 @@ fitdp <- dp
 for(i in 1:2){fitdp <- Fit(fitdp,5000)}
 
 
+
+
+dptest <- DirichletProcessMvnormal(y,
+                                #alphaPriors=c(0.1, 0.1),
+                                g0Priors=list(mu0=rep(0,dims), kappa0=0.01, Lambda=diag(dims)/2, nu=dims+1), numInitialClusters = dims)
+fitdptest <- dptest
+
+system.time(for(i in 1:1){fitdptest <- Fit(fitdptest,5000)})
+
+
 ## Schizo
 datafilename <- 'weights_Schizo_40cons'
 y2 <- t(as.matrix(read.csv(paste0(datafilename,'.csv'),header=FALSE,sep=',')))
@@ -279,6 +332,87 @@ crossvalsy2 <- log(posteriorx(y2,fitdp))-log(posteriorx(y2,fitdp2))
 [1] -27.75432
 > sd(crossvalsy2)
 [1] 13.99938
+
+> sum(crossvalsy>0) + sum(crossvalsy2<0)
+[1] 103
+> length(c(crossvalsy,crossvalsy2))
+[1] 104
+> 103/104
+[1] 0.9903846
+
+
+
+y <- rbind(rmvnorm(3, c(-20,-20), 100*diag(2)),rmvnorm(3, c(20,20), 100*diag(2)))
+
+dp <- DirichletProcessMvnormal(y,g0Priors = list(mu0=rep(1,2), kappa0=1, Lambda=100*diag(2), nu=2), alphaPriors=c(1, 0.1), numInitialClusters = 2)
+dp$alpha <- 0.001
+dp$clusterParameters <- list(mu=array(c(1,1,-1,-1),dim=c(1,2,2)), sig=array(c(diag(2)), dim=c(2,2,2)))
+
+
+set.seed(1) ; pc <- PosteriorClusters(dp)
+
+testpc <- function(x,pcobj){
+    w <- pcobj$weights
+    mu <- pcobj$params[[1]]
+    sig <- pcobj$params[[2]]
+
+    foreach(i=seq_along(w), .combine='+')%do%{
+        w[i] * dmvnorm(x, mean=mu[,,i], sigma=sig[,,i], checkSymmetry=FALSE, log=FALSE)
+    }
+}
+
+testpcbis <- function(x,pcobj){
+    w <- pcobj$weights
+    mu <- pcobj$params[[1]]
+    sig <- pcobj$params[[2]]
+
+    vapply(seq_len(dim(mu)[3]),
+            function(i){dmvnorm(x,
+                                mu[,,i],
+                                sig[,,i])},
+            numeric(nrow(x)))
+}
+
+testpf <- function(x,dpobj){
+    pcobj <- PosteriorClusters(dpobj)
+    w <- pcobj$weights
+    mu <- pcobj$params[[1]]
+    sig <- pcobj$params[[2]]
+
+    foreach(i=seq_along(w), .combine='+')%do%{
+        w[i] * dmvnorm(x, mean=mu[,,i], sigma=sig[,,i], checkSymmetry=FALSE, log=FALSE)
+    }
+}
+
+ll <- function(x,dpobj){
+    mu <- dpobj$clusterParameters$mu
+    sig <- dpobj$clusterParameters$sig
+    w <- dpobj$pointsPerCluster / dpobj$n
+    
+    foreach(i=seq_along(w), .combine='+')%do%{
+        w[i] * dmvnorm(x, mean=mu[,,i], sigma=sig[,,i], checkSymmetry=FALSE, log=FALSE)
+    }    
+}
+
+## discrepancy from PosteriorFunction
+## > testy <- matrix(c(1,1,-1,-1),nrow=2,byrow=TRUE)
+## > seed <- 4 ;  set.seed(seed) ; test2 <- c(PosteriorFunction(dp)(testy)) ; set.seed(seed) ; test1 <- testpf(testy,dp) ; 1-test2/test1
+## [1] -2.220446e-16 -2.220446e-16
+
+
+> summary(dp)
+                     Length Class  Mode   
+data                 12     -none- numeric
+mixingDistribution    5     list   list   
+n                     1     -none- numeric
+alphaPriorParameters  2     -none- numeric
+alpha                 1     -none- numeric
+mhDraws               1     -none- numeric
+clusterLabels         6     -none- numeric
+numberClusters        1     -none- numeric
+pointsPerCluster      2     -none- numeric
+clusterParameters     2     -none- list   
+predictiveArray       6     -none- numeric
 
 
 ##############################################################################
